@@ -11,6 +11,7 @@ export default function MessageSettings() {
   const [showReceipts, setShowReceipts] = useState(true);
   const [followersOnly, setFollowersOnly] = useState(false);
   const [blocked, setBlocked] = useState([]);
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
 
   const load = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -42,6 +43,7 @@ export default function MessageSettings() {
 
   const clearConversations = async () => {
     await supabase.from("conversation_participants").delete().eq("user_id", userId);
+    setConfirmClearOpen(false);
     toast.success("Conversations cleared for your account.");
   };
 
@@ -82,9 +84,32 @@ export default function MessageSettings() {
       <Card>
         <CardHeader><CardTitle>Danger Zone</CardTitle></CardHeader>
         <CardContent>
-          <Button variant="destructive" onClick={clearConversations}>Clear all conversations</Button>
+          <Button variant="destructive" onClick={() => setConfirmClearOpen(true)}>Clear all conversations</Button>
         </CardContent>
       </Card>
+      {confirmClearOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="clear-conv-title"
+        >
+          <Card className="max-w-md w-full shadow-xl border-slate-200">
+            <CardHeader>
+              <CardTitle id="clear-conv-title">Clear all conversations?</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-slate-600">
+                This permanently removes your participation from every conversation. Other participants may still see past messages.
+              </p>
+              <div className="flex gap-2 justify-end">
+                <Button type="button" variant="outline" onClick={() => setConfirmClearOpen(false)}>Cancel</Button>
+                <Button type="button" variant="destructive" onClick={() => clearConversations()}>Clear everything</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
