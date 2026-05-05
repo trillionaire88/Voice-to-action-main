@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { api } from '@/api/client';
+import { supabase } from "@/lib/supabase";
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { Users, ChevronRight } from "lucide-react";
@@ -12,17 +12,19 @@ export default function FollowingWidget({ user }) {
   const { data: followedUsers = [] } = useQuery({
     queryKey: ["homeFollowing", user?.id],
     queryFn: async () => {
-      const follows = await api.entities.UserFollow.filter({ follower_user_id: user.id }, "-created_date", 10);
-      if (follows.length === 0) return [];
-      // Fetch each followed user individually — never download the whole user table
-      const results = await Promise.all(
-        follows.map(f =>
-          api.entities.User.filter({ id: f.following_user_id })
-            .then(r => r[0])
-            .catch(() => null)
-        )
-      );
-      return results.filter(Boolean);
+      const { data: rows, error } = await supabase
+        .from("follows")
+        .select("following_id")
+        .eq("follower_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
+      if (error) throw error;
+      if (!rows?.length) return [];
+      const ids = rows.map((r) => r.following_id);
+      const { data: profiles, error: pErr } = await supabase.from("profiles").select("*").in("id", ids);
+      if (pErr) throw pErr;
+      const map = Object.fromEntries((profiles || []).map((p) => [p.id, p]));
+      return ids.map((id) => map[id]).filter(Boolean);
     },
     enabled: !!user,
     staleTime: 5 * 60_000,
@@ -48,7 +50,7 @@ export default function FollowingWidget({ user }) {
       </CardHeader>
       <CardContent className="pb-4">
         <div className="flex flex-wrap gap-2">
-          {followedUsers.map(followedUser => (
+          {followedUsers.map((followedUser) => (
             <button
               key={followedUser.id}
               onClick={() => navigate(createPageUrl("Profile") + `?userId=${followedUser.id}`)}

@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from '@/api/client';
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { UserPlus, UserCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -12,11 +12,14 @@ export default function FollowButton({ targetUserId, currentUser, variant = "def
     queryKey: ["isFollowing", targetUserId, currentUser?.id],
     queryFn: async () => {
       if (!currentUser) return false;
-      const follows = await api.entities.UserFollow.filter({
-        follower_user_id: currentUser.id,
-        following_user_id: targetUserId,
-      });
-      return follows.length > 0;
+      const { data, error } = await supabase
+        .from("follows")
+        .select("id")
+        .eq("follower_id", currentUser.id)
+        .eq("following_id", targetUserId)
+        .maybeSingle();
+      if (error) throw error;
+      return !!data;
     },
     enabled: !!currentUser && !!targetUserId,
   });
@@ -24,18 +27,18 @@ export default function FollowButton({ targetUserId, currentUser, variant = "def
   const followMutation = useMutation({
     mutationFn: async () => {
       if (isFollowing) {
-        const follows = await api.entities.UserFollow.filter({
-          follower_user_id: currentUser.id,
-          following_user_id: targetUserId,
-        });
-        if (follows[0]) {
-          await api.entities.UserFollow.delete(follows[0].id);
-        }
+        const { error } = await supabase
+          .from("follows")
+          .delete()
+          .eq("follower_id", currentUser.id)
+          .eq("following_id", targetUserId);
+        if (error) throw error;
       } else {
-        await api.entities.UserFollow.create({
-          follower_user_id: currentUser.id,
-          following_user_id: targetUserId,
+        const { error } = await supabase.from("follows").insert({
+          follower_id: currentUser.id,
+          following_id: targetUserId,
         });
+        if (error) throw error;
       }
     },
     onSuccess: () => {

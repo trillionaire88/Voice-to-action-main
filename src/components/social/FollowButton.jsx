@@ -1,23 +1,35 @@
 import React from "react";
-import { api } from '@/api/client';
+import { api } from "@/api/client";
 import { Button } from "@/components/ui/button";
 import { UserPlus, UserMinus, Users } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 export default function FollowButton({ targetType, targetId, currentUserId, compact = false }) {
   const queryClient = useQueryClient();
 
-  // Fetch current follow state
   const { data: followRecord, isLoading } = useQuery({
     queryKey: ["follow", currentUserId, targetType, targetId],
     queryFn: async () => {
-      const res = await api.entities.UserFollow.filter({
-        follower_id: currentUserId,
-        target_type: targetType,
-        target_id: targetId,
-      });
-      return res[0] || null;
+      if (targetType === "user") {
+        const { data, error } = await supabase
+          .from("follows")
+          .select("id")
+          .eq("follower_id", currentUserId)
+          .eq("following_id", targetId)
+          .maybeSingle();
+        if (error) throw error;
+        return data || null;
+      }
+      const { data, error } = await supabase
+        .from("community_follows")
+        .select("id")
+        .eq("follower_id", currentUserId)
+        .eq("community_id", targetId)
+        .maybeSingle();
+      if (error) throw error;
+      return data || null;
     },
     enabled: !!currentUserId && !!targetId,
     staleTime: 30_000,
@@ -27,17 +39,33 @@ export default function FollowButton({ targetType, targetId, currentUserId, comp
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (isFollowing && followRecord?.id) {
-        await api.entities.UserFollow.delete(followRecord.id);
+      if (isFollowing) {
+        if (targetType === "user") {
+          const { error } = await supabase
+            .from("follows")
+            .delete()
+            .eq("follower_id", currentUserId)
+            .eq("following_id", targetId);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase
+            .from("community_follows")
+            .delete()
+            .eq("follower_id", currentUserId)
+            .eq("community_id", targetId);
+          if (error) throw error;
+        }
         return null;
-      } else {
-        const rec = await api.entities.UserFollow.create({
-          follower_id: currentUserId,
-          target_type: targetType,
-          target_id: targetId,
-        });
-        // Side-effects (non-blocking)
-        if (targetType === "user" && targetId !== currentUserId) {
+      }
+
+      if (targetType === "user") {
+        const { data, error } = await supabase
+          .from("follows")
+          .insert({ follower_id: currentUserId, following_id: targetId })
+          .select("id")
+          .single();
+        if (error) throw error;
+        if (targetId !== currentUserId) {
           api.entities.Notification.create({
             user_id: targetId,
             type: "follow",
@@ -50,38 +78,52 @@ export default function FollowButton({ targetType, targetId, currentUserId, comp
         }
         api.entities.ActivityEvent.create({
           user_id: currentUserId,
-          event_type: targetType === "user" ? "followed_user" : "followed_community",
-          entity_type: targetType,
+          event_type: "followed_user",
+          entity_type: "user",
           entity_id: targetId,
         }).catch(() => {});
-        return rec;
+        return data;
       }
+
+      const { data, error } = await supabase
+        .from("community_follows")
+        .insert({ follower_id: currentUserId, community_id: targetId })
+        .select("id")
+        .single();
+      if (error) throw error;
+      api.entities.ActivityEvent.create({
+        user_id: currentUserId,
+        event_type: "followed_community",
+        entity_type: "community",
+        entity_id: targetId,
+      }).catch(() => {});
+      return data;
     },
-    // Optimistic update
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["follow", currentUserId, targetType, targetId] });
       const previous = queryClient.getQueryData(["follow", currentUserId, targetType, targetId]);
-      // Toggle optimistically
       queryClient.setQueryData(
         ["follow", currentUserId, targetType, targetId],
-        isFollowing ? null : { id: "optimistic", follower_id: currentUserId, target_type: targetType, target_id: targetId }
+        isFollowing
+          ? null
+          : {
+              id: "optimistic",
+            },
       );
       return { previous };
     },
     onError: (err, _vars, context) => {
-      // Rollback
       queryClient.setQueryData(["follow", currentUserId, targetType, targetId], context.previous);
       toast.error(err.message || "Action failed");
     },
     onSuccess: (data) => {
-      // Replace optimistic record with real one (or null on unfollow)
       queryClient.setQueryData(["follow", currentUserId, targetType, targetId], data);
       toast.success(
         isFollowing
           ? "Unfollowed"
           : targetType === "community"
-          ? "Following community"
-          : "Following user"
+            ? "Following community"
+            : "Following user",
       );
     },
   });
@@ -92,12 +134,10 @@ export default function FollowButton({ targetType, targetId, currentUserId, comp
   const label = isFollowing
     ? "Unfollow"
     : targetType === "community"
-    ? "Follow Community"
-    : "Follow";
+      ? "Follow Community"
+      : "Follow";
   const Icon = isFollowing ? UserMinus : targetType === "community" ? Users : UserPlus;
-  const ariaLabel = isFollowing
-    ? `Unfollow this ${targetType}`
-    : `Follow this ${targetType}`;
+  const ariaLabel = isFollowing ? `Unfollow this ${targetType}` : `Follow this ${targetType}`;
 
   if (compact) {
     return (
@@ -124,7 +164,9 @@ export default function FollowButton({ targetType, targetId, currentUserId, comp
       onClick={() => mutation.mutate()}
       disabled={mutation.isPending}
       aria-label={ariaLabel}
-      className={isFollowing ? "active:border-red-300 active:text-red-600" : "bg-blue-600 active:bg-blue-700"}
+      className={
+        isFollowing ? "active:border-red-300 active:text-red-600" : "bg-blue-600 active:bg-blue-700"
+      }
     >
       <Icon className="w-4 h-4 mr-1" />
       {mutation.isPending ? "…" : label}

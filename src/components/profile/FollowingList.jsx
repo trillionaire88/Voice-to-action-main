@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { api } from '@/api/client';
+import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
 import { Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,9 @@ export default function FollowingList({ userId, currentUser }) {
   const { data: followingRelations = [], isLoading } = useQuery({
     queryKey: ["followingList", userId],
     queryFn: async () => {
-      return await api.entities.UserFollow.filter({ follower_user_id: userId });
+      const { data, error } = await supabase.from("follows").select("following_id").eq("follower_id", userId);
+      if (error) throw error;
+      return data ?? [];
     },
     enabled: !!userId,
   });
@@ -23,9 +25,11 @@ export default function FollowingList({ userId, currentUser }) {
     queryKey: ["followingUsers", followingRelations],
     queryFn: async () => {
       if (followingRelations.length === 0) return [];
-      const userIds = followingRelations.map((f) => f.following_user_id);
-      const allUsers = await api.entities.User.list();
-      return allUsers.filter((u) => userIds.includes(u.id));
+      const ids = followingRelations.map((f) => f.following_id);
+      const { data: profiles, error } = await supabase.from("profiles").select("*").in("id", ids);
+      if (error) throw error;
+      const map = Object.fromEntries((profiles || []).map((p) => [p.id, p]));
+      return ids.map((id) => map[id]).filter(Boolean);
     },
     enabled: followingRelations.length > 0,
   });
@@ -42,9 +46,7 @@ export default function FollowingList({ userId, currentUser }) {
     return (
       <Card className="border-slate-200 p-12 text-center">
         <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-slate-900 mb-2">
-          Not Following Anyone Yet
-        </h3>
+        <h3 className="text-lg font-semibold text-slate-900 mb-2">Not Following Anyone Yet</h3>
         <p className="text-slate-600">
           {currentUser?.id === userId
             ? "Start following users to see their activity"
@@ -67,17 +69,11 @@ export default function FollowingList({ userId, currentUser }) {
               <ProfileAvatar user={user} size="md" />
               <div>
                 <h4 className="font-semibold text-slate-900">{user.display_name}</h4>
-                {user.bio && (
-                  <p className="text-sm text-slate-600 line-clamp-1">{user.bio}</p>
-                )}
+                {user.bio && <p className="text-sm text-slate-600 line-clamp-1">{user.bio}</p>}
               </div>
             </div>
             <div onClick={(e) => e.stopPropagation()}>
-              <FollowButton
-                targetUserId={user.id}
-                currentUser={currentUser}
-                variant="outline"
-              />
+              <FollowButton targetUserId={user.id} currentUser={currentUser} variant="outline" />
             </div>
           </div>
         </Card>
