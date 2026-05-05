@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -73,6 +74,31 @@ export default function SecuritySettings() {
   const [revokingId, setRevokingId] = useState(null);
   const [disable2faDialogOpen, setDisable2faDialogOpen] = useState(false);
   const [revokeAllDialogOpen, setRevokeAllDialogOpen] = useState(false);
+
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [passwordFormError, setPasswordFormError] = useState("");
+  const [passwordChangeSubmitting, setPasswordChangeSubmitting] = useState(false);
+
+  const newPasswordStrength = useMemo(() => {
+    const pw = newPassword;
+    if (!pw) return { value: 0, label: "", sublabel: "" };
+    if (pw.length < 8) return { value: 15, label: "Too short", sublabel: "Use at least 8 characters" };
+    let score = 0;
+    if (pw.length >= 12) score++;
+    if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
+    if (/\d/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    const labels = ["Weak", "Fair", "Good", "Strong"];
+    const idx = Math.min(score, 3);
+    return {
+      value: 35 + idx * 22,
+      label: labels[idx],
+      sublabel: "",
+    };
+  }, [newPassword]);
 
   useEffect(() => {
     loadUser();
@@ -262,6 +288,53 @@ export default function SecuritySettings() {
       navigate(createPageUrl("Home"));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const resetPasswordForm = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setPasswordFormError("");
+  };
+
+  const handlePasswordChangeSubmit = async (e) => {
+    e.preventDefault();
+    setPasswordFormError("");
+    if (newPassword.length < 8) {
+      setPasswordFormError("New password must be at least 8 characters.");
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setPasswordFormError("New passwords do not match.");
+      return;
+    }
+    const email = user?.email;
+    if (!email) {
+      setPasswordFormError("Could not determine your account email.");
+      return;
+    }
+    setPasswordChangeSubmitting(true);
+    try {
+      const { error: signErr } = await supabase.auth.signInWithPassword({
+        email,
+        password: currentPassword,
+      });
+      if (signErr) {
+        setPasswordFormError(signErr.message || "Current password is incorrect.");
+        return;
+      }
+      const { error: updErr } = await supabase.auth.updateUser({ password: newPassword });
+      if (updErr) {
+        setPasswordFormError(updErr.message || "Could not update password.");
+        return;
+      }
+      toast.success("Password updated successfully.");
+      setShowPasswordChange(false);
+      resetPasswordForm();
+      await loadUser();
+    } finally {
+      setPasswordChangeSubmitting(false);
     }
   };
 
@@ -703,22 +776,122 @@ export default function SecuritySettings() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-medium text-slate-900">Password</h4>
-              <p className="text-sm text-slate-600">
-                Last changed: {user.last_password_change 
-                  ? format(new Date(user.last_password_change), 'PPP')
-                  : 'Never'}
-              </p>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                <h4 className="font-medium text-slate-900">Password</h4>
+                <p className="text-sm text-slate-600">
+                  Last changed: {user.last_password_change
+                    ? format(new Date(user.last_password_change), 'PPP')
+                    : 'Never'}
+                </p>
+              </div>
+              {!showPasswordChange && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  type="button"
+                  onClick={() => {
+                    resetPasswordForm();
+                    setShowPasswordChange(true);
+                  }}
+                >
+                  Change Password
+                </Button>
+              )}
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => toast.info("To change your password, sign out and use 'Forgot Password' on the login page.")}
-            >
-              Change Password
-            </Button>
+
+            {showPasswordChange && (
+              <form className="space-y-3 pt-3 border-t border-slate-100" onSubmit={handlePasswordChangeSubmit}>
+                {passwordFormError && (
+                  <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertDescription>{passwordFormError}</AlertDescription>
+                  </Alert>
+                )}
+                <div className="space-y-2">
+                  <Label htmlFor="security-current-password">Current password</Label>
+                  <Input
+                    id="security-current-password"
+                    type="password"
+                    autoComplete="current-password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    disabled={passwordChangeSubmitting}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="security-new-password">New password</Label>
+                  <Input
+                    id="security-new-password"
+                    type="password"
+                    autoComplete="new-password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    disabled={passwordChangeSubmitting}
+                    minLength={8}
+                  />
+                  {newPassword.length > 0 && (
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-slate-600">Strength</span>
+                        <span
+                          className={
+                            newPasswordStrength.label === "Too short"
+                              ? "text-red-600"
+                              : newPasswordStrength.label === "Weak"
+                                ? "text-amber-600"
+                                : newPasswordStrength.label === "Fair"
+                                  ? "text-amber-700"
+                                  : "text-emerald-700"
+                          }
+                        >
+                          {newPasswordStrength.label}
+                          {newPasswordStrength.sublabel ? ` — ${newPasswordStrength.sublabel}` : ""}
+                        </span>
+                      </div>
+                      <Progress value={newPasswordStrength.value} className="h-1.5" />
+                    </div>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="security-confirm-password">Confirm new password</Label>
+                  <Input
+                    id="security-confirm-password"
+                    type="password"
+                    autoComplete="new-password"
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    disabled={passwordChangeSubmitting}
+                    minLength={8}
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="submit"
+                    disabled={
+                      passwordChangeSubmitting ||
+                      !currentPassword ||
+                      newPassword.length < 8 ||
+                      newPassword !== confirmNewPassword
+                    }
+                  >
+                    {passwordChangeSubmitting ? "Updating…" : "Update password"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    disabled={passwordChangeSubmitting}
+                    onClick={() => {
+                      setShowPasswordChange(false);
+                      resetPasswordForm();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            )}
           </div>
         </CardContent>
       </Card>
