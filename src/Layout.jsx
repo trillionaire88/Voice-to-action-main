@@ -51,7 +51,7 @@ function filterTabs(tabs, user) {
 }
 
 const COMING_SOON_TAB_KEYS = new Set([
-  "CitizenJury", "PeoplesTribunal", "MandateLedger", "ElectionIntegrity", "HumanRightsBarometer", "ParliamentaryWatch",
+  "PeoplesTribunal", "MandateLedger", "ElectionIntegrity", "HumanRightsBarometer", "ParliamentaryWatch",
 ]);
 
 const WIDE_LAYOUT_PATHS = new Set([

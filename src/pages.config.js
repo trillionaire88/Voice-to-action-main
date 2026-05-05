@@ -15,7 +15,6 @@ const AnalyticsAPI = React.lazy(() => import('./pages/AnalyticsAPI'));
 const AuthorityDirectoryAdmin = React.lazy(() => import('./pages/AuthorityDirectoryAdmin'));
 const CSRDashboard = React.lazy(() => import('./pages/CSRDashboard'));
 const CharityProfile = React.lazy(() => import('./pages/CharityProfile'));
-const CitizenJury = React.lazy(() => import('./pages/CitizenJury'));
 const Communities = React.lazy(() => import('./pages/Communities'));
 const CommunityCouncils = React.lazy(() => import('./pages/CommunityCouncils'));
 const CommunityDetail = React.lazy(() => import('./pages/CommunityDetail'));
@@ -116,7 +115,6 @@ export const PAGES = {
     "AuthorityDirectoryAdmin": AuthorityDirectoryAdmin,
     "CSRDashboard": CSRDashboard,
     "CharityProfile": CharityProfile,
-    "CitizenJury": CitizenJury,
     "Communities": Communities,
     "CommunityCouncils": CommunityCouncils,
     "CommunityDetail": CommunityDetail,

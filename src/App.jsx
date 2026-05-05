@@ -302,6 +302,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin-communities" element={<ProtectedRoute requiredRole="admin"><LayoutWrapper currentPageName="AdminCommunities"><AdminCommunities /></LayoutWrapper></ProtectedRoute>} />
 
         {/* ─── REDIRECTS ─── */}
+        <Route path="/CitizenJury" element={<Navigate to="/" replace />} />
         <Route path="/security-dashboard" element={<Navigate to="/SecurityDashboard" replace />} />
         <Route path="/Charities" element={<Navigate to="/" replace />} />
         <Route path="/CharityProfile" element={<Navigate to="/" replace />} />
