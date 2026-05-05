@@ -72,15 +72,10 @@ export default function ReportModal({ targetType, targetId, targetPreview = "", 
   const { user } = useAuth();
   const fingerprint = getBrowserFingerprint();
 
-  if (!user) {
-    onClose();
-    return null;
-  }
-
   const { data: existingReports = [] } = useQuery({
     queryKey: ["reportsForTarget", targetId],
     queryFn: () => api.entities.Report.filter({ target_id: targetId }),
-    enabled: !!targetId,
+    enabled: !!targetId && !!user,
   });
 
   const reportMutation = useMutation({
@@ -221,6 +216,11 @@ export default function ReportModal({ targetType, targetId, targetPreview = "", 
     },
     onError: () => toast.error("Failed to submit report. Please try again."),
   });
+
+  if (!user) {
+    onClose();
+    return null;
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();

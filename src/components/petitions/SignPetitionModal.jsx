@@ -45,54 +45,7 @@ function generateCaptcha() {
 export default function SignPetitionModal({ petition, user, onClose, onSuccess }) {
   const queryClient = useQueryClient();
   const [showShare, setShowShare] = useState(false);
-
-  if (showShare) {
-    const updatedPetition = { ...petition, signature_count_total: (petition.signature_count_total || 0) + 1 };
-    return <PetitionShareModal petition={updatedPetition} onClose={() => { setShowShare(false); onClose(); }} />;
-  }
   const requireFullVerification = !!(petition?.verified_signers_only);
-
-  // Gate check before showing modal
-  if (!userPassesGate(user, requireFullVerification)) {
-    return (
-      <Dialog open onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-blue-600" />
-              Verification Required
-            </DialogTitle>
-          </DialogHeader>
-          {requireFullVerification ? (
-            <div className="text-center py-4 space-y-3">
-              <p className="text-slate-700 text-sm">
-                This petition requires full <strong>Stripe Identity verification</strong> ($12.99 AUD) to sign.
-              </p>
-              <a
-                href={createPageUrl("GetVerified")}
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-sm"
-              >
-                Verify Identity — $12.99 AUD
-              </a>
-            </div>
-          ) : (
-            <div className="text-center py-4 space-y-3">
-              <p className="text-slate-700 text-sm">
-                You need to verify your <strong>email or phone number</strong> before signing. It's free.
-              </p>
-              <a
-                href={createPageUrl("SecuritySettings")}
-                className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-5 py-2 rounded-lg text-sm"
-              >
-                Verify Email — It's Free
-              </a>
-            </div>
-          )}
-          <button onClick={onClose} className="text-xs text-slate-400 hover:text-slate-600 mt-2 text-center w-full">Cancel</button>
-        </DialogContent>
-      </Dialog>
-    );
-  }
   const pageLoadTime = useRef(Date.now());
   const [captcha] = useState(generateCaptcha);
   const [form, setForm] = useState({
@@ -235,6 +188,53 @@ export default function SignPetitionModal({ petition, user, onClose, onSuccess }
       setShowShare(true);
     },
   });
+
+  if (showShare) {
+    const updatedPetition = { ...petition, signature_count_total: (petition.signature_count_total || 0) + 1 };
+    return <PetitionShareModal petition={updatedPetition} onClose={() => { setShowShare(false); onClose(); }} />;
+  }
+
+  // Gate check before showing modal
+  if (!userPassesGate(user, requireFullVerification)) {
+    return (
+      <Dialog open onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-blue-600" />
+              Verification Required
+            </DialogTitle>
+          </DialogHeader>
+          {requireFullVerification ? (
+            <div className="text-center py-4 space-y-3">
+              <p className="text-slate-700 text-sm">
+                This petition requires full <strong>Stripe Identity verification</strong> ($12.99 AUD) to sign.
+              </p>
+              <a
+                href={createPageUrl("GetVerified")}
+                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-sm"
+              >
+                Verify Identity — $12.99 AUD
+              </a>
+            </div>
+          ) : (
+            <div className="text-center py-4 space-y-3">
+              <p className="text-slate-700 text-sm">
+                You need to verify your <strong>email or phone number</strong> before signing. It's free.
+              </p>
+              <a
+                href={createPageUrl("SecuritySettings")}
+                className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-5 py-2 rounded-lg text-sm"
+              >
+                Verify Email — It's Free
+              </a>
+            </div>
+          )}
+          <button onClick={onClose} className="text-xs text-slate-400 hover:text-slate-600 mt-2 text-center w-full">Cancel</button>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
