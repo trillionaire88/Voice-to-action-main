@@ -1,5 +1,5 @@
--- Recompute profile reputation subscores from user_reputation_ratings (server-side).
--- Duplicate of user_rating_aggregate_trigger.sql — deploy only one file to avoid redundant ALTERs.
+-- Profile reputation aggregates from user_ratings (table: user_reputation_ratings).
+-- Same deployment as user_reputation_aggregate_trigger.sql — run only one copy of this logic.
 -- Requires: public.profiles, public.user_reputation_ratings
 
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS reputation_score_overall double precision DEFAULT 0;
