@@ -9,9 +9,9 @@ import { toast } from "sonner";
 
 function generateAccessCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "";
-  for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
-  return code;
+  const bytes = new Uint8Array(8);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => chars[b % chars.length]).join("");
 }
 
 export default function CommunityAccessCodeSettings({ communityId, user }) {

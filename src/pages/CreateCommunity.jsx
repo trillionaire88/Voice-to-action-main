@@ -118,6 +118,7 @@ export default function CreateCommunity() {
   const [communityLocation, setCommunityLocation] = useState("");
   const [communityCategory, setCommunityCategory] = useState("");
   const [tagsInput, setTagsInput] = useState("");
+  const [joinPolicy, setJoinPolicy] = useState("open");
 
   // Errors
   const [errors, setErrors] = useState({});
@@ -236,7 +237,7 @@ export default function CreateCommunity() {
           verified_community: isPaid && subscriptionActive,
           community_analytics_enabled: isPaid && subscriptionActive,
           founder_user_id: user.id,
-          join_policy: communityPlan === "private" ? "invite_only" : "open",
+          join_policy: communityPlan === "private" ? "invite_only" : joinPolicy,
           governance_model: "founder_led",
           enabled_modules: {
             discussions: true, polls: true, petitions: true,
@@ -588,17 +589,29 @@ export default function CreateCommunity() {
           <CardContent className="space-y-5">
             <div>
               <Label>Join Policy</Label>
-              <Select
-                value={communityPlan === "private" ? "invite_only" : "open"}
-                disabled={communityPlan === "private"}
-              >
-                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="open">Open – anyone can join</SelectItem>
-                  <SelectItem value="approval_required">Approval Required</SelectItem>
-                  <SelectItem value="invite_only">Invite Only</SelectItem>
-                </SelectContent>
-              </Select>
+              {communityPlan === "private" ? (
+                <div className="mt-1 flex items-center gap-2 p-3 bg-purple-50 border border-purple-200 rounded-lg text-sm text-purple-800">
+                  <Lock className="w-4 h-4 text-purple-600" />
+                  Private communities always require an invite code to join.
+                </div>
+              ) : (
+                <Select
+                  value={joinPolicy}
+                  onValueChange={setJoinPolicy}
+                >
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="open">Open – anyone can join instantly</SelectItem>
+                    <SelectItem value="approval_required">Approval Required – admin reviews requests</SelectItem>
+                    <SelectItem value="invite_only">Invite Only – access code required</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+              <p className="text-xs text-slate-500 mt-1">
+                {joinPolicy === "open" && "Members join with one click — no approval needed."}
+                {joinPolicy === "approval_required" && "Members send a request; you approve or reject from the community settings."}
+                {joinPolicy === "invite_only" && "Members must enter a valid access code you share with them."}
+              </p>
             </div>
 
             <div>
@@ -655,6 +668,12 @@ export default function CreateCommunity() {
                 <span className="text-sm text-slate-500">Visibility</span>
                 <span className="font-semibold text-slate-900 capitalize">
                   {communityPlan === "private" ? "private" : communityVisibility}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-500">Join Policy</span>
+                <span className="font-semibold text-slate-900 capitalize">
+                  {communityPlan === "private" ? "invite_only" : joinPolicy.replace(/_/g, " ")}
                 </span>
               </div>
               {communityLocation && (

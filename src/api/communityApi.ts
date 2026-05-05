@@ -39,33 +39,129 @@ export async function joinCommunityWithCode(inviteCode: string): Promise<{ commu
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
+  const sanitisedCode = inviteCode.toUpperCase().trim().replace(/[^A-Z0-9]/g, "").slice(0, 16);
+  if (!sanitisedCode) throw new Error("Invalid invite code");
+
+  // Look up by legacy invite_code field (used on Communities page) or by access-code table.
   const { data: community, error: findErr } = await supabase
     .from("communities")
-    .select("id, name")
-    .eq("invite_code", inviteCode.toUpperCase().trim())
+    .select("id, name, plan, status, join_policy")
+    .or(`invite_code.eq.${sanitisedCode}`)
     .maybeSingle();
 
   if (findErr || !community) throw new Error("Invalid invite code");
+  if (community.status !== "active") throw new Error("This community is not currently active");
 
-  const { error } = await supabase.from("community_members").insert(cleanForDB({
-    community_id: community.id,
-    user_id: user.id,
-    role: "member",
-    status: "active",
-  }));
+  // Verify the community is actually joinable via code.
+  const allowedJoinPolicy = community.plan === "private" || community.join_policy === "invite_only";
+  if (!allowedJoinPolicy) throw new Error("This community does not use invite codes");
 
-  if (error && !String(error.message).toLowerCase().includes("duplicate")) {
-    throw new Error(error.message || "Failed to join community");
+  // Prevent duplicate membership.
+  const { data: existing } = await supabase
+    .from("community_members")
+    .select("id, status")
+    .eq("community_id", community.id)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (existing?.status === "active") throw new Error("You are already a member of this community");
+  if (existing?.status === "pending_approval") throw new Error("Your request is already pending approval");
+
+  if (existing) {
+    // Reactivate a previously removed membership.
+    await supabase.from("community_members").update({ status: "active" }).eq("id", existing.id);
+  } else {
+    const { error } = await supabase.from("community_members").insert(cleanForDB({
+      community_id: community.id,
+      user_id: user.id,
+      role: "member",
+      status: "active",
+    }));
+    if (error) throw new Error(error.message || "Failed to join community");
   }
 
   return { communityId: community.id, communityName: community.name as string };
 }
 
-/** Visible communities for directory (not hidden). */
+/** Join a community via a CommunityAccessCode record (used from CommunityDetail code input). */
+export async function joinCommunityWithAccessCode(
+  communityId: string,
+  code: string,
+): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const sanitisedCode = code.toUpperCase().trim().replace(/[^A-Z0-9]/g, "").slice(0, 16);
+
+  // Verify the access code exists and is active for this community.
+  const { data: accessCode, error: codeErr } = await supabase
+    .from("community_access_codes")
+    .select("id, uses_count, active")
+    .eq("community_id", communityId)
+    .eq("code", sanitisedCode)
+    .eq("active", true)
+    .maybeSingle();
+
+  if (codeErr || !accessCode) throw new Error("Invalid or inactive access code");
+
+  // Prevent duplicate membership.
+  const { data: existing } = await supabase
+    .from("community_members")
+    .select("id, status")
+    .eq("community_id", communityId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (existing?.status === "active") throw new Error("You are already a member of this community");
+
+  if (existing) {
+    await supabase.from("community_members").update({ status: "active" }).eq("id", existing.id);
+  } else {
+    const { error: insertErr } = await supabase.from("community_members").insert(cleanForDB({
+      community_id: communityId,
+      user_id: user.id,
+      role: "member",
+      status: "active",
+    }));
+    if (insertErr) throw new Error(insertErr.message || "Failed to join community");
+  }
+
+  // Increment use count.
+  await supabase
+    .from("community_access_codes")
+    .update({ uses_count: (accessCode.uses_count || 0) + 1 })
+    .eq("id", accessCode.id);
+}
+
+/** Approve a pending join request. */
+export async function approveMember(memberId: string): Promise<void> {
+  const { error } = await supabase
+    .from("community_members")
+    .update({ status: "active" })
+    .eq("id", memberId)
+    .eq("status", "pending_approval");
+  if (error) throw new Error(error.message);
+}
+
+/** Reject / remove a pending join request. */
+export async function rejectMember(memberId: string): Promise<void> {
+  const { error } = await supabase
+    .from("community_members")
+    .delete()
+    .eq("id", memberId)
+    .eq("status", "pending_approval");
+  if (error) throw new Error(error.message);
+}
+
+/** Visible communities for directory (not hidden, never private). */
 export async function getCommunitiesVisible(filter: "all" | "free" | "paid" = "all") {
-  let q = supabase    .from("communities")
+  // Private-plan communities are never shown in the public directory.
+  let q = supabase
+    .from("communities")
     .select("*")
-    .or("is_hidden.is.null,is_hidden.eq.false");
+    .or("is_hidden.is.null,is_hidden.eq.false")
+    .neq("plan", "private")
+    .or("visibility.eq.public,visibility.is.null");
 
   if (filter === "paid") q = q.eq("plan", "paid");
   else if (filter === "free") q = q.or("plan.eq.free,plan.is.null");

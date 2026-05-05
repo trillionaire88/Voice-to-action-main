@@ -170,12 +170,17 @@ export default function Communities() {
   const myMembershipIds = new Set(myMemberships.map(m => m.community_id));
 
   const filteredCommunities = communities.filter((community) => {
+    // Private-plan communities are never shown in the public directory
+    const tier = community.plan || community.community_plan || "free";
+    if (tier === "private") return false;
+    if (community.visibility === "private") return false;
+
     const name = community.community_name || community.name || "";
     const desc = community.community_description || community.description_public || "";
-    const matchesSearch = !searchQuery || 
+    const matchesSearch = !searchQuery ||
       name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       desc.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     const matchesType = typeFilter === "all" || community.community_type === typeFilter;
     const matchesScope = scopeFilter === "all" || community.geographic_scope === scopeFilter;
 
@@ -481,13 +486,21 @@ export default function Communities() {
                           <Badge variant="outline" className="text-xs">
                             {(community.community_type || "").replace(/_/g, ' ')}
                           </Badge>
-                          {tier !== "free" && (
-                            <Badge className="text-xs bg-indigo-600 text-white capitalize">{tier}</Badge>
+                          {tier === "paid" && (
+                            <Badge className="text-xs bg-blue-600 text-white">Paid</Badge>
                           )}
                           {showVerified && (
                             <Badge className="text-xs bg-emerald-500">
                               <CheckCircle2 className="w-3 h-3 mr-1" />
                               Verified
+                            </Badge>
+                          )}
+                          {community.join_policy === "approval_required" && (
+                            <Badge variant="outline" className="text-xs border-amber-400 text-amber-700">Approval Required</Badge>
+                          )}
+                          {community.join_policy === "invite_only" && (
+                            <Badge variant="outline" className="text-xs border-purple-400 text-purple-700">
+                              <Lock className="w-3 h-3 mr-1" />Invite Only
                             </Badge>
                           )}
                           {isMember && (
