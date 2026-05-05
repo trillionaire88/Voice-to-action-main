@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
+import { appHostname } from "@/constants/siteUrl";
 
 export async function generateWatermark(contentId: string, creatorId: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -22,7 +23,7 @@ export async function insertContentWatermark(
     content_id: contentId,
     creator_id: creatorId,
     watermark_hash,
-    platform: "voicetoaction.io",
+    platform: appHostname(),
   }));
   if (error) console.warn("[watermark]", contentType, error.message);
 }

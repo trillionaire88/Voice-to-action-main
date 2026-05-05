@@ -1,5 +1,6 @@
 import { createSupabaseContext } from '../lib/supabaseContext.ts';
 import { format } from 'npm:date-fns@3.6.0';
+import { siteUrl } from '../_shared/siteUrl.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -64,7 +65,7 @@ Category:         ${(petition.category || "").replace(/_/g, " ")}
 Status:           ${(petition.status || "active").toUpperCase()} (remains live — continues collecting signatures)
 Urgency Level:    ${petition.urgency_level || "N/A"}
 Created:          ${petition.created_date ? format(new Date(petition.created_date), "PPP") : "N/A"}
-Petition URL:     https://voicetoaction.dev/petitions?id=${petitionId}
+Petition URL:     ${siteUrl(`/PetitionDetail?id=${petitionId}`)}
 
 TARGET
 ------

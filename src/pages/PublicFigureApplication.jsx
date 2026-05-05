@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
 import { initiateStripeCheckout } from "@/lib/stripeCheckout";
+import { SUPPORT_EMAIL } from "@/constants/siteUrl";
 
 export default function PublicFigureApplication() {
   const navigate = useNavigate();
@@ -175,7 +176,7 @@ export default function PublicFigureApplication() {
             : status === "rejected"
             ? "Unfortunately your application was not approved at this time. You may re-apply after 30 days with additional evidence."
             : status === "needs_more_info"
-            ? "The review team needs more information. Please contact support at jeremy@everyvoice.com."
+            ? `The review team needs more information. Please contact support at ${SUPPORT_EMAIL}.`
             : "Your application has been submitted and is under review. This typically takes 1–10 business days."}
         </p>
         {existing?.review_notes && (

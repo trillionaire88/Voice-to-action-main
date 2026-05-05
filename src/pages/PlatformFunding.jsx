@@ -32,6 +32,7 @@ import {
 import { toast } from "sonner";
 import { ExternalLink } from "lucide-react";
 import { initiateStripeCheckout } from "@/lib/stripeCheckout";
+import { SUPPORT_EMAIL } from "@/constants/siteUrl";
 
 const DONATION_TIERS = [
 { value: "5", label: "$5" },
@@ -340,7 +341,7 @@ export default function PlatformFunding() {
                 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <a
-                    href="mailto:jeremy@everyvoice.com?subject=Strategic Partnership Inquiry"
+                    href={`mailto:${SUPPORT_EMAIL}?subject=Strategic Partnership Inquiry`}
                     className="flex-1">
 
                     <Button

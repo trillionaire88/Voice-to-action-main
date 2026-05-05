@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { appHostname } from "@/constants/siteUrl";
 import {
   CheckCircle2,
   AlertCircle,
@@ -314,7 +315,7 @@ export default function CreateCreatorCommunity() {
             <div className="space-y-2">
               <Label htmlFor="slug">URL Slug *</Label>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-500">everyvoice.com/creator/</span>
+                <span className="text-sm text-slate-500">{appHostname()}/creator/</span>
                 <Input
                   id="slug"
                   value={slug}

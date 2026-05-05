@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS content_watermarks (
   content_id      UUID NOT NULL,
   creator_id      UUID REFERENCES profiles(id),
   watermark_hash  TEXT NOT NULL UNIQUE,
-  platform        TEXT DEFAULT 'voicetoaction.io',
+  platform        TEXT DEFAULT 'voicetoaction.com',
   created_at      TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(content_type, content_id)
 );

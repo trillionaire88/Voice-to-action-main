@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { siteUrl } from "../_shared/siteUrl.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -120,7 +121,7 @@ serve(async (req) => {
         receipt_hash: receiptHash,
         petition_id,
         signed_at: timestamp,
-        verify_url: `https://voicetoaction.io/VerifySignature?receipt=${receiptHash}`,
+        verify_url: siteUrl(`/VerifySignature?receipt=${receiptHash}`),
       }),
       { headers: { ...CORS, "Content-Type": "application/json" } },
     );

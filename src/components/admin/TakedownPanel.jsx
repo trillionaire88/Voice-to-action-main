@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { appUrl } from "@/constants/siteUrl";
 
 const CATEGORY_LABELS = {
   defamation: "Defamation",
@@ -125,7 +126,7 @@ export default function TakedownPanel({ adminUser }) {
               `Complaint Reference: ${req.complaint_id}\n` +
               `Reason: ${decisionReason}\n\n` +
               `If you believe this action is incorrect, you may contact us to appeal this decision.\n\n` +
-              `Voice to Action\nhttps://voicetoaction.com`,
+              `Voice to Action\n${appUrl("/")}`,
           });
           await api.entities.TakedownRequest.update(req.id, { content_author_notified: true });
         }

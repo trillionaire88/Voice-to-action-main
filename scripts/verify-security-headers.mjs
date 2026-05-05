@@ -1,6 +1,6 @@
 /**
  * Fetches a deployed URL and prints security-relevant response headers.
- * Usage: VERIFY_URL=https://voicetoaction.io npm run verify:headers
+ * Usage: VERIFY_URL=https://voicetoaction.com npm run verify:headers
  */
 const url = process.env.VERIFY_URL || process.argv[2];
 if (!url) {

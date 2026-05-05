@@ -1,7 +1,8 @@
 import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { siteOrigin } from "./siteUrl.ts";
 
 export const SECURITY_HEADERS = {
-  "Access-Control-Allow-Origin": "https://voicetoaction.io",
+  "Access-Control-Allow-Origin": siteOrigin(),
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-request-id",
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
   "X-Content-Type-Options": "nosniff",

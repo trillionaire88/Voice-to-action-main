@@ -1,4 +1,5 @@
 import { createSupabaseContext } from '../lib/supabaseContext.ts';
+import { siteOrigin } from '../_shared/siteUrl.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -9,7 +10,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const origin = req.headers.get('origin') || 'https://voicetoaction.com';
+    const origin = req.headers.get('origin') || siteOrigin();
     const confirmUrl = `${origin}/PetitionDetail?id=${petition_id}&confirm_sig=${token}`;
 
     await integrations.Core.SendEmail({

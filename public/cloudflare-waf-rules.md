@@ -1,6 +1,6 @@
 # Cloudflare WAF Rules (Manual Setup)
 
-Apply these in the Cloudflare dashboard for `voicetoaction.io`.
+Apply these in the Cloudflare dashboard for `voicetoaction.com` (match your production hostname).
 
 ## Managed Custom Rules
 

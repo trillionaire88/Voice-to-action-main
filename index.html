@@ -14,10 +14,10 @@
 
     <!-- Open Graph / Facebook sharing -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://voicetoaction.com/" />
+    <meta property="og:url" content="%SITE_ORIGIN%/" />
     
     
-    <meta property="og:image" content="https://voicetoaction.com/og-image.png">
+    <meta property="og:image" content="%SITE_ORIGIN%/og-image.png">
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="Voice to Action" />
@@ -27,7 +27,7 @@
     <meta name="twitter:site" content="@VoiceToAction" />
     
     
-    <meta name="twitter:image" content="https://voicetoaction.com/og-image.png">
+    <meta name="twitter:image" content="%SITE_ORIGIN%/og-image.png">
 
     <!-- PWA / App -->
     <link rel="manifest" href="/manifest.json" />
@@ -44,11 +44,11 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Voice to Action",
-      "url": "https://voicetoaction.com",
+      "url": "%SITE_ORIGIN%",
       "description": "The world's first verified civic platform for petitions, polls, and political accountability.",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://voicetoaction.com/Search?q={search_term_string}",
+        "target": "%SITE_ORIGIN%/Search?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     }

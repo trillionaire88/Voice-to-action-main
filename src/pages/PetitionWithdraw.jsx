@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { initiateStripeCheckout } from "@/lib/stripeCheckout";
+import { appHostname, appUrl, getAppOrigin, SUPPORT_EMAIL } from "@/constants/siteUrl";
 
 function buildCSV(petition, petitionId) {
   const esc = (val) => `"${String(val || "").replace(/"/g, '""')}"`;
@@ -23,7 +24,7 @@ function buildCSV(petition, petitionId) {
     `Platform,Voice to Action`,
     `Legal Entity,Every Voice Proprietary Limited`,
     `Document Type,Official Petition Summary Export`,
-    `Website,https://voicetoaction.com`,
+    `Website,${getAppOrigin()}`,
     `Export Date,${esc(format(new Date(), "PPP p"))}`,
     ``,
     `PETITION DETAILS`,
@@ -50,9 +51,9 @@ function buildCSV(petition, petitionId) {
     `Personal signer data (names emails addresses) is not included in this export for privacy reasons.`,
     `This summary is provided for the petition creator and authorised parties only.`,
     `Voice to Action is a product of Every Voice Proprietary Limited registered in Australia.`,
-    `For verification contact jeremy@everyvoice.com`,
+    `For verification contact ${SUPPORT_EMAIL}`,
     ``,
-    `Petition URL,${window.location.origin}/PetitionDetail?id=${petitionId}`,
+    `Petition URL,${appUrl(`/PetitionDetail?id=${petitionId}`)}`,
   ];
   return lines.join("\n");
 }
@@ -94,7 +95,7 @@ function buildPrintablePDF(petition, petitionId) {
 <body>
 <div class="header">
   <div class="logo">Voice to Action</div>
-  <div class="legal">A product of Every Voice Proprietary Limited · Registered in Australia · voicetoaction.com</div>
+  <div class="legal">A product of Every Voice Proprietary Limited · Registered in Australia · ${appHostname()}</div>
   <div class="legal" style="margin-top:4px">OFFICIAL PETITION SUMMARY · Generated: ${format(new Date(), "PPP p")}</div>
 </div>
 <h1>${fmt(petition.title)}</h1>
@@ -114,13 +115,13 @@ ${progress !== null ? `<div style="margin:0 0 20px"><div style="font-size:13px;c
   <div class="row"><span class="row-label">Target</span><span>${fmt(petition.target_name)} (${fmt((petition.target_type||"").replace(/_/g," "))})</span></div>
   <div class="row"><span class="row-label">Creator</span><span>${fmt(petition.creator_name)}</span></div>
   <div class="row"><span class="row-label">Created Date</span><span>${petition.created_date ? format(new Date(petition.created_date),"PPP") : "—"}</span></div>
-  <div class="row"><span class="row-label">Petition URL</span><span style="word-break:break-all;font-size:11px">${window.location.origin}/PetitionDetail?id=${petitionId}</span></div>
+  <div class="row"><span class="row-label">Petition URL</span><span style="word-break:break-all;font-size:11px">${appUrl(`/PetitionDetail?id=${petitionId}`)}</span></div>
 </div>
 ${petition.full_description ? `<div class="section"><h2>Full Description</h2><p style="font-size:13px;line-height:1.6;color:#374151">${petition.full_description}</p></div>` : ""}
 ${petition.requested_action ? `<div class="section"><h2>Requested Action</h2><p style="font-size:13px;line-height:1.6;color:#374151">${petition.requested_action}</p></div>` : ""}
 <div class="footer">
   <p><strong>Privacy Notice:</strong> Personal signer data (names, emails, addresses) is not included in this export in accordance with the Australian Privacy Act 1988 and applicable privacy law.</p>
-  <p>This document is an official export from Voice to Action. For verification contact jeremy@everyvoice.com</p>
+  <p>This document is an official export from Voice to Action. For verification contact ${SUPPORT_EMAIL}</p>
   <p>© ${new Date().getFullYear()} Every Voice Proprietary Limited. All rights reserved. Voice to Action™ is a trademark of Every Voice Proprietary Limited.</p>
 </div>
 </body>

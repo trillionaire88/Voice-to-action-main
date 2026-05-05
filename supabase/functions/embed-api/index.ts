@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { siteUrl } from "../_shared/siteUrl.ts";
 
 serve(async (req) => {
   const headers = { "content-type": "application/json", "access-control-allow-origin": "*" };
@@ -22,8 +23,8 @@ serve(async (req) => {
     status: data.status,
     created_at: data.created_at || data.created_date,
     category: data.category,
-    url: `https://voicetoaction.io/PetitionDetail?id=${data.id}`,
-    embed_url: `https://voicetoaction.io/EmbedWidget?id=${data.id}`,
-    share_image: `https://voicetoaction.io/og/petition/${data.id}.png`,
+    url: siteUrl(`/PetitionDetail?id=${data.id}`),
+    embed_url: siteUrl(`/EmbedWidget?id=${data.id}`),
+    share_image: siteUrl(`/og/petition/${data.id}.png`),
   }), { headers });
 });

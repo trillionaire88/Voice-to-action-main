@@ -20,10 +20,10 @@ Voice to Action is the world's first civic accountability social media platform.
 petition, civic, politics, democracy, accountability, community, government, activism, social change, voting
 
 ## Privacy Policy URL
-https://voicetoaction.io/PrivacyPolicy
+https://voicetoaction.com/PrivacyPolicy
 
 ## Support URL
-https://voicetoaction.io/About
+https://voicetoaction.com/About
 
 ## Category
 Social Networking / News

@@ -1,4 +1,5 @@
 import React from "react";
+import { SUPPORT_EMAIL } from "@/constants/siteUrl";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Shield, AlertTriangle, Globe2, Scale } from "lucide-react";
@@ -19,7 +20,7 @@ export default function ToSContent() {
               Voice to Action is a product and trademark of <strong>Every Voice Proprietary Limited</strong>.
               All platform rights, intellectual property, and operations are exclusively owned by Every Voice Proprietary Limited.
             </p>
-            <p className="text-xs text-slate-500 mt-1.5">Contact: jeremy@everyvoice.com</p>
+            <p className="text-xs text-slate-500 mt-1.5">Contact: {SUPPORT_EMAIL}</p>
           </div>
         </div>
       </div>
@@ -371,10 +372,10 @@ export default function ToSContent() {
           <p className="text-slate-700 text-sm"><strong>Legal Entity:</strong> Every Voice Proprietary Limited</p>
           <p className="text-slate-700 text-sm"><strong>Trading As:</strong> Voice to Action</p>
           <p className="text-slate-700 text-sm"><strong>Country:</strong> Australia</p>
-          <p className="text-slate-700 text-sm"><strong>Email:</strong> jeremy@everyvoice.com</p>
+          <p className="text-slate-700 text-sm"><strong>Email:</strong> {SUPPORT_EMAIL}</p>
           <p className="text-xs text-slate-500 mt-2">
             For legal notices, IP complaints, data requests or compliance queries,
-            email jeremy@everyvoice.com with subject line "Legal Notice".
+            email {SUPPORT_EMAIL} with subject line "Legal Notice".
           </p>
         </div>
       </section>

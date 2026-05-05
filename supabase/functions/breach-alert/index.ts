@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { checkRateLimit, rateLimitResponse } from "../_shared/rateLimiter.ts";
+import { siteUrl } from "../_shared/siteUrl.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -39,7 +40,7 @@ serve(async (req) => {
           from: "Voice to Action Security <noreply@voicetoaction.io>",
           to: u.email,
           subject: "Important security notice regarding your Voice to Action account",
-          text: `${description}\n\nRecommended actions:\n- Change your password\n- Enable 2FA\n- Review active sessions\n\nhttps://voicetoaction.io/SecuritySettings`,
+          text: `${description}\n\nRecommended actions:\n- Change your password\n- Enable 2FA\n- Review active sessions\n\n${siteUrl("/SecuritySettings")}`,
         }),
       }).catch(() => {});
     }

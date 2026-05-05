@@ -2,10 +2,11 @@ import React, { useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { appUrl } from "@/constants/siteUrl";
 
 export default function EmbedCodeModal({ open, onOpenChange, petitionId }) {
   const embedCode = useMemo(
-    () => `<iframe src="https://voicetoaction.io/EmbedWidget?id=${petitionId}" width="100%" height="200" frameborder="0"></iframe>`,
+    () => `<iframe src="${appUrl(`/EmbedWidget?id=${petitionId}`)}" width="100%" height="200" frameborder="0"></iframe>`,
     [petitionId],
   );
 

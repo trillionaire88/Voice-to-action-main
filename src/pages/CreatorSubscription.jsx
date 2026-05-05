@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
 import { initiateStripeCheckout } from "@/lib/stripeCheckout";
+import { appHostname } from "@/constants/siteUrl";
 
 export default function CreatorSubscription() {
   const navigate    = useNavigate();
@@ -207,7 +208,7 @@ export default function CreatorSubscription() {
             <div className="bg-white rounded-xl p-4 border border-emerald-100 space-y-2">
               <p className="text-sm font-semibold text-slate-700">Share your code with your audience:</p>
               <p className="text-sm text-slate-600 italic bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
-                "Use code <strong>{referralCode.code}</strong> at voicetoaction.com to get 5% off any purchase!"
+                Use code <strong>{referralCode.code}</strong> at {appHostname()} to get 5% off any purchase!
               </p>
               <Button
                 variant="outline"
@@ -215,7 +216,7 @@ export default function CreatorSubscription() {
                 className="border-emerald-300 text-emerald-700"
                 onClick={() =>
                   copyText(
-                    `Use code ${referralCode.code} at voicetoaction.com to get 5% off any purchase!`,
+                    `Use code ${referralCode.code} at ${appHostname()} to get 5% off any purchase!`,
                     "Share text"
                   )
                 }

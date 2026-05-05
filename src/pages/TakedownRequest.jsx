@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { appUrl, appHostname } from "@/constants/siteUrl";
 
 const CATEGORIES = [
   { value: "defamation", label: "Defamation", desc: "False statements that damage your reputation" },
@@ -114,7 +115,7 @@ export default function TakedownRequest() {
           `• We aim to respond within 3–5 business days.\n` +
           `• You will be contacted at this email address if we require further information.\n\n` +
           `Please retain your complaint reference number for your records.\n\n` +
-          `Voice to Action\nhttps://voicetoaction.com`
+          `Voice to Action\n${appUrl("/")}`
       });
 
       return { complaintId, submittedAt: now };
@@ -241,7 +242,7 @@ export default function TakedownRequest() {
             <CardContent className="space-y-4">
               <div>
                 <Label>URL or Link to Content <span className="text-red-500">*</span></Label>
-                <Input className="mt-1" placeholder="https://voicetoaction.com/..." value={form.content_url} onChange={e => set("content_url", e.target.value)} />
+                <Input className="mt-1" placeholder={`https://${appHostname()}/...`} value={form.content_url} onChange={e => set("content_url", e.target.value)} />
                 <p className="text-xs text-slate-500 mt-1">Provide the direct link to the specific poll, petition, comment, or profile you are reporting.</p>
               </div>
 

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { siteUrl } from "../_shared/siteUrl.ts";
 
 serve(async (req) => {
   const url = new URL(req.url);
@@ -21,8 +22,8 @@ serve(async (req) => {
   const count = data?.signature_count_total || data?.total_votes_cached || data?.total_ratings || 0;
   const description = `${count} people have engaged. Join them.`;
   const pageType = type === "petition" ? "PetitionDetail" : type === "poll" ? "PollDetail" : "ScorecardDetail";
-  const pageUrl = `https://voicetoaction.io/${pageType}?id=${id}`;
-  const imageUrl = `https://voicetoaction.io/og/${type}/${id}.png`;
+  const pageUrl = siteUrl(`/${pageType}?id=${id}`);
+  const imageUrl = siteUrl(`/og/${type}/${id}.png`);
 
   const html = `<!doctype html><html><head>
 <meta property="og:title" content="${title}" />

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { initiateStripeCheckout } from "@/lib/stripeCheckout";
+import { SUPPORT_EMAIL } from "@/constants/siteUrl";
 
 const GIFT_TIERS = [
   { value: "10",  label: "$10"   },
@@ -326,7 +327,7 @@ export default function SupportOwner() {
                 <p className="text-sm font-medium">Bank transfer details are not currently configured.</p>
                 <p className="text-xs mt-1 text-slate-400">
                   Please use the Stripe card option, or contact the platform creator directly at{" "}
-                  <a href="mailto:jeremy@everyvoice.com" className="text-blue-600 underline">jeremy@everyvoice.com</a>.
+                  <a href={`mailto:${SUPPORT_EMAIL}`} className="text-blue-600 underline">{SUPPORT_EMAIL}</a>.
                 </p>
               </div>
             )}
@@ -339,7 +340,7 @@ export default function SupportOwner() {
         By sending a gift, you acknowledge this is a voluntary personal transaction between you and
         Every Voice Pty Ltd.
         All gifts are final and non-refundable. For queries, contact{" "}
-        <a href="mailto:jeremy@everyvoice.com" className="underline">jeremy@everyvoice.com</a>.
+        <a href={`mailto:${SUPPORT_EMAIL}`} className="underline">{SUPPORT_EMAIL}</a>.
       </p>
     </div>
   );

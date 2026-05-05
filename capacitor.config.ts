@@ -1,5 +1,17 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
+const siteHost =
+  (typeof process !== "undefined" &&
+    process.env.VITE_APP_URL &&
+    (() => {
+      try {
+        return new URL(process.env.VITE_APP_URL).hostname;
+      } catch {
+        return null;
+      }
+    })()) ||
+  "voicetoaction.com";
+
 const config: CapacitorConfig = {
   appId: "io.voicetoaction.app",
   appName: "Voice to Action",
@@ -7,9 +19,9 @@ const config: CapacitorConfig = {
   server: {
     androidScheme: "https",
     iosScheme: "https",
-    hostname: "voicetoaction.io",
+    hostname: siteHost,
     // Allow the app to navigate to auth redirect URLs
-    allowNavigation: ["voicetoaction.io", "*.supabase.co", "supabase.co"],
+    allowNavigation: [siteHost, "*.supabase.co", "supabase.co"],
   },
   plugins: {
     PushNotifications: {

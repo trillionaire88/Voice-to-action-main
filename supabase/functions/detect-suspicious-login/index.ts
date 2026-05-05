@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { constantTimeResponse } from "../_shared/timingProtection.ts";
 import { checkRateLimit, rateLimitResponse } from "../_shared/rateLimiter.ts";
+import { siteUrl } from "../_shared/siteUrl.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -155,7 +156,7 @@ serve(async (req) => {
         const alertBody =
           severity === "critical"
             ? `🚨 CRITICAL SECURITY ALERT\n\nA login to your Voice to Action account was detected from a new device AND a different country within 2 hours of your last login. This may indicate your account has been compromised.\n\nDevice: ${device_label || "Unknown"}\nLocation: ${city || "Unknown"}, ${country_code || "Unknown"}\nIP: ${ip_address || "Unknown"}\nTime: ${new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })}\n\nIf this was not you, immediately:\n1. Go to Security Settings\n2. Sign out of all devices\n3. Change your password\n4. Contact support at voicetoaction@outlook.com`
-            : `New login to your Voice to Action account\n\nTime: ${new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })}\nCountry: ${incomingCountry || "Unknown"}\nDevice: ${device_label || "Unknown"}\nIP: ${ip_address || "Unknown"}\n\nIf this was not you, go to Security Settings and revoke all sessions immediately:\nhttps://voicetoaction.io/SecuritySettings`;
+            : `New login to your Voice to Action account\n\nTime: ${new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })}\nCountry: ${incomingCountry || "Unknown"}\nDevice: ${device_label || "Unknown"}\nIP: ${ip_address || "Unknown"}\n\nIf this was not you, go to Security Settings and revoke all sessions immediately:\n${siteUrl("/SecuritySettings")}`;
 
         if (resendKey && user.email) {
           await fetch("https://api.resend.com/emails", {
