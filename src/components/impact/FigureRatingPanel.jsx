@@ -61,24 +61,7 @@ export default function FigureRatingPanel({ figure, user }) {
       } else {
         await api.entities.FigureRating.create(ratingData);
       }
-
-      // Recalculate figure ratings
-      const allRatings = await api.entities.FigureRating.filter({
-        figure_id: figure.id,
-      });
-
-      const avgTrustworthiness =
-        allRatings.reduce((sum, r) => sum + r.trustworthiness, 0) / allRatings.length;
-      const avgEthical =
-        allRatings.reduce((sum, r) => sum + r.ethical_conduct, 0) / allRatings.length;
-      const avgTransparency =
-        allRatings.reduce((sum, r) => sum + r.transparency, 0) / allRatings.length;
-
-      await api.entities.PublicFigure.update(figure.id, {
-        trustworthiness_rating: avgTrustworthiness,
-        ethical_conduct_rating: avgEthical,
-        transparency_rating: avgTransparency,
-      });
+      /* Aggregates on public_figures are recalculated by DB trigger (figure_rating_aggregate_trigger.sql). */
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["myFigureRating"]);
