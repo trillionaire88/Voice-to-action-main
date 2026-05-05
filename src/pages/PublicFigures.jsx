@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/AuthContext";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import PullToRefresh from "@/components/ui/PullToRefresh";
 import { createPageUrl } from "@/utils";
@@ -33,6 +33,8 @@ const ROLE_LABELS = {
   other: "Other",
 };
 
+const PAGE_SIZE = 20;
+
 export default function PublicFigures() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -45,18 +47,54 @@ export default function PublicFigures() {
     await queryClient.invalidateQueries({ queryKey: ["allImpactEvents"] });
   };
 
-  const { data: figures = [], isLoading } = useQuery({
-    queryKey: ["publicFigures"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("public_figures").select("*").limit(200);
+  const {
+    data: figuresPages,
+    isLoading,
+    isFetching,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["publicFigures", sortBy],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }) => {
+      const from = pageParam * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+      const { data, error } = await supabase
+        .from("public_figures")
+        .select("*")
+        .range(from, to)
+        .order("name", { ascending: true });
       if (error && (error.code === "42P01" || error.message?.includes("does not exist"))) {
-        const { data: profiles } = await supabase.from("profiles").select("*").eq("role", "political_figure").limit(200);
-        return (profiles || []).map((p) => ({ id: p.id, name: p.display_name || p.full_name || "Public Figure", role: "politician", country: p.country_code || "", status: "active", trustworthiness_rating: 0, tags: [] }));
+        const { data: profiles, error: pErr } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("role", "political_figure")
+          .range(from, to)
+          .order("display_name", { ascending: true });
+        if (pErr) throw pErr;
+        return (profiles || []).map((p) => ({
+          id: p.id,
+          name: p.display_name || p.full_name || "Public Figure",
+          role: "politician",
+          country: p.country_code || "",
+          status: "active",
+          trustworthiness_rating: 0,
+          tags: [],
+          impact_score_negative: 0,
+          impact_score_positive: 0,
+          total_events_count: 0,
+        }));
       }
+      if (error) throw error;
       return data || [];
     },
+    getNextPageParam: (lastPage, allPages) =>
+      (lastPage?.length ?? 0) < PAGE_SIZE ? undefined : allPages.length,
     staleTime: 2 * 60_000,
   });
+
+  const figures = figuresPages?.pages.flat() ?? [];
 
   const { data: allEvents = [] } = useQuery({
     queryKey: ["allImpactEvents"],
@@ -229,6 +267,18 @@ export default function PublicFigures() {
               </Card>
             );
           })}
+        </div>
+      )}
+      {!isLoading && hasNextPage && (
+        <div className="flex justify-center mt-10">
+          <Button
+            variant="outline"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="min-w-[140px]"
+          >
+            {isFetchingNextPage ? "Loading…" : "Load more"}
+          </Button>
         </div>
       )}
     </div>
