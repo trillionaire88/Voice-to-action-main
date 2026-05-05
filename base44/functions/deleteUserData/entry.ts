@@ -63,6 +63,15 @@ Deno.serve(async (req) => {
         city: null,
         region_code: null,
       }).catch(() => {});
+      const pets = await adminEntities.Petition.filter({ id: s.petition_id });
+      const p = pets[0];
+      if (p && s.petition_id) {
+        const verifiedDelta = s.is_verified_user ? 1 : 0;
+        await adminEntities.Petition.update(s.petition_id, {
+          signature_count_total: Math.max(0, (p.signature_count_total || 0) - 1),
+          signature_count_verified: Math.max(0, (p.signature_count_verified || 0) - verifiedDelta),
+        }).catch(() => {});
+      }
       sigCount++;
     }
     results.signatures_anonymised = sigCount;
