@@ -146,7 +146,7 @@ export default function Scorecards() {
       let q = supabase.from("scorecards").select("*").eq("status", "approved");
       if (category) q = q.eq("category", category);
       if (sort === "newest") {
-        q = q.order("created_at", { ascending: false });
+        q = q.order("created_date", { ascending: false });
       } else if (sort === "most_rated") {
         q = q.order("total_ratings", { ascending: false });
       } else if (sort === "trending") {
