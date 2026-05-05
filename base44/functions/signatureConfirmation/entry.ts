@@ -1,9 +1,13 @@
 import { createSupabaseContext } from '../lib/supabaseContext.ts';
 
-/** No hardcoded production domain — env or request headers only. */
+/**
+ * Canonical origin for signature confirmation links.
+ * Set APP_ORIGIN in Supabase secrets when callers do not send Origin (e.g. server-to-server).
+ * Falls back to SERVER_ORIGIN / APP_URL / Host when needed.
+ */
 function resolveCanonicalOrigin(req: Request): string {
-  const fromOrigin = req.headers.get('origin');
-  if (fromOrigin?.trim()) return fromOrigin.replace(/\/+$/, '');
+  const primary = (Deno.env.get('APP_ORIGIN') ?? req.headers.get('origin') ?? '').trim().replace(/\/+$/, '');
+  if (primary) return primary;
   const fromEnv =
     Deno.env.get('SERVER_ORIGIN') ||
     Deno.env.get('APP_URL') ||
@@ -17,7 +21,7 @@ function resolveCanonicalOrigin(req: Request): string {
     return `${proto}://${h}`;
   }
   throw new Error(
-    'Cannot build confirmation URL: set SERVER_ORIGIN or APP_URL (or send Origin/Host).',
+    'Cannot build confirmation URL: set APP_ORIGIN or SERVER_ORIGIN/APP_URL (or send Origin/Host).',
   );
 }
 
