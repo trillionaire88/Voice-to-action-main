@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { constantTimeResponse } from "../_shared/timingProtection.ts";
 import { checkRateLimit, rateLimitResponse } from "../_shared/rateLimiter.ts";
 import { siteUrl } from "../_shared/siteUrl.ts";
+import { FROM_SECURITY } from "../_shared/email.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -169,7 +170,7 @@ serve(async (req) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              from: "Voice to Action Security <noreply@voicetoaction.io>",
+              from: FROM_SECURITY,
               to: user.email,
               subject:
                 severity === "critical"
@@ -187,7 +188,7 @@ serve(async (req) => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                from: "Voice to Action Security <noreply@voicetoaction.io>",
+                from: FROM_SECURITY,
                 to: ownerInbox,
                 subject: `[SECURITY] Impossible travel detected — ${user.email}`,
                 text: `Impossible travel detected for user ${user.email} (${user.id})\n\nCountries: ${country_code}\nDevice: ${device_fingerprint}\nIP: ${ip_address}\nTime: ${new Date().toISOString()}`,

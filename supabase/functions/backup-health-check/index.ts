@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { FROM_SECURITY } from "../_shared/email.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -34,7 +35,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Voice to Action Security <noreply@voicetoaction.io>",
+        from: FROM_SECURITY,
         to: "jeremywhisson@gmail.com",
         subject: "Backup health check warning",
         text: `Backup health check failed at ${now}\n\n${issues.join("\n")}`,

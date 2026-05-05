@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { checkRateLimit, rateLimitResponse } from "../_shared/rateLimiter.ts";
 import { siteUrl } from "../_shared/siteUrl.ts";
+import { FROM_SECURITY } from "../_shared/email.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -37,7 +38,7 @@ serve(async (req) => {
         method: "POST",
         headers: { Authorization: `Bearer ${Deno.env.get("RESEND_API_KEY")}`, "Content-Type": "application/json" },
         body: JSON.stringify({
-          from: "Voice to Action Security <noreply@voicetoaction.io>",
+          from: FROM_SECURITY,
           to: u.email,
           subject: "Important security notice regarding your Voice to Action account",
           text: `${description}\n\nRecommended actions:\n- Change your password\n- Enable 2FA\n- Review active sessions\n\n${siteUrl("/SecuritySettings")}`,

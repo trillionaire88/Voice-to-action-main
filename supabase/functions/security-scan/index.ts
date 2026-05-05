@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { auditLog, SECURITY_HEADERS } from "../_shared/securityMiddleware.ts";
+import { FROM_SECURITY } from "../_shared/email.ts";
 
 const OWNER_EMAIL = "jeremywhisson@gmail.com";
 
@@ -110,7 +111,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Security Monitor <security@voicetoaction.io>",
+          from: FROM_SECURITY,
           to: OWNER_EMAIL,
           subject: `${alertLevel} — Security Scan — ${issues.length} issue(s)`,
           html: `<p>${issues.join("<br>")}</p>`,

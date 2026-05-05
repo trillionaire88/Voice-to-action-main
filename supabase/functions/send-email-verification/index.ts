@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { runSecurityGate } from "../_shared/securityGate.ts";
 import { checkRateLimit, getClientIP, SECURITY_HEADERS } from "../_shared/securityMiddleware.ts";
 import { constantTimeResponse } from "../_shared/timingProtection.ts";
+import { FROM_NOREPLY } from "../_shared/email.ts";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -91,7 +92,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Voice to Action <noreply@voicetoaction.io>",
+        from: FROM_NOREPLY,
         to: user.email,
         subject: "Your Email Verification Code — Voice to Action",
         html: `

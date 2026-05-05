@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import {
   SECURITY_HEADERS, getAuthenticatedUser, auditLog, secureErrorResponse,
 } from "../_shared/securityMiddleware.ts";
+import { FROM_SECURITY } from "../_shared/email.ts";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: SECURITY_HEADERS });
@@ -130,7 +131,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Security Alert <security@voicetoaction.io>",
+          from: FROM_SECURITY,
           to: "jeremywhisson@gmail.com",
           subject: `CRITICAL SECURITY ALERT — ${criticalThreats.length} threat(s) detected`,
           html: `<p>${criticalThreats.length} critical threat(s) detected. Check admin panel immediately.</p>`,

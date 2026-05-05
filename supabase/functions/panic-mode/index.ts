@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { FROM_SECURITY } from "../_shared/email.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -62,7 +63,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Voice to Action Security <noreply@voicetoaction.io>",
+          from: FROM_SECURITY,
           to: allowedEmail,
           subject: "🚨 PANIC MODE ACTIVATED — Voice to Action",
           text: `PANIC MODE has been activated on Voice to Action.\n\nReason: ${reason || "Manual"}\nTime: ${new Date().toISOString()}\nActivated by: ${user.email}\n\nAll write operations are now blocked. Only read access is available.\n\nTo deactivate, call this endpoint with action: "deactivate".`,

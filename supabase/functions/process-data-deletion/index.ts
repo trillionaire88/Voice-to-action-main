@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { FROM_NOREPLY } from "../_shared/email.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -83,7 +84,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Voice to Action <noreply@voicetoaction.io>",
+          from: FROM_NOREPLY,
           to: ownerInbox,
           subject: `[Data Deletion Request] ${user.email}`,
           text: `A user has requested full data erasure.\n\nUser: ${user.email}\nID: ${user.id}\nRequest ID: ${request?.id}\nTime: ${new Date().toISOString()}\n\nThis must be processed within 30 days under the Australian Privacy Act 1988.\n\nReview at your admin dashboard.`,
@@ -98,7 +99,7 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "Voice to Action <noreply@voicetoaction.io>",
+            from: FROM_NOREPLY,
             to: user.email,
             subject: "Your data deletion request has been received",
             text: `Hi,\n\nWe have received your request to delete your Voice to Action account and associated data.\n\nRequest ID: ${request?.id}\nSubmitted: ${new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })}\n\nUnder the Australian Privacy Act 1988, we will process your request within 30 days.\n\nYou will receive a confirmation email once your data has been deleted.\n\nVoice to Action\n${supportEmail}`,

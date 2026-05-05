@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { FROM_NOREPLY } from "../_shared/email.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -132,7 +133,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Voice to Action <noreply@voicetoaction.io>",
+        from: FROM_NOREPLY,
         to: recipientEmail,
         subject: `Petition Ready for Delivery: ${petition.title}`,
         text: emailContent,

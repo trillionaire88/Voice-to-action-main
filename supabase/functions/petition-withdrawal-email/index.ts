@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { FROM_NOREPLY } from "../_shared/email.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -163,7 +164,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Voice to Action <noreply@voicetoaction.io>",
+        from: FROM_NOREPLY,
         to: user.email,
         subject: `Petition Withdrawal Report - ${petition.title}`,
         html: emailHtml,
@@ -202,7 +203,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Voice to Action <noreply@voicetoaction.io>",
+        from: FROM_NOREPLY,
         to: ownerInbox,
         subject: `[Petition Withdrawal] $1.99 - "${petition.title}"`,
         html: `<p>Petition withdrawal completed.<br><br>User: ${userName} (${user.email})<br>Petition: ${petition.title}<br>ID: ${petition_id}<br>Time: ${generatedAt}</p>`,
