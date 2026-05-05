@@ -8,7 +8,7 @@ import { initialiseSecurity } from "@/lib/security";
 import "@/lib/i18n";
 
 Sentry.init({
-  dsn: 'https://5867f6e65a6e66ffd2e949b4e3339ec9@o4511212214091776.ingest.us.sentry.io/4511212220776448',
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   sendDefaultPii: false,
   environment: import.meta.env.PROD ? 'production' : 'development',
   tracesSampleRate: 0.2,
