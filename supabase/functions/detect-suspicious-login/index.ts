@@ -153,9 +153,12 @@ serve(async (req) => {
 
       if (emailAlert) {
         const resendKey = Deno.env.get("RESEND_API_KEY");
+        const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "support@voicetoaction.io";
+        const ownerInbox =
+          Deno.env.get("OWNER_NOTIFY_EMAIL")?.trim() || supportEmail;
         const alertBody =
           severity === "critical"
-            ? `🚨 CRITICAL SECURITY ALERT\n\nA login to your Voice to Action account was detected from a new device AND a different country within 2 hours of your last login. This may indicate your account has been compromised.\n\nDevice: ${device_label || "Unknown"}\nLocation: ${city || "Unknown"}, ${country_code || "Unknown"}\nIP: ${ip_address || "Unknown"}\nTime: ${new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })}\n\nIf this was not you, immediately:\n1. Go to Security Settings\n2. Sign out of all devices\n3. Change your password\n4. Contact support at voicetoaction@outlook.com`
+            ? `🚨 CRITICAL SECURITY ALERT\n\nA login to your Voice to Action account was detected from a new device AND a different country within 2 hours of your last login. This may indicate your account has been compromised.\n\nDevice: ${device_label || "Unknown"}\nLocation: ${city || "Unknown"}, ${country_code || "Unknown"}\nIP: ${ip_address || "Unknown"}\nTime: ${new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })}\n\nIf this was not you, immediately:\n1. Open Security Settings: ${siteUrl("/SecuritySettings")}\n2. Sign out of all devices\n3. Change your password\n4. Contact support at ${supportEmail}`
             : `New login to your Voice to Action account\n\nTime: ${new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })}\nCountry: ${incomingCountry || "Unknown"}\nDevice: ${device_label || "Unknown"}\nIP: ${ip_address || "Unknown"}\n\nIf this was not you, go to Security Settings and revoke all sessions immediately:\n${siteUrl("/SecuritySettings")}`;
 
         if (resendKey && user.email) {
@@ -185,7 +188,7 @@ serve(async (req) => {
               },
               body: JSON.stringify({
                 from: "Voice to Action Security <noreply@voicetoaction.io>",
-                to: "voicetoaction@outlook.com",
+                to: ownerInbox,
                 subject: `[SECURITY] Impossible travel detected — ${user.email}`,
                 text: `Impossible travel detected for user ${user.email} (${user.id})\n\nCountries: ${country_code}\nDevice: ${device_fingerprint}\nIP: ${ip_address}\nTime: ${new Date().toISOString()}`,
               }),

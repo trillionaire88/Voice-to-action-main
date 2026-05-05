@@ -5,9 +5,8 @@ export function siteOrigin(): string {
     Deno.env.get("APP_URL") ||
     Deno.env.get("SITE_URL") ||
     Deno.env.get("VITE_APP_URL") ||
-    ""
-  const trimmed = u.trim()
-  return trimmed ? trimmed.replace(/\/+$/, "") : ""
+    "https://voicetoaction.io";
+  return u.trim().replace(/\/+$/, "");
 }
 
 export function siteUrl(path: string): string {

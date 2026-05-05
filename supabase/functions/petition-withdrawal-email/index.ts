@@ -61,6 +61,9 @@ serve(async (req) => {
       .single();
 
     const userName = profile?.full_name || profile?.display_name || user.email;
+    const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "support@voicetoaction.io";
+    const ownerInbox =
+      Deno.env.get("OWNER_NOTIFY_EMAIL")?.trim() || supportEmail;
     const totalSignatures = petition.signature_count_total || signatureCount || 0;
     const verifiedSignatures =
       petition.signature_count_verified || (signatures || []).filter((s) => s.is_verified_user).length;
@@ -147,7 +150,7 @@ serve(async (req) => {
       <p><strong>Requested by:</strong> ${userName} (${user.email})</p>
       <p><strong>Generated:</strong> ${generatedAt} AEST</p>
       <p><strong>Petition ID:</strong> ${petition_id}</p>
-      <p style="margin-top:8px;">Voice to Action - Every Voice Pty Ltd - ACN 696 098 218 - voicetoaction@outlook.com</p>
+      <p style="margin-top:8px;">Voice to Action - Every Voice Pty Ltd - ACN 696 098 218 - ${supportEmail}</p>
     </div>
   </div>
 </body>
@@ -200,7 +203,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         from: "Voice to Action <noreply@voicetoaction.io>",
-        to: "voicetoaction@outlook.com",
+        to: ownerInbox,
         subject: `[Petition Withdrawal] $1.99 - "${petition.title}"`,
         html: `<p>Petition withdrawal completed.<br><br>User: ${userName} (${user.email})<br>Petition: ${petition.title}<br>ID: ${petition_id}<br>Time: ${generatedAt}</p>`,
       }),

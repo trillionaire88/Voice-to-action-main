@@ -73,7 +73,9 @@ serve(async (req) => {
       });
     }
 
-    const ownerTo = Deno.env.get("OWNER_NOTIFY_EMAIL") || "voicetoaction@outlook.com";
+    const ownerTo = Deno.env.get("OWNER_NOTIFY_EMAIL")?.trim() ||
+      Deno.env.get("SUPPORT_EMAIL")?.trim() ||
+      "support@voicetoaction.io";
     const resendKey = Deno.env.get("RESEND_API_KEY");
     if (!resendKey) {
       console.error("[notify-petition-delivery-request] RESEND_API_KEY missing");

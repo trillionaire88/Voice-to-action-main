@@ -106,7 +106,7 @@ serve(async (req) => {
 
     const recipientEmail =
       email_choice === "platform"
-        ? (Deno.env.get("OWNER_NOTIFY_EMAIL") || "voicetoaction@outlook.com").trim()
+        ? (Deno.env.get("OWNER_NOTIFY_EMAIL") || Deno.env.get("SUPPORT_EMAIL") || "support@voicetoaction.io").trim()
         : user.email || "";
 
     if (!recipientEmail) {
