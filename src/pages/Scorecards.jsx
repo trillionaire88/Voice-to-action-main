@@ -141,36 +141,53 @@ export default function Scorecards() {
   };
 
   const { data: scorecards = [], isLoading } = useQuery({
-    queryKey: ["scorecards", "approved"],
+    queryKey: ["scorecards", "approved", sort, category],
     queryFn: async () => {
-      const { data } = await supabase.from("scorecards").select("*").eq("status", "approved").order("created_at", { ascending: false }).limit(300);
-      return data || [];
+      let q = supabase.from("scorecards").select("*").eq("status", "approved");
+      if (category) q = q.eq("category", category);
+      if (sort === "newest") {
+        q = q.order("created_at", { ascending: false });
+      } else if (sort === "most_rated") {
+        q = q.order("total_ratings", { ascending: false });
+      } else if (sort === "trending") {
+        q = q.order("is_trending", { ascending: false }).order("total_ratings", { ascending: false });
+      } else if (sort === "most_approved") {
+        q = q.order("raw_approval_score", { ascending: false });
+      } else if (sort === "most_disapproved") {
+        q = q.order("raw_approval_score", { ascending: true });
+      } else if (sort === "controversial") {
+        q = q.order("total_ratings", { ascending: false });
+      } else {
+        q = q.order("total_ratings", { ascending: false });
+      }
+      const { data, error } = await q.limit(50);
+      if (error) throw error;
+      let rows = data || [];
+      if (sort === "controversial") {
+        rows = [...rows].sort(
+          (a, b) =>
+            Math.abs(50 - (a.raw_approval_score ?? 50)) -
+            Math.abs(50 - (b.raw_approval_score ?? 50)),
+        );
+      }
+      return rows;
     },
     refetchInterval: 60000,
     staleTime: 2 * 60_000,
   });
 
-  const filtered = scorecards
-    .filter(s => {
-      if (category && s.category !== category) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        return s.name?.toLowerCase().includes(q) || s.description?.toLowerCase().includes(q) || s.country_code?.toLowerCase().includes(q) || s.tags?.some(t => t.toLowerCase().includes(q));
-      }
-      return true;
-    })
-    .sort((a, b) => {
-      if (sort === "most_approved") return (b.raw_approval_score || 0) - (a.raw_approval_score || 0);
-      if (sort === "most_disapproved") return (a.raw_approval_score || 100) - (b.raw_approval_score || 100);
-      if (sort === "controversial") {
-        const aControversy = Math.abs(50 - (a.raw_approval_score || 50));
-        const bControversy = Math.abs(50 - (b.raw_approval_score || 50));
-        return aControversy - bControversy; // closest to 50/50 = most controversial
-      }
-      if (sort === "trending") return (b.is_trending ? 1 : 0) - (a.is_trending ? 1 : 0) || (b.total_ratings || 0) - (a.total_ratings || 0);
-      if (sort === "newest") return new Date(b.created_date) - new Date(a.created_date);
-      return (b.total_ratings || 0) - (a.total_ratings || 0); // most_rated default
-    });
+  const filtered = scorecards.filter((s) => {
+    if (search) {
+      const q = search.toLowerCase();
+      return (
+        s.name?.toLowerCase().includes(q) ||
+        s.description?.toLowerCase().includes(q) ||
+        s.country_code?.toLowerCase().includes(q) ||
+        s.tags?.some((t) => t.toLowerCase().includes(q))
+      );
+    }
+    return true;
+  });
 
   const totalRatings = scorecards.reduce((s, c) => s + (c.total_ratings || 0), 0);
 
