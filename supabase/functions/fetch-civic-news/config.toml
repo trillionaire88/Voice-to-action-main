@@ -1,0 +1,3 @@
+[functions.fetch-civic-news]
+verify_jwt = false
+schedule = "*/30 * * * *"

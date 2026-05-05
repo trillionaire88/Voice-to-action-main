@@ -1,0 +1,3 @@
+[functions.clean-feed-data]
+verify_jwt = false
+schedule = "0 3 * * *"

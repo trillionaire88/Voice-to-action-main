@@ -1,0 +1,3 @@
+[functions.backup-health-check]
+verify_jwt = false
+schedule = "0 6 * * *"

@@ -1,0 +1,481 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Google Font ───────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@layer base {
+  :root {
+    /* ── Brand Colors ── */
+    --color-primary:        221 83% 53%;   /* blue-600 */
+    --color-primary-light:  214 100% 97%;  /* blue-50 */
+    --color-secondary:      271 81% 56%;   /* violet-600 */
+    --color-success:        142 71% 45%;   /* emerald-500 */
+    --color-warning:        38 92% 50%;    /* amber-500 */
+    --color-danger:         0 84% 60%;     /* red-500 */
+    --color-info:           199 89% 48%;   /* cyan-500 */
+
+    /* ── Neutral Palette ── */
+    --background:           210 40% 98%;
+    --foreground:           222 47% 11%;
+    --card:                 0 0% 100%;
+    --card-foreground:      222 47% 11%;
+    --popover:              0 0% 100%;
+    --popover-foreground:   222 47% 11%;
+    --primary:              221 83% 53%;
+    --primary-foreground:   0 0% 100%;
+    --secondary:            210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted:                210 40% 96%;
+    --muted-foreground:     215 16% 47%;
+    --accent:               210 40% 96%;
+    --accent-foreground:    222 47% 11%;
+    --destructive:          0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border:               214 32% 91%;
+    --input:                214 32% 91%;
+    --ring:                 221 83% 53%;
+    --radius:               0.625rem;
+
+    /* ── Chart Colors ── */
+    --chart-1: 221 83% 53%;
+    --chart-2: 271 81% 56%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 0 84% 60%;
+
+    /* ── Spacing Scale ── */
+    --space-xs:  0.25rem;
+    --space-sm:  0.5rem;
+    --space-md:  1rem;
+    --space-lg:  1.5rem;
+    --space-xl:  2rem;
+    --space-2xl: 3rem;
+
+    /* ── Shadow Scale ── */
+    --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+    --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.07), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+  }
+
+  .dark {
+    --background:           222 47% 6%;
+    --foreground:           210 40% 98%;
+    --card:                 222 47% 9%;
+    --card-foreground:      210 40% 98%;
+    --popover:              222 47% 9%;
+    --popover-foreground:   210 40% 98%;
+    --primary:              213 94% 68%;
+    --primary-foreground:   222 47% 6%;
+    --secondary:            217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted:                217 33% 17%;
+    --muted-foreground:     215 20% 65%;
+    --accent:               217 33% 17%;
+    --accent-foreground:    210 40% 98%;
+    --destructive:          0 63% 31%;
+    --destructive-foreground: 0 0% 100%;
+    --border:               217 33% 17%;
+    --input:                217 33% 17%;
+    --ring:                 213 94% 68%;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    zoom: 1 !important;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-size: 15px;
+    line-height: 1.6;
+    zoom: 1 !important;
+  }
+  
+  #root {
+    transform: scale(1) !important;
+    transform-origin: top left !important;
+  }
+}
+
+/* ── Typography Scale ─────────────────────────────────────────── */
+@layer components {
+  .text-display   { @apply text-4xl sm:text-5xl font-black tracking-tight leading-tight; }
+  .text-h1        { @apply text-3xl font-extrabold tracking-tight; }
+  .text-h2        { @apply text-2xl font-bold tracking-tight; }
+  .text-h3        { @apply text-xl font-semibold; }
+  .text-h4        { @apply text-lg font-semibold; }
+  .text-body      { @apply text-sm text-slate-700; }
+  .text-caption   { @apply text-xs text-slate-500; }
+  .text-label     { @apply text-xs font-semibold text-slate-600 uppercase tracking-wide; }
+
+  /* ── Header Consistency ── */
+  header nav {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    max-height: 2.25rem;
+  }
+
+  header nav button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Panel / Card ── */
+  .panel {
+    @apply bg-white rounded-2xl border border-slate-200 shadow-sm;
+  }
+  .panel-padded {
+    @apply bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6;
+  }
+  .panel-hover {
+    @apply bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200;
+  }
+
+  /* ── Page wrapper ── */
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10;
+  }
+  .page-container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10;
+  }
+  .page-container-wide {
+    @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10;
+  }
+
+  /* ── Section header ── */
+  .section-header {
+    @apply flex items-center justify-between gap-3 mb-5;
+  }
+  .section-title {
+    @apply text-h3 text-slate-900;
+  }
+
+  /* ── Stat card ── */
+  .stat-card {
+    @apply panel-padded flex flex-col gap-1;
+  }
+  .stat-value {
+    @apply text-2xl font-extrabold text-slate-900;
+  }
+  .stat-label {
+    @apply text-caption;
+  }
+
+  /* ── Badge variants ── */
+  .badge-primary   { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200; }
+  .badge-success   { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200; }
+  .badge-warning   { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200; }
+  .badge-danger    { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200; }
+  .badge-neutral   { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200; }
+  .badge-purple    { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200; }
+
+  /* ── Input / Form ── */
+  .form-field { @apply flex flex-col gap-1.5; }
+  .form-label { @apply text-sm font-semibold text-slate-700; }
+  .form-input {
+    @apply w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400
+           focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent
+           transition-shadow bg-white shadow-sm;
+  }
+  .form-help  { @apply text-xs text-slate-500; }
+  .form-error { @apply text-xs text-red-600 font-medium; }
+
+  /* ── Divider ── */
+  .divider { @apply border-t border-slate-200; }
+
+  /* ── Loading skeleton pulse ── */
+  .skeleton {
+    @apply animate-pulse rounded-xl bg-slate-100;
+  }
+
+  /* ── Empty state ── */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-16 text-center gap-3;
+  }
+  .empty-state-icon {
+    @apply w-14 h-14 text-slate-200;
+  }
+  .empty-state-title {
+    @apply text-h4 text-slate-500;
+  }
+  .empty-state-text {
+    @apply text-sm text-slate-400 max-w-xs;
+  }
+
+  /* ── Alert boxes ── */
+  .alert-info    { @apply flex gap-3 p-4 rounded-xl border bg-blue-50 border-blue-200 text-blue-800; }
+  .alert-success { @apply flex gap-3 p-4 rounded-xl border bg-emerald-50 border-emerald-200 text-emerald-800; }
+  .alert-warning { @apply flex gap-3 p-4 rounded-xl border bg-amber-50 border-amber-200 text-amber-800; }
+  .alert-danger  { @apply flex gap-3 p-4 rounded-xl border bg-red-50 border-red-200 text-red-800; }
+
+  /* ── Grid helpers ── */
+  .grid-2col { @apply grid grid-cols-1 sm:grid-cols-2 gap-4; }
+  .grid-3col { @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4; }
+  .grid-4col { @apply grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4; }
+
+  /* ── Button / tap target standardization — 44px minimum (iOS HIG) ── */
+  button, [role="button"], a[role="button"] {
+    min-height: 44px;
+  }
+
+  button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* ── Form standardization ── */
+  input, select, textarea {
+    @apply w-full text-base;
+    color: #0f172a;
+    background-color: #ffffff;
+    -webkit-text-fill-color: #0f172a;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #94a3b8;
+    -webkit-text-fill-color: #94a3b8;
+    opacity: 1;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    @apply ring-2 ring-blue-500 ring-offset-2;
+  }
+
+  /* ── Card consistency ── */
+  .card-standard {
+    @apply bg-white rounded-xl border border-slate-200 shadow-sm p-5 sm:p-6;
+  }
+
+  /* ── Feed/grid alignment ── */
+  .feed-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+  }
+
+  /* ── Modal/dialog centering ── */
+  [role="dialog"] {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* ── Scrollbar ── */
+  .scrollbar-thin::-webkit-scrollbar       { width: 4px; height: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+
+  /* ── Page fade-in ── */
+  .page-enter { animation: pageEnter 0.2s ease-out; }
+  @keyframes pageEnter {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Hover lift ── */
+  .hover-lift { @apply transition-transform duration-200 hover:-translate-y-0.5; }
+
+  /* ── Focus ring ── */
+  .focus-ring { @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2; }
+}
+
+/* ── Dark mode overrides ──────────────────────────────────────── */
+.dark .panel, .dark .panel-padded, .dark .panel-hover {
+  @apply bg-slate-900 border-slate-800;
+}
+.dark .form-input {
+  @apply bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500;
+}
+
+/* ── Safe-area header/nav enforcement ───────────────────────── */
+/* Sticky headers must account for safe-area-inset-top on iOS */
+header.sticky,
+header[style*="sticky"],
+.fixed-header {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Bottom fixed elements (nav, toolbars) */
+nav.fixed,
+.fixed-bottom,
+.mobile-bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Mobile / PWA Polish ──────────────────────────────────────── */
+
+/* Respect system font size preferences on iOS/Android */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Remove tap highlight on iOS */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safe area insets (iPhone notch + home indicator) */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+/* Bottom nav safe area */
+.mobile-bottom-nav {
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* Body padding for mobile bottom nav — prevents content hiding behind fixed bottom nav */
+@media (max-width: 767px) {
+  body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  /* Main content bottom padding accounts for bottom nav + safe area */
+  .pb-main {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* iOS rubber-band overscroll */
+html {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+}
+
+/* Smooth momentum scrolling in scroll containers */
+.scroll-smooth-mobile {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Larger touch targets on mobile */
+@media (max-width: 767px) {
+  button, a[role="button"], [role="button"] {
+    min-height: 44px;
+  }
+  input, select, textarea {
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+  }
+}
+
+/* Prevent text selection / native selection handles on interactive and UI elements */
+button,
+a,
+nav,
+header,
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+[role="option"],
+[role="listitem"],
+label,
+.no-select,
+.badge-primary,
+.badge-success,
+.badge-warning,
+.badge-danger,
+.badge-neutral,
+.badge-purple,
+.panel,
+.panel-padded,
+.panel-hover,
+.stat-card,
+.skeleton {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Mobile card full-bleed on small screens */
+@media (max-width: 480px) {
+  .mobile-full-bleed {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+  }
+}
+
+/* Status bar spacer for PWA fullscreen on iOS */
+.ios-status-spacer {
+  height: env(safe-area-inset-top, 0px);
+  background: #1d4ed8;
+}
+
+/* Pull-to-refresh indicator */
+html, body {
+  overscroll-behavior-y: contain;
+}
+
+/* Native-like active press state */
+.native-press {
+  @apply transition-transform duration-75 active:scale-95;
+}
+
+/* Hide scrollbars on mobile horizontally scrollable sections */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Skip to main content (accessibility) ────────────────────── */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 9999;
+  padding: 0.75rem 1.25rem;
+  background: #1d4ed8;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 0 0 0.5rem 0;
+  transition: top 0.15s ease;
+  text-decoration: none;
+}
+.skip-to-content:focus {
+  top: 0;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .page-enter { animation: none; }
+}
+
+/* ── Focus ring only on keyboard navigation ─────────────────── */
+:focus:not(:focus-visible) { outline: none; }
+:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Print styles ────────────────────────────────────────────── */
+@media print {
+  header, footer, nav, button { display: none !important; }
+  body { padding: 0; background: white; color: black; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.75em; }
+}

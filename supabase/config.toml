@@ -1,0 +1,5 @@
+# Linked project — adjust project_id if your Supabase project differs
+project_id = "excfsjeuiigvbzosamqf"
+
+[functions.sign-event]
+verify_jwt = false

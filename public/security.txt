@@ -1,0 +1,6 @@
+Contact: mailto:voicetoaction@outlook.com
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://voicetoaction.io/security.txt
+Policy: https://voicetoaction.io/SecurityPolicy
+Acknowledgments: https://voicetoaction.io/SecurityAcknowledgments
