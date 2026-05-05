@@ -27,6 +27,7 @@ import { insertContentWatermark } from "@/lib/watermark";
 import { reportHoneypotHit } from "@/lib/threatIntelClient";
 import { cleanForDB } from "@/lib/dbHelpers";
 import FormErrorHandler from "@/components/ui/FormErrorHandler";
+import { COMMUNITY_SUBSCRIPTION_PRICE_LABEL } from "@/constants/communitySubscription";
 
 const COMMUNITY_TYPES = [
   { value: "general",       label: "General",        icon: Globe2,       description: "Open community" },
@@ -59,7 +60,7 @@ const PLANS = [
   {
     value: "paid",
     title: "Paid",
-    price: "$10.99 / month",
+    price: COMMUNITY_SUBSCRIPTION_PRICE_LABEL,
     color: "blue",
     description: "Best for active communities",
     features: [
@@ -73,7 +74,7 @@ const PLANS = [
   {
     value: "private",
     title: "Private",
-    price: "$10.99 / month",
+    price: COMMUNITY_SUBSCRIPTION_PRICE_LABEL,
     color: "purple",
     description: "Hidden, invite-only access",
     features: [

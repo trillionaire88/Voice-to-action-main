@@ -3,6 +3,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { runSecurityGate } from "../_shared/securityGate.ts";
 import { checkRateLimit, getClientIP, sanitiseInput, SECURITY_HEADERS } from "../_shared/securityMiddleware.ts";
+import {
+  COMMUNITY_SUBSCRIPTION_PRICE_AUD,
+  COMMUNITY_SUBSCRIPTION_UNIT_AMOUNT_CENTS,
+} from "../_shared/communitySubscriptionPricing.ts";
 
 function isCommunityOwnerRole(role: string | null | undefined) {
   return role === "owner" || role === "founder";
@@ -89,9 +93,9 @@ serve(async (req) => {
           currency: "aud",
           product_data: {
             name: `Voice to Action — ${planLabel} Plan`,
-            description: `${planLabel} plan for ${community?.name || "your community"}. $10.99 AUD/month. Cancel anytime.`,
+            description: `${planLabel} plan for ${community?.name || "your community"}. $${COMMUNITY_SUBSCRIPTION_PRICE_AUD.toFixed(2)} AUD/month. Cancel anytime.`,
           },
-          unit_amount: 1099,
+          unit_amount: COMMUNITY_SUBSCRIPTION_UNIT_AMOUNT_CENTS,
           recurring: { interval: "month" },
         },
         quantity: 1,
