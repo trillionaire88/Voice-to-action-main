@@ -29,6 +29,15 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { useReAuth } from "@/components/ReAuthModal";
 import DeleteAccountSection from "@/components/settings/DeleteAccountSection";
@@ -62,6 +71,8 @@ export default function SecuritySettings() {
   const [sessions, setSessions] = useState([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [revokingId, setRevokingId] = useState(null);
+  const [disable2faDialogOpen, setDisable2faDialogOpen] = useState(false);
+  const [revokeAllDialogOpen, setRevokeAllDialogOpen] = useState(false);
 
   useEffect(() => {
     loadUser();
@@ -125,7 +136,6 @@ export default function SecuritySettings() {
       toast.error("Enter your 6-digit code to confirm.");
       return;
     }
-    if (!window.confirm("Disable two-factor authentication? This makes your account less secure.")) return;
     setTotpLoading(true);
     try {
       const data = await callTotp("disable", { token: totpToken });
@@ -141,7 +151,16 @@ export default function SecuritySettings() {
     }
   };
 
-  const handleDisable2FA = async () => {
+  const openDisable2faDialog = () => {
+    if (!totpToken || totpToken.length !== 6) {
+      toast.error("Enter your 6-digit code to confirm.");
+      return;
+    }
+    setDisable2faDialogOpen(true);
+  };
+
+  const confirmDisable2FA = async () => {
+    setDisable2faDialogOpen(false);
     await requireReAuth(disable2FAInternal);
   };
 
@@ -198,7 +217,6 @@ export default function SecuritySettings() {
   };
 
   const revokeAllSessionsInternal = async () => {
-    if (!window.confirm("Sign out all other devices?")) return;
     try {
       const {
         data: { session },
@@ -219,7 +237,8 @@ export default function SecuritySettings() {
     }
   };
 
-  const revokeAllSessions = async () => {
+  const confirmRevokeAllSessions = async () => {
+    setRevokeAllDialogOpen(false);
     await requireReAuth(revokeAllSessionsInternal);
   };
 
@@ -369,8 +388,68 @@ export default function SecuritySettings() {
   const isAccountLocked = user.account_locked_until && 
     new Date(user.account_locked_until) > new Date();
 
+  const otherSessionCount = sessions.filter((s) => !s.is_current).length;
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <AlertDialog open={disable2faDialogOpen} onOpenChange={setDisable2faDialogOpen}>
+        <AlertDialogContent
+          className="max-w-md"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") e.preventDefault();
+          }}
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle>Disable two-factor authentication?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-600 space-y-2">
+              <span className="block font-medium text-slate-800">
+                Turning off 2FA significantly reduces your account security.
+              </span>
+              <span className="block">
+                Anyone who knows your password could sign in without a second step. Only continue if you understand this
+                risk.
+              </span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <Button
+              type="button"
+              className="bg-red-600 hover:bg-red-700 text-white focus-visible:ring-red-600"
+              onClick={() => void confirmDisable2FA()}
+            >
+              Disable 2FA
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={revokeAllDialogOpen} onOpenChange={setRevokeAllDialogOpen}>
+        <AlertDialogContent
+          className="max-w-md"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") e.preventDefault();
+          }}
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sign out all other devices?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-600">
+              You will end{" "}
+              <strong>
+                {otherSessionCount} other session{otherSessionCount === 1 ? "" : "s"}
+              </strong>
+              . Those devices will need to sign in again. This device stays signed in.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <Button type="button" variant="destructive" onClick={() => void confirmRevokeAllSessions()}>
+              Sign out {otherSessionCount} session{otherSessionCount === 1 ? "" : "s"}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
@@ -754,7 +833,8 @@ export default function SecuritySettings() {
                   maxLength={6}
                 />
                 <Button
-                  onClick={handleDisable2FA}
+                  type="button"
+                  onClick={openDisable2faDialog}
                   disabled={totpLoading || totpToken.length !== 6}
                   variant="outline"
                   className="w-full border-red-300 text-red-700 hover:bg-red-50"
@@ -775,10 +855,11 @@ export default function SecuritySettings() {
             </span>
             {sessions.filter((s) => !s.is_current).length > 0 && (
               <Button
+                type="button"
                 size="sm"
                 variant="outline"
                 className="border-red-300 text-red-600 text-xs"
-                onClick={revokeAllSessions}
+                onClick={() => setRevokeAllDialogOpen(true)}
               >
                 Sign Out All Other Devices
               </Button>
