@@ -203,7 +203,7 @@ export default function Layout({ children }) {
     } else if (tabKey === "PublicFigures") {
       queryClientInstance.prefetchQuery({
         queryKey: ["figures-prefetch"],
-        queryFn: () => supabase.from("profiles").select("id,full_name,is_verified").eq("is_verified", true).limit(20),
+        queryFn: () => supabase.from("public_profiles_view").select("id,full_name,is_blue_verified").eq("is_blue_verified", true).limit(20),
         staleTime: 3 * 60 * 1000,
       });
     } else if (tabKey === "Scorecards") {
@@ -218,7 +218,7 @@ export default function Layout({ children }) {
   return (
     <ToSGate user={user}>
       <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50" style={{ zoom: 1, transform: 'none', scale: 1 }}>
-        <div id="ev-ownership-marker" style={{ display: "none" }} data-owner="Jeremy Kyle Whisson" data-platform="Voice to Action" />
+        <div id="ev-ownership-marker" style={{ display: "none" }} data-platform="Voice to Action" />
 
         {/* iOS PWA / safe-area top spacer — visible on all viewports */}
         <div className="bg-white" style={{ height: "env(safe-area-inset-top, 0px)" }} />

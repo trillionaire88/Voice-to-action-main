@@ -215,9 +215,24 @@ FOR SELECT TO authenticated
 USING (user_id = auth.uid());
 
 DROP POLICY IF EXISTS profiles_public_read ON public.profiles;
-CREATE POLICY profiles_public_read ON public.profiles
-FOR SELECT TO anon, authenticated
-USING (true);
+DROP POLICY IF EXISTS profiles_select_own ON public.profiles;
+DROP POLICY IF EXISTS profiles_select_admin ON public.profiles;
+
+CREATE POLICY profiles_select_own ON public.profiles
+FOR SELECT TO authenticated
+USING (id = auth.uid());
+
+CREATE POLICY profiles_select_admin ON public.profiles
+FOR SELECT TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.profiles p
+    WHERE p.id = auth.uid()
+    AND p.role::text IN ('admin', 'owner_admin')
+  )
+);
+
+-- Note: anonymous discovery uses public.public_profiles_view (see supabase/public_profile_view.sql).
 
 DROP POLICY IF EXISTS profiles_user_update_own ON public.profiles;
 CREATE POLICY profiles_user_update_own ON public.profiles

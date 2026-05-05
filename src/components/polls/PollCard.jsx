@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { api } from '@/api/client';
+import { fetchPublicProfileById } from "@/lib/publicProfile";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -47,8 +47,8 @@ export default function PollCard({ poll, hasVoted, onClick, currentUserId }) {
   const { data: creator } = useQuery({
     queryKey: ["user", poll.creator_user_id],
     queryFn: async () => {
-      const users = await api.entities.User.filter({ id: poll.creator_user_id });
-      return users[0];
+      const u = await fetchPublicProfileById(poll.creator_user_id);
+      return u;
     },
     enabled: !!poll.creator_user_id && !poll.is_anonymous_display,
   });

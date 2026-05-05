@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 import { toast } from "sonner";
+import { fetchPublicProfileById } from "@/lib/publicProfile";
 import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonDetail } from "@/components/ui/SkeletonCard";
@@ -86,12 +87,7 @@ export default function PollDetail() {
 
   const { data: creator } = useQuery({
     queryKey: ["user", poll?.creator_user_id],
-    queryFn: async () => {
-      const users = await api.entities.User.filter({
-        id: poll.creator_user_id,
-      });
-      return users[0];
-    },
+    queryFn: async () => fetchPublicProfileById(poll?.creator_user_id),
     enabled: !!poll?.creator_user_id && !poll?.is_anonymous_display,
     staleTime: 5 * 60_000,
   });

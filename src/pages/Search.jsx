@@ -125,7 +125,7 @@ async function fetchByTypesOnly(types) {
   }
   if (types.includes("user")) {
     const { data, error } = await supabase
-      .from("profiles")
+      .from("public_profiles_view")
       .select("id, display_name, full_name, avatar_url, is_blue_verified, follower_count")
       .limit(limit);
     if (!error) add(data, (p) => mapSearchToResults({ petitions: [], polls: [], profiles: [p], communities: [], discussions: [] })[0]);
@@ -185,7 +185,7 @@ async function searchAll(query) {
       .eq("status", "open")
       .limit(5),
     supabase
-      .from("profiles")
+      .from("public_profiles_view")
       .select("id, display_name, full_name, avatar_url, is_blue_verified, follower_count")
       .or(orProfile)
       .limit(5),

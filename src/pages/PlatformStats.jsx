@@ -10,7 +10,7 @@ export default function PlatformStats() {
   const { data: users = [], isLoading: usersLoading } = useQuery({
     queryKey: ["allUsers"],
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("*");
+      const { data } = await supabase.from("public_profiles_view").select("*");
       return data || [];
     },
   });
@@ -44,7 +44,7 @@ export default function PlatformStats() {
   // Calculate statistics
   const stats = {
     totalUsers: users.length,
-    verifiedUsers: users.filter(u => u.is_verified).length,
+    verifiedUsers: users.filter(u => u.is_blue_verified || u.is_verified).length,
     totalPolls: polls.length,
     activePolls: polls.filter(p => p.status === 'open').length,
     totalVotes: votes.length,

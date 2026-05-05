@@ -210,7 +210,14 @@ export default function Messages() {
   const searchUsers = async (q) => {
     setUserSearch(q);
     if (!q.trim()) return setUsers([]);
-    const { data } = await supabase.from("profiles").select("id,full_name,avatar_url,is_verified").ilike("full_name", `%${q}%`).limit(15);
+    const raw = q.trim();
+    const safe = raw.replace(/\\/g, "\\\\").replace(/%/g, "\\%").replace(/_/g, "\\_");
+    const p = `%${safe}%`;
+    const { data } = await supabase
+      .from("public_profiles_view")
+      .select("id,full_name,display_name,avatar_url")
+      .or(`full_name.ilike.${p},display_name.ilike.${p}`)
+      .limit(15);
     setUsers(data || []);
   };
 
@@ -399,8 +406,8 @@ export default function Messages() {
           <div className="max-h-80 overflow-y-auto space-y-1 mt-2">
             {users.map((u) => (
               <button key={u.id} className="w-full text-left p-2 rounded hover:bg-slate-50 flex items-center gap-2" onClick={() => openDirect(u.id)}>
-                <Avatar className="w-7 h-7"><AvatarImage src={u.avatar_url} /><AvatarFallback>{(u.full_name || "U")[0]}</AvatarFallback></Avatar>
-                <span className="text-sm">{u.full_name}</span>
+                <Avatar className="w-7 h-7"><AvatarImage src={u.avatar_url} /><AvatarFallback>{((u.display_name || u.full_name) || "U")[0]}</AvatarFallback></Avatar>
+                <span className="text-sm">{u.display_name || u.full_name}</span>
               </button>
             ))}
           </div>
@@ -416,7 +423,7 @@ export default function Messages() {
             {users.map((u) => (
               <label key={u.id} className="flex items-center gap-2 py-1 text-sm">
                 <input type="checkbox" checked={selectedMembers.includes(u.id)} onChange={(e) => setSelectedMembers((prev) => e.target.checked ? [...prev, u.id] : prev.filter((id) => id !== u.id))} />
-                {u.full_name}
+                {u.display_name || u.full_name}
               </label>
             ))}
           </div>

@@ -16,18 +16,34 @@ export default function FeedStoriesBar() {
       const { data: follows } = await supabase.from("follows").select("following_id").eq("follower_id", user.id);
       const ids = (follows || []).map((f) => f.following_id);
       if (!ids.length) {
-        const { data: suggested } = await supabase.from("profiles").select("id,full_name,profile_avatar_url,is_verified").eq("is_verified", true).limit(8);
+        const { data: suggested } = await supabase
+          .from("public_profiles_view")
+          .select("id,full_name,profile_avatar_url,is_blue_verified")
+          .eq("is_blue_verified", true)
+          .limit(8);
         return (suggested || []).map((p) => ({ ...p, is_suggested: true }));
       }
       const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
       const { data: latest } = await supabase
         .from("user_activity")
-        .select("user_id,entity_type,entity_id,created_at,profiles:profiles!user_activity_user_id_fkey(full_name,profile_avatar_url,is_verified)")
+        .select("user_id,entity_type,entity_id,created_at")
         .in("user_id", ids)
         .gte("created_at", since)
         .order("created_at", { ascending: false })
         .limit(30);
-      return latest || [];
+      const uidList = [...new Set((latest || []).map((x) => x.user_id).filter(Boolean))];
+      let pmap = {};
+      if (uidList.length) {
+        const { data: profs } = await supabase
+          .from("public_profiles_view")
+          .select("id,full_name,profile_avatar_url,is_blue_verified")
+          .in("id", uidList);
+        pmap = Object.fromEntries((profs || []).map((p) => [p.id, p]));
+      }
+      return (latest || []).map((s) => ({
+        ...s,
+        profiles: pmap[s.user_id] || null,
+      }));
     },
   });
 
@@ -48,7 +64,7 @@ export default function FeedStoriesBar() {
               className={`rounded-full ring-2 ${ring} p-0.5 flex-shrink-0`}
               title={p.full_name}
             >
-              <ProfileAvatar user={{ display_name: p.full_name, profile_avatar_url: p.profile_avatar_url, is_blue_verified: p.is_verified }} size="md" />
+              <ProfileAvatar user={{ display_name: p.full_name, profile_avatar_url: p.profile_avatar_url, is_blue_verified: p.is_blue_verified }} size="md" />
             </button>
           );
         })}

@@ -20,7 +20,7 @@ export default function Newsfeed() {
   const { data: whoToFollow = [] } = useQuery({
     queryKey: ["newsfeed-who-to-follow"],
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("id,full_name,is_verified").eq("is_verified", true).limit(5);
+      const { data } = await supabase.from("public_profiles_view").select("id,full_name,is_blue_verified").eq("is_blue_verified", true).limit(5);
       return data || [];
     },
   });

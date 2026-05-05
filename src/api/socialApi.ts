@@ -33,22 +33,47 @@ export async function isFollowing(targetUserId: string): Promise<boolean> {
   return !!data;
 }
 
+async function fetchPublicProfilesMap(ids: string[]) {
+  const uniq = [...new Set(ids.filter(Boolean))];
+  if (uniq.length === 0) return new Map<string, Record<string, unknown>>();
+  const { data, error } = await supabase
+    .from("public_profiles_view")
+    .select("id, display_name, profile_avatar_url, is_blue_verified, follower_count")
+    .in("id", uniq);
+  if (error) throw new Error(error.message);
+  return new Map((data || []).map((p) => [p.id as string, p as Record<string, unknown>]));
+}
+
 export async function getFollowers(userId: string) {
-  const { data } = await supabase
+  const { data: rows, error } = await supabase
     .from("follows")
-    .select("follower_id, profiles!follows_follower_id_fkey(id, display_name, profile_avatar_url, is_blue_verified, follower_count)")
+    .select("follower_id, created_at")
     .eq("following_id", userId)
     .order("created_at", { ascending: false });
-  return data || [];
+  if (error) throw new Error(error.message);
+  const list = rows || [];
+  const pmap = await fetchPublicProfilesMap(list.map((r) => r.follower_id as string));
+  return list.map((r) => ({
+    follower_id: r.follower_id,
+    created_at: r.created_at,
+    profiles: pmap.get(r.follower_id as string) ?? null,
+  }));
 }
 
 export async function getFollowing(userId: string) {
-  const { data } = await supabase
+  const { data: rows, error } = await supabase
     .from("follows")
-    .select("following_id, profiles!follows_following_id_fkey(id, display_name, profile_avatar_url, is_blue_verified, follower_count)")
+    .select("following_id, created_at")
     .eq("follower_id", userId)
     .order("created_at", { ascending: false });
-  return data || [];
+  if (error) throw new Error(error.message);
+  const list = rows || [];
+  const pmap = await fetchPublicProfilesMap(list.map((r) => r.following_id as string));
+  return list.map((r) => ({
+    following_id: r.following_id,
+    created_at: r.created_at,
+    profiles: pmap.get(r.following_id as string) ?? null,
+  }));
 }
 
 export async function logActivity(activity: {
@@ -74,13 +99,16 @@ export async function getFollowingFeed(page: number = 0, limit: number = 20) {
     .eq("follower_id", user.id);
   if (!followingData || followingData.length === 0) return [];
   const followingIds = followingData.map((f) => f.following_id);
-  const { data } = await supabase
+  const { data: rows, error } = await supabase
     .from("user_activity")
-    .select("*, profiles!user_activity_user_id_fkey(id, display_name, profile_avatar_url, is_blue_verified)")
+    .select("*")
     .in("user_id", followingIds)
     .order("created_at", { ascending: false })
     .range(page * limit, (page + 1) * limit - 1);
-  return data || [];
+  if (error) throw new Error(error.message);
+  const list = rows || [];
+  const pmap = await fetchPublicProfilesMap(list.map((r) => r.user_id as string));
+  return list.map((r) => ({ ...r, profiles: pmap.get(r.user_id as string) ?? null }));
 }
 
 export async function getOrCreateConversation(otherUserId: string): Promise<string> {
@@ -109,26 +137,40 @@ export async function getOrCreateConversation(otherUserId: string): Promise<stri
 export async function getConversations() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return [];
-  const { data } = await supabase
+  const { data: convs, error } = await supabase
     .from("conversations")
-    .select("*, profile_one:profiles!conversations_participant_one_fkey(id, display_name, profile_avatar_url, is_blue_verified), profile_two:profiles!conversations_participant_two_fkey(id, display_name, profile_avatar_url, is_blue_verified)")
+    .select("*")
     .or(`participant_one.eq.${user.id},participant_two.eq.${user.id}`)
     .order("last_message_at", { ascending: false });
-  return (data || []).map((conv) => ({
-    ...conv,
-    other_user: conv.participant_one === user.id ? conv.profile_two : conv.profile_one,
-    unread_count: conv.participant_one === user.id ? conv.unread_count_one : conv.unread_count_two,
-  }));
+  if (error) throw new Error(error.message);
+  const list = convs || [];
+  const ids = [...new Set(list.flatMap((c) => [c.participant_one as string, c.participant_two as string]))];
+  const pmap = await fetchPublicProfilesMap(ids);
+  return list.map((conv) => {
+    const profile_one = pmap.get(conv.participant_one as string) ?? null;
+    const profile_two = pmap.get(conv.participant_two as string) ?? null;
+    return {
+      ...conv,
+      profile_one,
+      profile_two,
+      other_user: conv.participant_one === user.id ? profile_two : profile_one,
+      unread_count: conv.participant_one === user.id ? conv.unread_count_one : conv.unread_count_two,
+    };
+  });
 }
 
 export async function getMessages(conversationId: string, page: number = 0) {
-  const { data } = await supabase
+  const { data: rows, error } = await supabase
     .from("messages")
-    .select("*, profiles!messages_sender_id_fkey(id, display_name, profile_avatar_url)")
+    .select("*")
     .eq("conversation_id", conversationId)
     .order("created_at", { ascending: false })
     .range(page * 50, (page + 1) * 50 - 1);
-  return (data || []).reverse();
+  if (error) throw new Error(error.message);
+  const list = rows || [];
+  const pmap = await fetchPublicProfilesMap(list.map((m) => m.sender_id as string));
+  const merged = list.map((m) => ({ ...m, profiles: pmap.get(m.sender_id as string) ?? null }));
+  return merged.reverse();
 }
 
 export async function sendMessage(conversationId: string, content: string): Promise<void> {

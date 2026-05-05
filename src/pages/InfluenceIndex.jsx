@@ -314,15 +314,15 @@ export default function InfluenceIndex() {
     queryKey: ["influenceUsers"],
     queryFn: async () => {
       const { data } = await supabase
-        .from("profiles")
-        .select("id,display_name,email,reputation_score,is_blue_verified")
-        .order("reputation_score", { ascending: false })
+        .from("public_profiles_view")
+        .select("id,display_name,follower_count,public_role,is_blue_verified")
+        .order("follower_count", { ascending: false })
         .limit(30);
       return (data || []).map((u) => ({
         id: u.id,
         user_display_name: u.display_name,
-        user_email: u.email,
-        overall_score: u.reputation_score || 0,
+        user_email: "",
+        overall_score: u.follower_count || 0,
         influence_level: undefined,
         is_restricted: false,
         flags: [],

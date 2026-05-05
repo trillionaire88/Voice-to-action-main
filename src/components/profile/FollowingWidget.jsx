@@ -21,7 +21,7 @@ export default function FollowingWidget({ user }) {
       if (error) throw error;
       if (!rows?.length) return [];
       const ids = rows.map((r) => r.following_id);
-      const { data: profiles, error: pErr } = await supabase.from("profiles").select("*").in("id", ids);
+      const { data: profiles, error: pErr } = await supabase.from("public_profiles_view").select("*").in("id", ids);
       if (pErr) throw pErr;
       const map = Object.fromEntries((profiles || []).map((p) => [p.id, p]));
       return ids.map((id) => map[id]).filter(Boolean);
@@ -62,7 +62,7 @@ export default function FollowingWidget({ user }) {
               <span className="text-sm font-medium text-slate-700 max-w-[100px] truncate">
                 {followedUser.display_name || followedUser.full_name || "User"}
               </span>
-              {followedUser.is_verified && <span className="text-blue-500 text-xs">✓</span>}
+              {followedUser.is_blue_verified && <span className="text-blue-500 text-xs">✓</span>}
               {followedUser.is_public_figure && <span className="text-yellow-500 text-xs">★</span>}
             </button>
           ))}

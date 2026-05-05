@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { api } from "@/api/client";
+import { fetchPublicProfileById } from "@/lib/publicProfile";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import FollowButton from "@/components/social/FollowButton";
 function UserRow({ userId, currentUserId }) {
   const { data: userData } = useQuery({
     queryKey: ["user-basic", userId],
-    queryFn: () => api.entities.User.filter({ id: userId }).then((r) => r[0]),
+    queryFn: () => fetchPublicProfileById(userId),
     enabled: !!userId,
     staleTime: 60000,
   });
@@ -26,7 +26,7 @@ function UserRow({ userId, currentUserId }) {
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-sm text-slate-900">{userData.full_name || "User"}</p>
-        <p className="text-xs text-slate-400">{userData.email}</p>
+        <p className="text-xs text-slate-400 capitalize">{userData.public_role || ""}</p>
       </div>
       <FollowButton targetType="user" targetId={userId} currentUserId={currentUserId} compact />
     </div>

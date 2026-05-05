@@ -22,7 +22,7 @@ export default function FollowingFeed() {
     queryKey: ["following-feed-suggested"],
     enabled: !!emptyState?.empty,
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("id,full_name,profile_avatar_url,is_verified").eq("is_verified", true).limit(5);
+      const { data } = await supabase.from("public_profiles_view").select("id,full_name,profile_avatar_url,is_blue_verified").eq("is_blue_verified", true).limit(5);
       return data || [];
     },
   });
@@ -37,7 +37,7 @@ export default function FollowingFeed() {
         <div className="mt-6 space-y-2">
           {suggested.map((p) => (
             <div key={p.id} className="flex items-center justify-between border rounded-lg p-2">
-              <div className="flex items-center gap-2"><ProfileAvatar user={{ display_name: p.full_name, profile_avatar_url: p.profile_avatar_url, is_blue_verified: p.is_verified }} size="sm" />{p.full_name}</div>
+              <div className="flex items-center gap-2"><ProfileAvatar user={{ display_name: p.full_name, profile_avatar_url: p.profile_avatar_url, is_blue_verified: p.is_blue_verified }} size="sm" />{p.full_name}</div>
               <Button size="sm" variant="outline" onClick={async () => {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) return;

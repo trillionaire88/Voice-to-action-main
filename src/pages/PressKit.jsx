@@ -9,10 +9,10 @@ export default function PressKit() {
     queryFn: async () => {
       try {
         const [{ count: users }, { count: petitions }, { count: signatures }, { data: profiles = [] }] = await Promise.all([
-          supabase.from("profiles").select("*", { count: "exact", head: true }),
+          supabase.from("public_profiles_view").select("*", { count: "exact", head: true }),
           supabase.from("petitions").select("*", { count: "exact", head: true }),
           supabase.from("signatures").select("*", { count: "exact", head: true }),
-          supabase.from("profiles").select("country_code").limit(5000),
+          supabase.from("public_profiles_view").select("country_code").limit(5000),
         ]);
         return { users: users || 0, petitions: petitions || 0, signatures: signatures || 0, countries: new Set((profiles || []).map((p) => p.country_code).filter(Boolean)).size };
       } catch {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { api } from '@/api/client';
+import { fetchPublicProfileById } from "@/lib/publicProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EyeOff, ShieldCheck } from "lucide-react";
@@ -19,8 +19,8 @@ export default function PetitionCreatorCard({ petition, viewerUser }) {
 
   useEffect(() => {
     if (!petition?.creator_user_id || !showIdentity) return;
-    api.entities.User.filter({ id: petition.creator_user_id })
-      .then(users => { if (users.length > 0) setCreator(users[0]); })
+    fetchPublicProfileById(petition.creator_user_id)
+      .then((u) => { if (u) setCreator(u); })
       .catch(() => {});
   }, [petition?.creator_user_id, showIdentity]);
 

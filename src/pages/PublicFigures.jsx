@@ -67,9 +67,9 @@ export default function PublicFigures() {
         .order("name", { ascending: true });
       if (error && (error.code === "42P01" || error.message?.includes("does not exist"))) {
         const { data: profiles, error: pErr } = await supabase
-          .from("profiles")
+          .from("public_profiles_view")
           .select("*")
-          .eq("role", "political_figure")
+          .eq("public_role", "political_figure")
           .range(from, to)
           .order("display_name", { ascending: true });
         if (pErr) throw pErr;

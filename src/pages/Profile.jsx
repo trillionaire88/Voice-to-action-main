@@ -174,14 +174,25 @@ export default function Profile() {
   const targetUserId = profileUserId || currentUser?.id;
   const isOwnProfile = currentUser && targetUserId === currentUser.id;
 
-  // For own profile, use currentUser directly — avoids User entity security restrictions
-  // For other users' profiles, query the entity
+  // For own profile, use currentUser directly — avoids User entity security restrictions.
+  // For other users' profiles, use public_profiles_view (no sensitive columns).
   const { data: queriedProfileUser, isLoading: loadingOtherProfile, isFetched: otherProfileFetched } = useQuery({
     queryKey: ["user", targetUserId],
     queryFn: async () => {
       try {
-        const users = await api.entities.User.filter({ id: targetUserId });
-        return users[0];
+        const { data, error } = await supabase
+          .from("public_profiles_view")
+          .select("*")
+          .eq("id", targetUserId)
+          .maybeSingle();
+        if (error) throw error;
+        if (!data) return null;
+        return {
+          ...data,
+          created_date: data.created_at,
+          is_verified: data.is_blue_verified ?? data.is_verified,
+          role: data.public_role,
+        };
       } catch {
         return null;
       }

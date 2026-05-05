@@ -26,7 +26,7 @@ export default function FollowingList({ userId, currentUser }) {
     queryFn: async () => {
       if (followingRelations.length === 0) return [];
       const ids = followingRelations.map((f) => f.following_id);
-      const { data: profiles, error } = await supabase.from("profiles").select("*").in("id", ids);
+      const { data: profiles, error } = await supabase.from("public_profiles_view").select("*").in("id", ids);
       if (error) throw error;
       const map = Object.fromEntries((profiles || []).map((p) => [p.id, p]));
       return ids.map((id) => map[id]).filter(Boolean);

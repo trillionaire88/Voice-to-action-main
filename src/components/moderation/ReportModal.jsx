@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { api } from '@/api/client';
+import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/AuthContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -169,8 +170,8 @@ export default function ReportModal({ targetType, targetId, targetPreview = "", 
 
       // Notify admin — include brigade alert details if triggered
       if (isHighPriority || brigadeTriggered) {
-        const admins = await api.entities.User.filter({ role: "admin" });
-        for (const admin of admins) {
+        const { data: admins = [] } = await supabase.from("admin_contact_directory").select("id, email, display_name, full_name").limit(50);
+        for (const admin of admins || []) {
           if (admin.email) {
             await api.integrations.Core.SendEmail({
               to: admin.email,
