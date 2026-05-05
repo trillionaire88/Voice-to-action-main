@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { api } from '@/api/client';
+import { supabase } from "@/lib/supabase";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,25 +80,12 @@ export default function TakedownRequest() {
         content_author_notified: false,
       });
 
-      // Notify platform owner
-      await api.integrations.Core.SendEmail({
-        to: "jeremy@voicetoaction.com",
-        subject: `🚨 New Legal Complaint [${complaintId}] — Voice to Action`,
-        body: `A new Notice and Takedown request has been submitted.\n\n` +
-          `Complaint ID: ${complaintId}\n` +
-          `Submitted: ${format(new Date(now), "PPP p")}\n\n` +
-          `--- COMPLAINANT ---\n` +
-          `Name: ${form.full_name}\n` +
-          `Email: ${form.email}\n` +
-          `Phone: ${form.phone || "Not provided"}\n` +
-          `Country: ${form.country}\n` +
-          `Organisation: ${form.organisation || "N/A"}\n\n` +
-          `--- COMPLAINT ---\n` +
-          `Category: ${CATEGORIES.find(c => c.value === form.complaint_category)?.label}\n` +
-          `Content URL: ${form.content_url}\n\n` +
-          `Description:\n${form.content_description}\n\n` +
-          `Review this complaint in your Master Admin → Takedown Requests panel.`
+      const { error: ownerNotifyErr } = await supabase.functions.invoke("notify-takedown-request", {
+        body: { takedown_request_id: record.id },
       });
+      if (ownerNotifyErr) {
+        console.error("notify-takedown-request:", ownerNotifyErr);
+      }
 
       // Send confirmation to complainant
       await api.integrations.Core.SendEmail({

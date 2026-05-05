@@ -3,3 +3,6 @@ project_id = "excfsjeuiigvbzosamqf"
 
 [functions.sign-event]
 verify_jwt = false
+
+[functions.notify-takedown-request]
+verify_jwt = false
