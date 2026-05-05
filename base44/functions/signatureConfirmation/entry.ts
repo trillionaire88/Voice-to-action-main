@@ -1,5 +1,25 @@
 import { createSupabaseContext } from '../lib/supabaseContext.ts';
-import { siteOrigin } from '../_shared/siteUrl.ts';
+
+/** No hardcoded production domain — env or request headers only. */
+function resolveCanonicalOrigin(req: Request): string {
+  const fromOrigin = req.headers.get('origin');
+  if (fromOrigin?.trim()) return fromOrigin.replace(/\/+$/, '');
+  const fromEnv =
+    Deno.env.get('SERVER_ORIGIN') ||
+    Deno.env.get('APP_URL') ||
+    Deno.env.get('SITE_URL') ||
+    Deno.env.get('VITE_APP_URL');
+  if (fromEnv?.trim()) return fromEnv.replace(/\/+$/, '');
+  const host = req.headers.get('host') || req.headers.get('x-forwarded-host');
+  if (host?.trim()) {
+    const proto = (req.headers.get('x-forwarded-proto') || 'https').split(',')[0].trim();
+    const h = host.split(',')[0].trim();
+    return `${proto}://${h}`;
+  }
+  throw new Error(
+    'Cannot build confirmation URL: set SERVER_ORIGIN or APP_URL (or send Origin/Host).',
+  );
+}
 
 Deno.serve(async (req) => {
   try {
@@ -10,7 +30,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const origin = req.headers.get('origin') || siteOrigin();
+    const origin = resolveCanonicalOrigin(req);
     const confirmUrl = `${origin}/PetitionDetail?id=${petition_id}&confirm_sig=${token}`;
 
     await integrations.Core.SendEmail({
