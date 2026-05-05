@@ -178,7 +178,12 @@ export default function CivicMap() {
           <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
             <MapPin className="w-8 h-8 text-blue-600" /> Civic Initiative Map
           </h1>
-          <p className="text-slate-500 mt-1">Discover petitions and polls active in your neighbourhood and city</p>
+          <p className="text-slate-500 mt-1">
+            Discover petitions and polls active in your neighbourhood and city. Initiative locations are aggregated from public petition and poll metadata — no personal addresses are shown.{" "}
+            <span className="text-slate-600">
+              &quot;Find Near Me&quot; uses your browser location only when you tap it; it is not read from your profile or stored by us for this map.
+            </span>
+          </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <Button

@@ -288,7 +288,7 @@ const AuthenticatedApp = () => {
         <Route path="/FollowList" element={<ProtectedRoute><LayoutWrapper currentPageName="FollowList"><FollowList /></LayoutWrapper></ProtectedRoute>} />
         <Route path="/AdminMessages" element={<ProtectedRoute requiredRole="admin"><LayoutWrapper currentPageName="AdminMessages"><AdminMessages /></LayoutWrapper></ProtectedRoute>} />
         <Route path="/EditCommunity" element={<ProtectedRoute><LayoutWrapper currentPageName="EditCommunity"><EditCommunity /></LayoutWrapper></ProtectedRoute>} />
-        <Route path="/CivicMap" element={<ProtectedRoute><LayoutWrapper currentPageName="CivicMap"><CivicMap /></LayoutWrapper></ProtectedRoute>} />
+        <Route path="/CivicMap" element={<LayoutWrapper currentPageName="CivicMap"><CivicMap /></LayoutWrapper>} />
         <Route path="/AdminSignatures" element={<ProtectedRoute requiredRole="admin"><LayoutWrapper currentPageName="AdminSignatures"><AdminSignatures /></LayoutWrapper></ProtectedRoute>} />
         <Route path="/SecurityDashboard" element={<ProtectedRoute requiredRole="admin"><LayoutWrapper currentPageName="SecurityDashboard"><SecurityDashboard /></LayoutWrapper></ProtectedRoute>} />
         <Route path="/BackupStatus" element={<ProtectedRoute requiredRole="admin"><LayoutWrapper currentPageName="BackupStatus"><BackupStatus /></LayoutWrapper></ProtectedRoute>} />
