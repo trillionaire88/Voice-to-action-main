@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Send, Search, Building2, CheckCircle2, AlertCircle, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 const MILESTONES = [1000, 5000, 10000, 25000, 50000, 100000];
 
@@ -54,7 +55,7 @@ export default function RequestDeliveryModal({ petition, user, onClose }) {
       const geoMap = {};
       sigs.forEach(s => { if (s.country_code) geoMap[s.country_code] = (geoMap[s.country_code] || 0) + 1; });
 
-      await api.entities.PetitionDelivery.create({
+      const created = await api.entities.PetitionDelivery.create({
         petition_id: petition.id,
         petition_title: petition.title,
         trigger_threshold: threshold,
@@ -70,12 +71,10 @@ export default function RequestDeliveryModal({ petition, user, onClose }) {
         geographic_summary: geoMap,
       });
 
-      // Notify platform owner
-      await api.integrations.Core.SendEmail({
-        to: "jeremy@voicetoaction.com",
-        subject: `📬 Petition Delivery Request: ${petition.title}`,
-        body: `A petition has reached a delivery milestone and the creator is requesting official delivery.\n\nPetition: ${petition.title}\nTarget: ${form.recipient_organisation}${form.recipient_department ? ` / ${form.recipient_department}` : ""}\nEmail: ${form.recipient_email || "Not provided"}\nSignatures: ${petition.signature_count_total.toLocaleString()} total / ${petition.signature_count_verified.toLocaleString()} verified\n\nPlease review and approve delivery in the Master Admin panel.`,
+      const { error: notifyErr } = await supabase.functions.invoke("notify-petition-delivery-request", {
+        body: { delivery_id: created.id },
       });
+      if (notifyErr) throw new Error(notifyErr.message || "Could not notify platform. Delivery request was saved.");
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["petitionDeliveries", petition.id]);
