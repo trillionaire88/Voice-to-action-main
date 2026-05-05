@@ -224,11 +224,7 @@ export default function SignPetitionModal({ petition, user, onClose, onSuccess }
         })
       );
 
-      // Update petition count
-      await api.entities.Petition.update(petition.id, {
-        signature_count_total: (petition.signature_count_total || 0) + 1,
-        signature_count_verified: (petition.signature_count_verified || 0) + (user?.is_verified ? 1 : 0),
-      });
+      /* Petition counts incremented by DB trigger (petition_signature_count_trigger.sql). */
 
       return sig;
     },
