@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -9,8 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import {
-  Heart, CreditCard, Building2, AlertTriangle,
-  CheckCircle2, Gift, Copy,
+  Heart, CreditCard, Building2, AlertTriangle, Gift, Copy,
 } from "lucide-react";
 import { toast } from "sonner";
 import { initiateStripeCheckout } from "@/lib/stripeCheckout";

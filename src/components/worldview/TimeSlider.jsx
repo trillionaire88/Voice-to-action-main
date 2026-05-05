@@ -1,9 +1,8 @@
-import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
-import { Calendar, Clock, Play, Pause, SkipBack, SkipForward, X } from "lucide-react";
+import { Clock, Play, Pause, SkipBack, SkipForward, X } from "lucide-react";
 import { format } from "date-fns";
 
 export default function TimeSlider({ 

@@ -1,4 +1,3 @@
-import React from "react";
 import { SUPPORT_EMAIL } from "@/constants/siteUrl";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";

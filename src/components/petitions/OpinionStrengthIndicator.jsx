@@ -1,6 +1,5 @@
-import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Globe, MapPin, Flag, TrendingUp, Flame } from "lucide-react";
+import { Globe, MapPin, Flag, Flame } from "lucide-react";
 
 const LEVELS = [
   {

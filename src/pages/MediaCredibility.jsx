@@ -1,10 +1,9 @@
-import React from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Newspaper, CheckCircle2, AlertTriangle, BarChart3 } from "lucide-react";
+import { Newspaper, CheckCircle2, AlertTriangle } from "lucide-react";
 
 export default function MediaCredibility() {
   const { data: mediaScores = [] } = useQuery({

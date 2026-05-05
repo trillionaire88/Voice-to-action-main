@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
@@ -19,7 +19,6 @@ import {
   Clock,
   Monitor,
   Bell,
-  Lock,
   Mail,
   Phone,
   Send,

@@ -1,10 +1,9 @@
-import React from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, Globe2, MapPin, CheckCircle2 } from "lucide-react";
+import { Users, Globe2, MapPin } from "lucide-react";
 
 export default function CommunityCouncils() {
   const { data: councils = [] } = useQuery({

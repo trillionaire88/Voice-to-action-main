@@ -1,4 +1,3 @@
-import React from "react";
 import { Target, FileText, BarChart3, Users, Eye } from "lucide-react";
 
 export default function Purpose() {

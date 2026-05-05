@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useAuth } from "@/lib/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { sanitiseText } from "@/lib/sanitise";
 import HoneypotField from "@/components/HoneypotField";

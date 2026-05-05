@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
 import {
-  TrendingUp, Users, Globe2, Flame, Award, Crown, Star,
-  CheckCircle2, Shield, FileText, Vote, BarChart3, ArrowRight,
-  Zap, Activity, Trophy, Medal, ChevronUp
+  TrendingUp, Users, Globe2, Flame, Crown, Star,
+  CheckCircle2, Shield, FileText, Vote, BarChart3, ArrowRight, Activity, Trophy, Medal, ChevronUp
 } from "lucide-react";
 import ReputationBadge, { getInfluenceLevel, INFLUENCE_LEVELS } from "@/components/reputation/ReputationBadge";
 

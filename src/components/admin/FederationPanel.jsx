@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Network, Plus, X, RefreshCw, CheckCircle2, AlertTriangle,
-  Globe2, Pause, Play, Trash2, Copy, Activity, ArrowRight
+  Network, Plus, X, CheckCircle2,
+  Globe2, Pause, Play, Trash2
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";

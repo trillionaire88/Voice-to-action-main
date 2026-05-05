@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,12 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CheckCircle2, XCircle, Eye, FileText, Download } from "lucide-react";
+import { CheckCircle2, XCircle, Eye, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 
 const STATUS_COLORS = {
   pending_payment: "bg-slate-100 text-slate-600",

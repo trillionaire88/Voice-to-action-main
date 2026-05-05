@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,8 +13,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
-  Flame, TrendingUp, Zap, Globe, Users, MessageSquare, CheckCircle2,
-  FileText, Share2, Download, Eye, Edit3, RefreshCw, ArrowLeft,
+  Flame, TrendingUp, Globe, Users, MessageSquare, CheckCircle2,
+  FileText, Share2, Download, RefreshCw, ArrowLeft,
   BarChart3, AlertTriangle, Sparkles, Copy
 } from "lucide-react";
 import { format } from "date-fns";

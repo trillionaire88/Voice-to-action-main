@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, XCircle, Clock, Shield, Filter } from "lucide-react";
+import { CheckCircle2, XCircle, Shield, Filter } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 

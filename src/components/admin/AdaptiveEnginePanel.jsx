@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import {
-  Settings, TrendingUp, AlertTriangle, CheckCircle2,
-  RefreshCw, Activity, Brain, Zap, Shield, BarChart3, Download
+  Settings, TrendingUp, AlertTriangle, CheckCircle2, Activity, Brain, Zap, Shield, Download
 } from "lucide-react";
 import { toast } from "sonner";
 

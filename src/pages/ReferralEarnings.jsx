@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import PriceDisplay from "@/components/payments/PriceDisplay";
 
 const STATUS_COLORS = {
   pending:   "bg-amber-100 text-amber-800 border-amber-200",

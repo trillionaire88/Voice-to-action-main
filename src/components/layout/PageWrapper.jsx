@@ -1,4 +1,3 @@
-import React from "react";
 
 /**
  * Layout shell for page content. Prefer the app Layout route wrapper for uniform spacing;

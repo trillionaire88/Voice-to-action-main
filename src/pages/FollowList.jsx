@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchPublicProfileById } from "@/lib/publicProfile";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import AdminGuard from "@/components/auth/AdminGuard";
 
 // Inline selector to pick a petition and view its integrity panel
@@ -65,7 +65,6 @@ import AdaptiveEnginePanel from "@/components/admin/AdaptiveEnginePanel";
 import FederationPanel from "@/components/admin/FederationPanel";
 import LedgerPanel from "@/components/admin/LedgerPanel";
 import InfrastructurePanel from "@/components/admin/InfrastructurePanel";
-import { Link } from "react-router-dom";
 
 const NAV_TABS = [
   { id: "overview", label: "Overview", icon: BarChart3 },

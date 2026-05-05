@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
 import {
-  ArrowLeft, Star, Globe2, MapPin, ExternalLink, CheckCircle2,
-  Users, Shield, Flag, Lock, AlertTriangle, ThumbsUp
+  ArrowLeft, MapPin, ExternalLink, Shield, Flag, Lock, AlertTriangle, ThumbsUp
 } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";

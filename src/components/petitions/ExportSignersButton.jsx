@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";

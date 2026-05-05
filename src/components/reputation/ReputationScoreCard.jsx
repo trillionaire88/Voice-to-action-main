@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Shield, RefreshCw, ChevronDown, ChevronUp, Crown, ShieldCheck, Star, AlertTriangle } from "lucide-react";
+import { Shield, RefreshCw, ChevronDown, ChevronUp, AlertTriangle } from "lucide-react";
 import ReputationBadge, { INFLUENCE_LEVELS } from "./ReputationBadge";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";

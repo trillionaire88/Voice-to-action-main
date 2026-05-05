@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
   Shield, AlertTriangle, CheckCircle2, XCircle, BarChart3,
-  Globe2, Clock, Users, Bot, Copy, Flag, Pause
+  Globe2, Users, Bot, Copy, Flag, Pause
 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";

@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
-import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import {
-  Brain, Zap, TrendingUp, AlertTriangle, CheckCircle2,
-  RefreshCw, FileText, BarChart3, Download, Globe2,
+  Brain, Zap, TrendingUp, AlertTriangle, CheckCircle2, FileText, BarChart3, Download,
   ThumbsUp, ThumbsDown, Flame, Activity, Shield
 } from "lucide-react";
 import { toast } from "sonner";

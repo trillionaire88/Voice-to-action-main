@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { startInactivityTimer, stopInactivityTimer, generateSessionFingerprint, secureSessionStore } from "@/lib/security";
 import { toast } from "sonner";

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { BarChart3, Users, AlertTriangle, TrendingUp } from "lucide-react";
+import { BarChart3, Users, AlertTriangle } from "lucide-react";
 
 export default function ElectionSimulator({ countryCode }) {
   const [scenarioType, setScenarioType] = useState("referendum");

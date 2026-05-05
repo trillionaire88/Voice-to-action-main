@@ -1,10 +1,8 @@
-import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { MapPin, Users, CheckCircle2, Target, Clock, Flame, Trash2 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
 import FollowButton from "@/components/FollowButton";
 import MessageButton from "@/components/MessageButton";
 

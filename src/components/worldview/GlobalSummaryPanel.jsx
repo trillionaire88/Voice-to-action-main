@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Globe2, FileText, Users, Activity, ChevronLeft, ChevronRight } from "lucide-react";
+import { TrendingUp, Globe2, FileText, Activity, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function GlobalSummaryPanel({ polls, petitions, stats }) {
   const [isMinimized, setIsMinimized] = useState(false);

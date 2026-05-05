@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { UserPlus, UserMinus } from "lucide-react";
 import { followUser, unfollowUser, isFollowing } from "@/api/socialApi";
 import { toast } from "sonner";

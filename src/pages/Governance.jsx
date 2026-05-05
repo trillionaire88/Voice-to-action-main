@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Vote, Plus, X, CheckCircle2, XCircle, Shield,
-  AlertTriangle, Users, Clock, History, Scale, Info
+  Vote, Plus, X, CheckCircle2, XCircle, Shield, Clock, History, Scale, Info
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow, isPast } from "date-fns";

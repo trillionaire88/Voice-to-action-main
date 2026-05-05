@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,8 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
-  Shield, AlertTriangle, RefreshCw, Globe, Users, CheckCircle2,
-  Copy, TrendingUp, Activity, ShieldX
+  Shield, RefreshCw, ShieldX
 } from "lucide-react";
 import { format } from "date-fns";
 

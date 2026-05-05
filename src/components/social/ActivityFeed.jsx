@@ -1,7 +1,5 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from '@/api/client';
-import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { FileText, BarChart2, Users, MessageSquare, PenLine, CheckSquare, Vote, UserPlus } from "lucide-react";
 

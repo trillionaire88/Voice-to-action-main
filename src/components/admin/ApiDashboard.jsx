@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,8 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Key, Plus, X, Copy, CheckCircle2, Shield, Activity,
-  BarChart3, Globe2, TrendingUp, FileText, Eye, EyeOff
+  Key, Plus, X, Copy, CheckCircle2, FileText, Eye, EyeOff
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";

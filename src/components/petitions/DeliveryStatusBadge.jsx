@@ -1,6 +1,5 @@
-import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Clock, Send, AlertTriangle, XCircle, Package } from "lucide-react";
+import { CheckCircle2, Clock, Send, AlertTriangle, XCircle } from "lucide-react";
 
 const STATUS_CONFIG = {
   awaiting_owner_review: { label: "Awaiting Review", icon: Clock, className: "bg-amber-100 text-amber-800 border-amber-300" },

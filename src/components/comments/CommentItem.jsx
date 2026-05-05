@@ -1,4 +1,3 @@
-import React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { MessageSquare } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";

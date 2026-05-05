@@ -1,6 +1,5 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Send, Clock, CheckCircle2, AlertTriangle, Download } from "lucide-react";
+import { Send, Download } from "lucide-react";
 import { format } from "date-fns";
 import DeliveryStatusBadge from "./DeliveryStatusBadge";
 

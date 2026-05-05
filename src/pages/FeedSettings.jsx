@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
 import { useQuery } from "@tanstack/react-query";

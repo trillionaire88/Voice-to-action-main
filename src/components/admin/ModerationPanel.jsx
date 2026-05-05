@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import {
-  AlertCircle, Eye, EyeOff, Trash2, AlertTriangle, UserX, Ban,
-  MessageSquare, Clock, CheckCircle2, ExternalLink, Flag, Shield
+  AlertCircle, Eye, EyeOff, Trash2, AlertTriangle, UserX, Ban, CheckCircle2, Flag, Shield
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";

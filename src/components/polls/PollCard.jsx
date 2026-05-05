@@ -1,4 +1,3 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPublicProfileById } from "@/lib/publicProfile";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";

@@ -12,8 +12,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import {
-  Globe2, Building2, GraduationCap, Landmark, Users, Heart,
-  Dumbbell, BookOpen, Briefcase, Settings,
+  Globe2, Building2, GraduationCap, Landmark, Users,
+  Dumbbell, Briefcase, Settings,
   ArrowRight, ArrowLeft, CheckCircle2, AlertCircle,
   Lock, CreditCard, ShieldAlert, Info, Sparkles
 } from "lucide-react";

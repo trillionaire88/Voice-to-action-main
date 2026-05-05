@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,8 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
-  Star, Search, Check, X, Eye, Trash2, Lock, RotateCcw,
-  AlertTriangle, Users, CheckCircle2, ChevronDown, ChevronUp
+  Star, Search, Check, X, Trash2, Lock, RotateCcw,
+  AlertTriangle, ChevronDown, ChevronUp
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";

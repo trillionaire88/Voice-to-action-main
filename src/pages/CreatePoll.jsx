@@ -23,7 +23,7 @@ import { assertPollImageUrlFromProject } from "@/lib/pollImageUrl";
 import { checkRateLimit } from "@/lib/rateLimit";
 import FormErrorHandler from "@/components/ui/FormErrorHandler";
 import { api } from "@/api/client";
-import { PlusCircle, X, Globe2, Shield, ChevronDown, ChevronUp, GripVertical, ImageIcon } from "lucide-react";
+import { PlusCircle, X, Shield, ChevronDown, ChevronUp, GripVertical, ImageIcon } from "lucide-react";
 
 const CATEGORIES = [
   { value: "governance_policy", label: "Governance & Policy" },

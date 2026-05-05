@@ -1,4 +1,3 @@
-import React from "react";
 
 const BADGE_CONFIG = {
   user:         { color: "text-blue-500",    label: "Verified User",         title: "Verified User" },

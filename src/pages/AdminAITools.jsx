@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Zap, Brain, Shield, TrendingUp, AlertTriangle, Activity, BarChart3 } from "lucide-react";
+import { Zap, Brain, Shield, TrendingUp, Activity, BarChart3 } from "lucide-react";
 import { TopicClassifier } from "../components/ai/TopicClassifier";
 import { AutoModerationEngine } from "../components/moderation/AutoModerationEngine";
 import { ReputationEngine } from "../components/reputation/ReputationEngine";

@@ -2,7 +2,7 @@ import React from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Info, ExternalLink, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { Info, XCircle, AlertCircle } from "lucide-react";
 
 export default function FactCheckBanner({ claims }) {
   const [expanded, setExpanded] = React.useState(false);

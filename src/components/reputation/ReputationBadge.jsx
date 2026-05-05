@@ -1,6 +1,5 @@
-import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Shield, ShieldCheck, Star, Award, Crown, AlertTriangle } from "lucide-react";
+import { Shield, ShieldCheck, Star, Crown, AlertTriangle } from "lucide-react";
 
 export const INFLUENCE_LEVELS = {
   trusted_leader:  { label: "Trusted Leader",  color: "bg-amber-50 text-amber-800 border-amber-300",   icon: Crown,       min: 90 },

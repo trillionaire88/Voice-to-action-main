@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { api } from '@/api/client';
@@ -17,16 +17,11 @@ import {
   X,
   MapPin,
   BarChart3,
-  MessageSquare,
   Scale,
   Calendar,
   Users,
-  TrendingUp,
   Clock,
   FileText,
-  Newspaper,
-  Building2,
-  Lightbulb,
 } from "lucide-react";
 import { format } from "date-fns";
 import NewsLayer from "./NewsLayer";

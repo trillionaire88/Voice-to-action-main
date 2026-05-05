@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
+import { useState, useEffect } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { Card } from "@/components/ui/card";
-import { Globe2, AlertCircle } from "lucide-react";
+import { Globe2 } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
 // Country centroids for basic positioning

@@ -1,4 +1,3 @@
-import React from "react";
 import ImpactDashboard from "@/components/dashboard/ImpactDashboard";
 
 export default function ImpactDashboardPage() {

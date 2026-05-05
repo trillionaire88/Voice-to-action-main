@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,9 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Shield, AlertTriangle, Crown, Users, RefreshCw,
-  TrendingDown, TrendingUp, Search, RotateCcw, Lock, Star
+  TrendingDown, Search, RotateCcw, Lock, Star
 } from "lucide-react";
-import ReputationBadge, { INFLUENCE_LEVELS } from "@/components/reputation/ReputationBadge";
+import ReputationBadge from "@/components/reputation/ReputationBadge";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 

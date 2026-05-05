@@ -1,4 +1,3 @@
-import React from "react";
 import { api } from "@/api/client";
 import { Button } from "@/components/ui/button";
 import { UserPlus, UserMinus, Users } from "lucide-react";

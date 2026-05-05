@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

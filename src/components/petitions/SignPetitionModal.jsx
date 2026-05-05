@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { api } from '@/api/client';
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import MobileSelect from "@/components/ui/MobileSelect";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Shield, CheckCircle2, Mail } from "lucide-react";
+import { Shield } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import PetitionShareModal from "@/components/petitions/PetitionShareModal";
 import { userPassesGate } from "@/components/auth/VerificationGate";

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import PullToRefresh from "@/components/ui/PullToRefresh";
 import { Button } from "@/components/ui/button";

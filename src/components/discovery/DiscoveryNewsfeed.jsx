@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PullToRefresh from "@/components/ui/PullToRefresh";
 import { Card, CardContent } from "@/components/ui/card";

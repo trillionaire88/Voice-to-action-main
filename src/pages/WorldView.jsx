@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Globe2, List, Layers, X, MapPin, Clock } from "lucide-react";
 import EnhancedGlobe from "../components/worldview/EnhancedGlobe";
-import RegionPanel from "../components/worldview/RegionPanel";
 import LayerSelector from "../components/worldview/LayerSelector";
 import TopicOverlay from "../components/worldview/TopicOverlay";
 import MapSearch from "../components/worldview/MapSearch";

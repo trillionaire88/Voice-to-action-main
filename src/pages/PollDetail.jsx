@@ -13,15 +13,11 @@ import {
   MapPin,
   Clock,
   Users,
-  CheckCircle2,
   AlertTriangle,
-  Share2,
   Flag,
-  BarChart3,
   User,
   Calendar,
   MessageSquare,
-  Lightbulb,
 } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 import { toast } from "sonner";

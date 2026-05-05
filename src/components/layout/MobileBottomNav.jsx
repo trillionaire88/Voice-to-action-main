@@ -1,7 +1,5 @@
-import React from "react";
 import { useLocation } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { Home, Compass, FileText, User, PlusCircle, MessageSquare, Newspaper } from "lucide-react";
+import { Home, User, PlusCircle, MessageSquare, Newspaper } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigation, resolveTabKey } from "@/lib/NavigationContext";
 

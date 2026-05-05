@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Heart, ArrowLeft, Upload, AlertCircle } from "lucide-react";
+import { Heart, ArrowLeft, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import MediaUploader from "../components/profile/MediaUploader";
 
