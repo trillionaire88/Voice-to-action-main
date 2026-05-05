@@ -63,7 +63,7 @@ export default function CommunityDetail() {
     enabled: !!safeCommunityId,
   });
 
-  const { data: membership, refetch: refetchMembership } = useQuery({
+  const { data: membership, isLoading: membershipLoading, refetch: refetchMembership } = useQuery({
     queryKey: ["communityMembership", communityId, user?.id],
     queryFn: async () => {
       const members = await api.entities.CommunityMember.filter({
@@ -123,6 +123,7 @@ export default function CommunityDetail() {
   const canManage = isAdmin;
 
   const joinPolicy = community?.join_policy || "open";
+
 
   const { data: pendingRequests = [], refetch: refetchPending } = useQuery({
     queryKey: ["pendingRequests", safeCommunityId],
@@ -327,6 +328,9 @@ export default function CommunityDetail() {
 
   // Determine content visibility: non-members can't see private community content at all
   const isPrivateGated = isPrivatePlan && !isMember && !isAdmin;
+
+  const tabContentLoading =
+    !!user && membershipLoading && (isMember || isAdmin) && !isPrivateGated;
 
   return (
     <div className="pb-16">
@@ -724,7 +728,13 @@ export default function CommunityDetail() {
 
             {/* Polls */}
             <TabsContent value="polls">
-              {polls.length === 0 ? (
+              {tabContentLoading ? (
+                <div className="space-y-3">
+                  <Skeleton className="h-28 w-full rounded-xl" />
+                  <Skeleton className="h-28 w-full rounded-xl" />
+                  <Skeleton className="h-28 w-full rounded-xl" />
+                </div>
+              ) : polls.length === 0 ? (
                 <Card>
                   <CardContent className="py-16 text-center">
                     <BarChart3 className="w-12 h-12 text-slate-400 mx-auto mb-4" />
@@ -771,6 +781,12 @@ export default function CommunityDetail() {
 
             {/* Petitions */}
             <TabsContent value="petitions">
+              {tabContentLoading ? (
+                <div className="space-y-3">
+                  <Skeleton className="h-36 w-full rounded-xl" />
+                  <Skeleton className="h-36 w-full rounded-xl" />
+                </div>
+              ) : (
               <div className="space-y-6">
                 {pendingEndorsements.length > 0 && (
                   <div>
@@ -846,9 +862,8 @@ export default function CommunityDetail() {
                   </div>
                 )}
               </div>
+              )}
             </TabsContent>
-
-            {/* Members */}
             <TabsContent value="members">
               <Card>
                 <CardHeader>
@@ -883,7 +898,14 @@ export default function CommunityDetail() {
 
             {/* Discussions */}
             <TabsContent value="discussions">
+              {tabContentLoading ? (
+                <div className="space-y-3">
+                  <Skeleton className="h-32 w-full rounded-xl" />
+                  <Skeleton className="h-32 w-full rounded-xl" />
+                </div>
+              ) : (
               <CommunityDiscussionsTab communityId={communityId} user={user} />
+              )}
             </TabsContent>
 
             {/* Settings (admin only) */}
