@@ -132,31 +132,8 @@ export default function PollDetail() {
         await api.entities.Vote.update(myVote.id, voteData);
       } else {
         await api.entities.Vote.create(voteData);
-        await api.entities.Poll.update(pollId, {
-          total_votes_cached: (poll.total_votes_cached || 0) + 1,
-          verified_votes_count: (poll.verified_votes_count || 0) + (user.is_verified ? 1 : 0),
-          first_vote_cast_at: poll.first_vote_cast_at || new Date().toISOString(),
-        });
-        await api.auth.updateMe({ polls_voted_count: (user.polls_voted_count || 0) + 1 });
       }
-
-      const option = options.find((o) => o.id === optionId);
-      if (option) {
-        await api.entities.PollOption.update(optionId, {
-          votes_count_cached: (option.votes_count_cached || 0) + (myVote ? 0 : 1),
-          verified_votes_count: (option.verified_votes_count || 0) + (myVote ? 0 : user.is_verified ? 1 : 0),
-        });
-      }
-
-      if (myVote && myVote.option_id !== optionId) {
-        const oldOption = options.find((o) => o.id === myVote.option_id);
-        if (oldOption) {
-          await api.entities.PollOption.update(myVote.option_id, {
-            votes_count_cached: Math.max(0, (oldOption.votes_count_cached || 1) - 1),
-            verified_votes_count: Math.max(0, (oldOption.verified_votes_count || 0) - (myVote.is_verified_user ? 1 : 0)),
-          });
-        }
-      }
+      // Vote totals and profiles.polls_voted_count are maintained by DB triggers (poll_vote_count_trigger.sql).
     },
     onMutate: async (optionId) => {
       // Optimistic update: immediately show the user's vote
