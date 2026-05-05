@@ -1,5 +1,7 @@
 import { createSupabaseContext } from '../lib/supabaseContext.ts';
 
+/** Petition export branding uses OWNER_DISPLAY_NAME only — never hardcode personal names in output. */
+
 Deno.serve(async (req) => {
   try {
     const { supabase, supabaseAdmin, entities, adminEntities, integrations, getUser } = createSupabaseContext(req);
