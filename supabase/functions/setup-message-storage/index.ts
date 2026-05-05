@@ -37,6 +37,6 @@ serve(async (req) => {
   return new Response(JSON.stringify({
     success: true,
     bucket: bucketName,
-    note: "Create/verify storage RLS policies for upload/download access in dashboard if needed.",
+    note: "Apply supabase/storage_rls.sql for participant-scoped RLS on this bucket.",
   }), { headers: { ...CORS, "Content-Type": "application/json" } });
 });
