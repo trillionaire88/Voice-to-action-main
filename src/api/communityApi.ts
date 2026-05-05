@@ -206,7 +206,7 @@ export async function getMyPrivateCommunities() {
     .eq("plan", "private")
     .order("member_count", { ascending: false });
 
-  if (error) return [];
+  if (error) throw error;
   return data || [];
 }
 

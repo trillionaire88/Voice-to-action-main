@@ -128,39 +128,23 @@ export default function Communities() {
     }
   }, [searchParams]);
 
-  const { data: communities = [], isLoading } = useQuery({
+  const { data: communities = [], isLoading, isError, error } = useQuery({
     queryKey: ["communities", planFilter],
     queryFn: async () => {
-      try {
-        if (planFilter === "private") {
-          return await getMyPrivateCommunities();
-        }
-        if (planFilter === "all") return await getCommunitiesVisible("all");
-        if (planFilter === "free") return await getCommunitiesVisible("free");
-        if (planFilter === "paid") return await getCommunitiesVisible("paid");
-        return await getCommunitiesVisible("all");
-      } catch {
-        const allCommunities = await api.entities.Community.list("-created_date");
-        return allCommunities.filter(c => c.status === "active" && c.visibility !== "private");
+      if (planFilter === "private") {
+        return await getMyPrivateCommunities();
       }
+      if (planFilter === "all") return await getCommunitiesVisible("all");
+      if (planFilter === "free") return await getCommunitiesVisible("free");
+      if (planFilter === "paid") return await getCommunitiesVisible("paid");
+      return await getCommunitiesVisible("all");
     },
     staleTime: 2 * 60_000,
   });
 
   const { data: myPrivateCommunities = [] } = useQuery({
     queryKey: ["myPrivateCommunities", user?.id],
-    queryFn: async () => {
-      try {
-        return await getMyPrivateCommunities();
-      } catch {
-        if (!user) return [];
-        const memberships = await api.entities.CommunityMember.filter({ user_id: user.id, status: "active" });
-        if (memberships.length === 0) return [];
-        const allCommunities = await api.entities.Community.list("-created_date");
-        const myIds = new Set(memberships.map(m => m.community_id));
-        return allCommunities.filter(c => c.visibility === "private" && myIds.has(c.id) && c.status === "active");
-      }
-    },
+    queryFn: () => getMyPrivateCommunities(),
     enabled: !!user,
     staleTime: 2 * 60_000,
   });
@@ -444,7 +428,17 @@ export default function Communities() {
         </Card>
 
         {/* Communities Grid */}
-        {isLoading ? (
+        {isError ? (
+          <Card className="border-red-200 bg-red-50">
+            <CardContent className="py-12 text-center space-y-3">
+              <p className="text-red-900 font-semibold">Could not load communities</p>
+              <p className="text-sm text-red-800">{error?.message || "Please try again."}</p>
+              <Button type="button" variant="outline" onClick={() => queryClient.invalidateQueries({ queryKey: ["communities"] })}>
+                Retry
+              </Button>
+            </CardContent>
+          </Card>
+        ) : isLoading ? (
           <div className="text-center py-16 text-slate-600">Loading communities...</div>
         ) : filteredCommunities.length === 0 ? (
           <Card className="border-dashed border-2 border-slate-300">
