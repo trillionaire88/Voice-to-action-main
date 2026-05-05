@@ -70,27 +70,26 @@ export default function CreateScorecard() {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      const { count, error: cntErr } = await supabase
-        .from("scorecards")
-        .select("*", { count: "exact", head: true })
-        .eq("submitted_by_user_id", user.id)
-        .gte("created_at", since);
-      if (cntErr) throw cntErr;
-      if ((count ?? 0) >= 3) {
-        throw new Error("You can only create 3 scorecards per day");
-      }
-
       const nameTrim = form.name.trim();
-      const { data: dup } = await supabase
-        .from("scorecards")
-        .select("id")
-        .eq("submitted_by_user_id", user.id)
-        .eq("category", form.category)
-        .eq("name", nameTrim)
-        .maybeSingle();
-      if (dup?.id) {
-        throw new Error("You already have a scorecard for this subject and category.");
+      const { data: validation, error: fnErr } = await supabase.functions.invoke(
+        "validate-scorecard-create",
+        {
+          body: { name: nameTrim, category: form.category },
+        },
+      );
+      if (fnErr) {
+        let msg = fnErr.message || "Validation failed";
+        try {
+          const ctx = fnErr.context;
+          if (ctx && typeof ctx.json === "function") {
+            const j = await ctx.json();
+            if (j?.message) msg = j.message;
+          }
+        } catch (_) {}
+        throw new Error(msg);
+      }
+      if (validation && typeof validation === "object" && "ok" in validation && !validation.ok) {
+        throw new Error(validation.message || "Validation failed");
       }
 
       return api.entities.Scorecard.create(
