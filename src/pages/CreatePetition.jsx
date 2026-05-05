@@ -350,6 +350,7 @@ export default function CreatePetition() {
                 value={title}
                 onChange={e => setTitle(e.target.value.slice(0, 150))}
                 className="text-base"
+                maxLength={150}
               />
               <p className="text-xs text-slate-400 text-right">{title.length}/150</p>
             </div>
@@ -361,6 +362,7 @@ export default function CreatePetition() {
                 value={shortSummary}
                 onChange={e => setShortSummary(e.target.value.slice(0, 500))}
                 rows={3}
+                maxLength={500}
               />
               <p className="text-xs text-slate-400 text-right">{shortSummary.length}/500</p>
             </div>
@@ -370,10 +372,11 @@ export default function CreatePetition() {
               <Textarea
                 placeholder="Explain the problem in detail. Why does this matter? What is the impact? Who is affected?"
                 value={fullDescription}
-                onChange={e => setFullDescription(e.target.value.slice(0, 10000))}
+                onChange={e => setFullDescription(e.target.value.slice(0, 20000))}
                 rows={8}
+                maxLength={20000}
               />
-              <p className="text-xs text-slate-400 text-right">{fullDescription.length}/10,000</p>
+              <p className="text-xs text-slate-400 text-right">{fullDescription.length}/20,000</p>
             </div>
 
             <div className="space-y-1">
@@ -449,6 +452,7 @@ export default function CreatePetition() {
                   placeholder="e.g. Australian Parliament, Nike Inc."
                   value={targetName}
                   onChange={e => setTargetName(e.target.value)}
+                  maxLength={300}
                 />
               </div>
             </div>
@@ -482,6 +486,7 @@ export default function CreatePetition() {
                 placeholder="e.g. Queensland, NSW"
                 value={regionCode}
                 onChange={e => setRegionCode(e.target.value)}
+                maxLength={120}
               />
             </div>
           </CardContent>
@@ -589,6 +594,7 @@ export default function CreatePetition() {
                 placeholder="e.g. Affected resident, community advocate, parent of a student..."
                 value={creatorRelationship}
                 onChange={e => setCreatorRelationship(e.target.value)}
+                maxLength={300}
               />
             </div>
             <div className="space-y-1">

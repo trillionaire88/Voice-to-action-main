@@ -2,12 +2,12 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { constantTimeResponse } from "../_shared/timingProtection.ts";
 import { checkRateLimit, rateLimitResponse } from "../_shared/rateLimiter.ts";
-import { siteUrl } from "../_shared/siteUrl.ts";
+import { siteUrl, siteOrigin } from "../_shared/siteUrl.ts";
 import { FROM_SECURITY } from "../_shared/email.ts";
 import { supportContactEmail } from "../_shared/supportEmail.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": siteOrigin(),
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 

@@ -7,6 +7,7 @@ import {
   COMMUNITY_SUBSCRIPTION_PRICE_AUD,
   COMMUNITY_SUBSCRIPTION_UNIT_AMOUNT_CENTS,
 } from "../_shared/communitySubscriptionPricing.ts";
+import { validateCheckoutRedirectPair } from "../_shared/checkoutRedirect.ts";
 
 function isCommunityOwnerRole(role: string | null | undefined) {
   return role === "owner" || role === "founder";
@@ -53,6 +54,11 @@ serve(async (req) => {
 
     if (!community_id || !plan || !success_url || !cancel_url) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400, headers: { ...SECURITY_HEADERS, "Content-Type": "application/json" } });
+    }
+
+    const redirectErr = validateCheckoutRedirectPair(success_url, cancel_url);
+    if (redirectErr) {
+      return new Response(JSON.stringify({ error: redirectErr }), { status: 400, headers: { ...SECURITY_HEADERS, "Content-Type": "application/json" } });
     }
 
     if (!["paid", "private"].includes(plan)) {

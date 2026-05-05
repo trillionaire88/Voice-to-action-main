@@ -103,17 +103,6 @@ export default function PollDetail() {
       return votes.length > 0 ? votes[0] : null;
     },
     enabled: !!pollId && !!user,
-    staleTime: 5 * 60_000,
-  });
-
-  const { data: allVotes = [] } = useQuery({
-    queryKey: ["votes", pollId],
-    queryFn: () => api.entities.Vote.filter({ poll_id: pollId }),
-    enabled: !!pollId && (
-      !!myVote ||
-      poll?.status === "closed" ||
-      poll?.result_visibility === "always_visible"
-    ),
     staleTime: 30_000,
   });
 
@@ -140,7 +129,6 @@ export default function PollDetail() {
       await queryClient.cancelQueries({ queryKey: ["myVote", pollId, user?.id] });
       await queryClient.cancelQueries({ queryKey: ["poll", pollId] });
       await queryClient.cancelQueries({ queryKey: ["pollOptions", pollId] });
-      await queryClient.cancelQueries({ queryKey: ["votes", pollId] });
       const previousMyVote = queryClient.getQueryData(["myVote", pollId, user?.id]);
       const previousPoll = queryClient.getQueryData(["poll", pollId]);
 
@@ -166,7 +154,6 @@ export default function PollDetail() {
       queryClient.invalidateQueries({ queryKey: ["poll", pollId] });
       queryClient.invalidateQueries({ queryKey: ["pollOptions", pollId] });
       queryClient.invalidateQueries({ queryKey: ["myVote", pollId] });
-      queryClient.invalidateQueries({ queryKey: ["votes", pollId] });
       if (user) void refreshUser();
       toast.success("Vote recorded successfully!");
     },
@@ -370,7 +357,7 @@ export default function PollDetail() {
               <ResultsVisualization
                 poll={poll}
                 options={options}
-                votes={allVotes}
+                votes={[]}
                 myVote={myVote}
                 canChangeVote={canVote && myVote}
                 onChangeVote={(optionId) => voteMutation.mutate(optionId)}
@@ -444,7 +431,7 @@ export default function PollDetail() {
 
           {canSeeResults && (
             <Suspense fallback={<Skeleton className="h-24 rounded-xl" />}>
-              <VoteTrustIndicators poll={poll} votes={allVotes} />
+              <VoteTrustIndicators poll={poll} votes={[]} />
             </Suspense>
           )}
         </div>

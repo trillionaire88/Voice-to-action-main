@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /Admin
+Disallow: /SecurityDashboard
+Disallow: /ComplianceDashboard
+Disallow: /BackupStatus
+Disallow: /EmbedWidget
+Allow: /

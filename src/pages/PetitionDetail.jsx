@@ -107,7 +107,7 @@ export default function PetitionDetail() {
       return sigs.length > 0 ? sigs[0] : null;
     },
     enabled: !!petitionId && !!user,
-    staleTime: 5 * 60_000,
+    staleTime: 30_000,
   });
 
   const { data: deliveries = [] } = useQuery({
@@ -441,6 +441,14 @@ export default function PetitionDetail() {
           <Card className="border-slate-200">
             <CardContent className="pt-6 space-y-4">
               <div>
+                {petitionLoading ? (
+                  <>
+                    <Skeleton className="h-10 w-36 mb-3" />
+                    <Skeleton className="h-4 w-48 mb-3" />
+                    <Skeleton className="h-3 w-full rounded-full" />
+                  </>
+                ) : (
+                  <>
                 <div className="text-3xl font-bold text-slate-900 mb-1">
                   {(petition.signature_count_total || 0).toLocaleString()}
                 </div>
@@ -448,9 +456,12 @@ export default function PetitionDetail() {
                   of {(petition.signature_goal || 1000).toLocaleString()} signatures
                 </div>
                 <Progress value={Math.min(progress, 100)} className="h-3" />
+                  </>
+                )}
 
                 {/* Delivery milestone indicator */}
-                {(petition.signature_count_verified || 0) < MIN_VERIFIED_SIGS_FOR_DELIVERY &&
+                {!petitionLoading &&
+                  (petition.signature_count_verified || 0) < MIN_VERIFIED_SIGS_FOR_DELIVERY &&
                   petition.status === "active" && (
                   <div className="mt-2">
                     <div className="flex justify-between text-xs text-slate-500 mb-1">
@@ -477,7 +488,8 @@ export default function PetitionDetail() {
                     </p>
                   </div>
                 )}
-                {(petition.signature_count_verified || 0) >= MIN_VERIFIED_SIGS_FOR_DELIVERY && (
+                {!petitionLoading &&
+                  (petition.signature_count_verified || 0) >= MIN_VERIFIED_SIGS_FOR_DELIVERY && (
                   <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 rounded-lg px-3 py-2 mt-2">
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                     <p className="text-xs font-semibold">Delivery threshold reached!</p>

@@ -1,4 +1,4 @@
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "sonner"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { pagesConfig } from './pages.config'
@@ -97,7 +97,7 @@ const ProtectedRoute = ({
 
   if (!isAuthenticated || !user) {
     // Redirect to landing page with signin param
-    window.location.assign(`${window.location.origin}/?signin=1&return=${encodeURIComponent(window.location.pathname)}`);
+    window.location.replace(`${window.location.origin}/?signin=1&return=${encodeURIComponent(window.location.pathname)}`);
     return null;
   }
 
@@ -360,7 +360,7 @@ function App() {
                   <AuthenticatedApp />
                 </NavigationProvider>
               </Router>
-              <Toaster />
+              <Toaster richColors position="top-center" />
             </QueryClientProvider>
           </ReAuthProvider>
         </AuthProvider>

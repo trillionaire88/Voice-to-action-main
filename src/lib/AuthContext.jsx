@@ -103,12 +103,12 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(false);
       await supabase.auth.signOut();
     } finally {
-      if (shouldRedirect) window.location.assign(`${window.location.origin}/`);
+      if (shouldRedirect) window.location.replace(`${window.location.origin}/`);
     }
   }, []);
 
   const navigateToLogin = useCallback(() => {
-    window.location.assign(`${window.location.origin}/?signin=1`);
+    window.location.replace(`${window.location.origin}/?signin=1`);
   }, []);
 
   return (

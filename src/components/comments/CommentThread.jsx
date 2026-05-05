@@ -15,7 +15,9 @@ export default function CommentThread() {
         <div className="text-center py-12">
           <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <p className="text-slate-600 font-medium">Comments coming soon</p>
-          <p className="text-sm text-slate-500 mt-1">We are rebuilding discussions for better performance and safety.</p>
+          <p className="text-sm text-slate-500 mt-1">
+            When discussions return, every comment will go through the platform moderation pipeline before publication (pending / flagged / cleared).
+          </p>
         </div>
       </CardContent>
     </Card>

@@ -6,61 +6,98 @@ import { Badge } from "@/components/ui/badge";
 import { Users, BarChart3, CheckCircle2, TrendingUp, Globe2, Shield } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function PlatformStats() {
-  const { data: users = [], isLoading: usersLoading } = useQuery({
-    queryKey: ["allUsers"],
-    queryFn: async () => {
-      const { data } = await supabase.from("public_profiles_view").select("*");
-      return data || [];
-    },
-  });
-
-  const { data: polls = [], isLoading: pollsLoading } = useQuery({
-    queryKey: ["allPolls"],
-    queryFn: async () => {
-      const { data } = await supabase.from("polls").select("*");
-      return data || [];
-    },
-  });
-
-  const { data: votes = [], isLoading: votesLoading } = useQuery({
-    queryKey: ["allVotes"],
-    queryFn: async () => {
-      const { data } = await supabase.from("votes").select("*");
-      return data || [];
-    },
-  });
-
-  const { data: communities = [], isLoading: communitiesLoading } = useQuery({
-    queryKey: ["allCommunities"],
-    queryFn: async () => {
-      const { data } = await supabase.from("communities").select("*");
-      return data || [];
-    },
-  });
-
-  const isLoading = usersLoading || pollsLoading || votesLoading || communitiesLoading;
-
-  // Calculate statistics
-  const stats = {
-    totalUsers: users.length,
-    verifiedUsers: users.filter(u => u.is_blue_verified || u.is_verified).length,
-    totalPolls: polls.length,
-    activePolls: polls.filter(p => p.status === 'open').length,
-    totalVotes: votes.length,
-    totalComments: 0,
-    totalCommunities: communities.length,
-    uniqueCountries: new Set(users.map(u => u.country_code).filter(Boolean)).size,
+function normalizeRpcPayload(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  return {
+    totalUsers: Number(raw.total_users) || 0,
+    verifiedUsers: Number(raw.verified_users) || 0,
+    uniqueCountries: Number(raw.unique_countries) || 0,
+    totalPolls: Number(raw.total_polls) || 0,
+    activePolls: Number(raw.active_polls) || 0,
+    totalVotes: Number(raw.total_votes) || 0,
+    totalCommunities: Number(raw.total_communities) || 0,
+    recentVotes24h: Number(raw.votes_24h) || 0,
+    recentPolls24h: Number(raw.polls_24h) || 0,
+    recentPolls7d: Number(raw.polls_7d) || 0,
   };
+}
 
-  // Time-based stats
-  const now = new Date();
-  const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
-  const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+async function fetchStatsViaCounts() {
+  const day = new Date(Date.now() - 86400000).toISOString();
+  const week = new Date(Date.now() - 7 * 86400000).toISOString();
 
-  const recentPolls24h = polls.filter(p => new Date(p.created_date || p.created_at) > oneDayAgo).length;
-  const recentPolls7d = polls.filter(p => new Date(p.created_date || p.created_at) > sevenDaysAgo).length;
-  const recentVotes24h = votes.filter(v => new Date(v.created_date || v.created_at) > oneDayAgo).length;
+  const countHead = (q) => q.select("*", { count: "exact", head: true });
+
+  const [
+    usersRes,
+    verifiedRes,
+    pollsRes,
+    activePollsRes,
+    votesRes,
+    communitiesRes,
+    polls24Res,
+    polls7Res,
+    votes24Res,
+  ] = await Promise.all([
+    countHead(supabase.from("public_profiles_view")),
+    countHead(supabase.from("public_profiles_view").eq("is_blue_verified", true)),
+    countHead(supabase.from("polls")),
+    countHead(supabase.from("polls").eq("status", "open")),
+    countHead(supabase.from("votes")),
+    countHead(supabase.from("communities")),
+    countHead(supabase.from("polls").gte("created_date", day)),
+    countHead(supabase.from("polls").gte("created_date", week)),
+    countHead(supabase.from("votes").gte("created_at", day)),
+  ]);
+
+  const polls24Fallback =
+    typeof polls24Res.count === "number"
+      ? polls24Res.count
+      : (await countHead(supabase.from("polls").gte("start_time", day))).count ?? 0;
+
+  return {
+    totalUsers: usersRes.count ?? 0,
+    verifiedUsers: verifiedRes.count ?? 0,
+    uniqueCountries: 0,
+    totalPolls: pollsRes.count ?? 0,
+    activePolls: activePollsRes.count ?? 0,
+    totalVotes: votesRes.count ?? 0,
+    totalCommunities: communitiesRes.count ?? 0,
+    recentVotes24h: votes24Res.count ?? 0,
+    recentPolls24h: polls24Fallback,
+    recentPolls7d: polls7Res.count ?? 0,
+  };
+}
+
+export default function PlatformStats() {
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ["platformStatsSummary"],
+    queryFn: async () => {
+      const { data: rpcData, error } = await supabase.rpc("platform_stats_public_summary");
+      if (!error && rpcData) {
+        const n = normalizeRpcPayload(rpcData);
+        if (n) return n;
+      }
+      return fetchStatsViaCounts();
+    },
+    staleTime: 5 * 60_000,
+  });
+
+  const loading = isLoading || !stats;
+
+  const recentPolls24h = stats?.recentPolls24h ?? 0;
+  const recentPolls7d = stats?.recentPolls7d ?? 0;
+  const recentVotes24h = stats?.recentVotes24h ?? 0;
+
+  const statsView = stats ?? {
+    totalUsers: 0,
+    verifiedUsers: 0,
+    uniqueCountries: 0,
+    totalPolls: 0,
+    activePolls: 0,
+    totalVotes: 0,
+    totalCommunities: 0,
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -81,7 +118,7 @@ export default function PlatformStats() {
         </Badge>
       </div>
 
-      {isLoading ? (
+      {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[...Array(8)].map((_, i) => (
             <Skeleton key={i} className="h-32" />
@@ -99,9 +136,9 @@ export default function PlatformStats() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-slate-900">{stats.totalUsers.toLocaleString()}</div>
+                <div className="text-3xl font-bold text-slate-900">{statsView.totalUsers.toLocaleString()}</div>
                 <p className="text-xs text-slate-500 mt-1">
-                  {stats.verifiedUsers.toLocaleString()} verified
+                  {statsView.verifiedUsers.toLocaleString()} verified
                 </p>
               </CardContent>
             </Card>
@@ -114,9 +151,9 @@ export default function PlatformStats() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-slate-900">{stats.totalPolls.toLocaleString()}</div>
+                <div className="text-3xl font-bold text-slate-900">{statsView.totalPolls.toLocaleString()}</div>
                 <p className="text-xs text-slate-500 mt-1">
-                  {stats.activePolls.toLocaleString()} currently active
+                  {statsView.activePolls.toLocaleString()} currently active
                 </p>
               </CardContent>
             </Card>
@@ -129,7 +166,7 @@ export default function PlatformStats() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-slate-900">{stats.totalVotes.toLocaleString()}</div>
+                <div className="text-3xl font-bold text-slate-900">{statsView.totalVotes.toLocaleString()}</div>
                 <p className="text-xs text-slate-500 mt-1">
                   {recentVotes24h.toLocaleString()} in last 24h
                 </p>
@@ -144,7 +181,9 @@ export default function PlatformStats() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-slate-900">{stats.uniqueCountries}</div>
+                <div className="text-3xl font-bold text-slate-900">
+                  {statsView.uniqueCountries > 0 ? statsView.uniqueCountries : "—"}
+                </div>
                 <p className="text-xs text-slate-500 mt-1">
                   Global representation
                 </p>
@@ -174,7 +213,7 @@ export default function PlatformStats() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-slate-900">{stats.totalCommunities.toLocaleString()}</div>
+                <div className="text-3xl font-bold text-slate-900">{statsView.totalCommunities.toLocaleString()}</div>
               </CardContent>
             </Card>
 
@@ -187,7 +226,7 @@ export default function PlatformStats() {
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-slate-900">
-                  {stats.totalUsers > 0 ? Math.round((stats.verifiedUsers / stats.totalUsers) * 100) : 0}%
+                  {statsView.totalUsers > 0 ? Math.round((statsView.verifiedUsers / statsView.totalUsers) * 100) : 0}%
                 </div>
               </CardContent>
             </Card>
@@ -216,7 +255,7 @@ export default function PlatformStats() {
                 <div>
                   <div className="text-sm text-slate-600 mb-1">Avg Votes per Poll</div>
                   <div className="text-2xl font-bold text-slate-900">
-                    {stats.totalPolls > 0 ? Math.round(stats.totalVotes / stats.totalPolls) : 0}
+                    {statsView.totalPolls > 0 ? Math.round(statsView.totalVotes / statsView.totalPolls) : 0}
                   </div>
                   <div className="text-xs text-slate-500">votes</div>
                 </div>

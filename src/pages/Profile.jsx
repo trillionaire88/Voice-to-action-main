@@ -208,7 +208,7 @@ export default function Profile() {
       setOtherProfileTimedOut(false);
       return;
     }
-    const t = setTimeout(() => setOtherProfileTimedOut(true), 5000);
+    const t = setTimeout(() => setOtherProfileTimedOut(true), 3000);
     return () => clearTimeout(t);
   }, [profileUserId, profileUser]);
 
@@ -441,7 +441,8 @@ export default function Profile() {
 
   if (profileUserId && !profileUser && loadingOtherProfile && !otherProfileTimedOut) {
     return (
-      <div className="w-full py-12">
+      <div className="w-full py-12 space-y-4">
+        <p className="text-center text-slate-600 text-sm">Loading profile…</p>
         <SkeletonProfile />
       </div>
     );

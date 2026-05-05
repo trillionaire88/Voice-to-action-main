@@ -15,15 +15,13 @@ export default function FormErrorHandler({ error }) {
 
     if (msg.includes("Could not find the") && msg.includes("column")) {
       const col = msg.match(/'([^']+)' column/)?.[1];
-      return col
-        ? `A technical issue occurred (missing field: ${col}). Please run the latest schema migration in Supabase or try again shortly.`
-        : "A technical issue occurred with the database. Please try again shortly.";
+      if (col) console.warn("[FormErrorHandler] Missing column:", col);
+      return "A technical issue occurred. Please try again or contact support.";
     }
     if (msg.includes("column") && msg.includes("does not exist")) {
       const col = msg.match(/column \"([^\"]+)\"/)?.[1];
-      return col
-        ? `A technical issue occurred (missing field: ${col}). Please run the latest schema migration in Supabase.`
-        : "A technical issue occurred with the database schema.";
+      if (col) console.warn("[FormErrorHandler] Missing column:", col);
+      return "A technical issue occurred. Please try again or contact support.";
     }
     if (msg.includes("duplicate key")) return "This already exists. Please check and try again.";
     if (msg.includes("violates not-null")) return "Please fill in all required fields.";

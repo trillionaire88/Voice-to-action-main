@@ -19,6 +19,28 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing petitionId' }, { status: 400 });
     }
 
+    const { data: petitionAuth, error: petitionAuthErr } = await supabaseAdmin
+      .from('petitions')
+      .select('creator_user_id')
+      .eq('id', petitionId)
+      .single();
+
+    if (petitionAuthErr || !petitionAuth) {
+      return Response.json({ error: 'Petition not found' }, { status: 404 });
+    }
+
+    const { data: profileAuth } = await supabaseAdmin
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    const role = profileAuth?.role ?? 'user';
+    const isElevated = role === 'admin' || role === 'owner_admin';
+    if (petitionAuth.creator_user_id !== user.id && !isElevated) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     // Fetch petition and related data
     const [petitions, freshSignatures, deliveries, analytics] = await Promise.all([
       entities.Petition.filter({ id: petitionId }),
@@ -235,12 +257,15 @@ Your petition remains ACTIVE and will continue collecting signatures.
     }
 
     // Send notification to team (async, don't block on failure)
-    integrations.Core.SendEmail({
-      to: 'voicetoaction@outlook.com',
-      subject: `[Withdrawal] ${petition.title} — requested by ${user.full_name}`,
-      body: `Withdrawal report requested.\n\nPetition: "${petition.title}" (ID: ${petitionId})\nRequested by: ${user.full_name} (${user.email})\nSent to: ${recipients.join(', ')}\nIs Creator: ${isCreator}\nTotal signatures: ${petition.signature_count_total || 0}\nDate: ${new Date().toISOString()}`,
-      from_name: 'Voice to Action',
-    }).catch(err => console.error("Team email failed:", err));
+    const teamTo = Deno.env.get("OWNER_NOTIFY_EMAIL") ?? Deno.env.get("ADMIN_EMAIL") ?? "";
+    if (teamTo.trim()) {
+      integrations.Core.SendEmail({
+        to: teamTo.trim(),
+        subject: `[Withdrawal] ${petition.title} — requested by ${user.full_name}`,
+        body: `Withdrawal report requested.\n\nPetition: "${petition.title}" (ID: ${petitionId})\nRequested by: ${user.full_name} (${user.email})\nSent to: ${recipients.join(', ')}\nIs Creator: ${isCreator}\nTotal signatures: ${petition.signature_count_total || 0}\nDate: ${new Date().toISOString()}`,
+        from_name: 'Voice to Action',
+      }).catch(err => console.error("Team email failed:", err));
+    }
 
     // Create withdrawal record
     await adminEntities.PetitionWithdrawal.create({

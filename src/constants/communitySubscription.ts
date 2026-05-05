@@ -1,9 +1,10 @@
 /**
  * Paid / private community subscription pricing (AUD).
  * Must stay in sync with `supabase/functions/community-subscribe/index.ts`
- * (`unit_amount` cents and marketing copy).
+ * and `base44/functions/stripeCheckout` (`community_subscription` cents).
  */
-export const COMMUNITY_SUBSCRIPTION_AMOUNT_CENTS = 1099;
+/** Canonical monthly price — must match Stripe checkout (`community_subscription` in edge functions). */
+export const COMMUNITY_SUBSCRIPTION_AMOUNT_CENTS = 1999;
 export const COMMUNITY_SUBSCRIPTION_PRICE_AUD =
   COMMUNITY_SUBSCRIPTION_AMOUNT_CENTS / 100;
 

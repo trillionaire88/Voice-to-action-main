@@ -56,7 +56,6 @@
 
     <!-- Security headers -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
     <!-- Preconnect for performance -->
@@ -68,6 +67,11 @@
   <meta name="twitter:description" content="The world&#39;s first verified civic platform. Sign petitions, vote on policies, hold governments and corporations accountable. Real voices. Real change.">
 </head>
   <body>
+    <noscript>
+      <p style="font-family:sans-serif;text-align:center;padding:2rem">
+        Voice to Action requires JavaScript. Please enable it to continue.
+      </p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { runSecurityGate } from "../_shared/securityGate.ts";
 import { checkRateLimit, getClientIP, sanitiseInput, SECURITY_HEADERS } from "../_shared/securityMiddleware.ts";
+import { validateCheckoutRedirectPair } from "../_shared/checkoutRedirect.ts";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: SECURITY_HEADERS });
@@ -34,6 +35,11 @@ serve(async (req) => {
     const success_url = String(body.success_url || "");
     const cancel_url = String(body.cancel_url || "");
     if (!success_url || !cancel_url) return new Response(JSON.stringify({ error: "success_url and cancel_url required" }), { status: 400, headers: { ...SECURITY_HEADERS, "Content-Type": "application/json" } });
+
+    const redirectErr = validateCheckoutRedirectPair(success_url, cancel_url);
+    if (redirectErr) {
+      return new Response(JSON.stringify({ error: redirectErr }), { status: 400, headers: { ...SECURITY_HEADERS, "Content-Type": "application/json" } });
+    }
 
     if (user.email === "jeremywhisson@gmail.com") {
       return new Response(JSON.stringify({ checkout_url: success_url, owner_bypass: true }), { headers: { ...SECURITY_HEADERS, "Content-Type": "application/json" } });

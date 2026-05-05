@@ -28,7 +28,7 @@ export default function VoteTrustIndicators({ poll, votes = [] }) {
     });
     const topCountryPct = Object.values(countryCounts).length > 0
       ? Math.max(...Object.values(countryCounts)) / total
-      : 1;
+      : (votes.length > 0 ? 1 : 0.5);
 
     // Credibility score (0-100)
     let score = 0;

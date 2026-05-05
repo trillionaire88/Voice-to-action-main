@@ -1,9 +1,11 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { FROM_NOREPLY } from "../_shared/email.ts";
+import { checkRateLimit, rateLimitResponse } from "../_shared/rateLimiter.ts";
+import { siteOrigin } from "../_shared/siteUrl.ts";
 
 const cors = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": siteOrigin(),
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
@@ -11,6 +13,13 @@ const MAX_AGE_MS = 20 * 60 * 1000;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+
+  const ip =
+    req.headers.get("cf-connecting-ip") ||
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown";
+  const rl = await checkRateLimit(ip, "notify-takedown-request", 40, 3600);
+  if (!rl.allowed) return rateLimitResponse(rl.resetAt);
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;

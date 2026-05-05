@@ -1,3 +1,5 @@
+/** Ingress uses `x-internal-secret` matching INTERNAL_FUNCTION_SECRET — JWT verification intentionally off in config. */
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 

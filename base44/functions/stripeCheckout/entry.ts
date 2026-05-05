@@ -1,5 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.99.3';
 import Stripe from 'npm:stripe@14.21.0';
+import { validateCheckoutRedirectPair } from '../_shared/checkoutRedirect.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -28,6 +29,11 @@ Deno.serve(async (req) => {
 
     if (!success_url || !cancel_url) {
       return Response.json({ error: 'success_url and cancel_url are required' }, { status: 400 });
+    }
+
+    const redirectErr = validateCheckoutRedirectPair(String(success_url), String(cancel_url));
+    if (redirectErr) {
+      return Response.json({ error: redirectErr }, { status: 400 });
     }
 
     const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));

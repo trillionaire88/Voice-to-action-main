@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { getSafeReturnPath } from "@/lib/safeReturnPath";
 import {
   FileText, Vote, Users, Shield, Globe2, TrendingUp,
   CheckCircle2, ArrowRight, Loader2, X
@@ -63,7 +64,8 @@ function AuthModal({ initialMode, onClose }) {
   const returnUrl = (() => {
     try {
       const p = new URLSearchParams(window.location.search);
-      return p.get("return") || `${window.location.origin}/Home`;
+      const path = getSafeReturnPath(p.get("return"), "/Home");
+      return `${window.location.origin}${path}`;
     } catch {
       return `${window.location.origin}/Home`;
     }

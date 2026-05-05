@@ -407,7 +407,7 @@ export default function SearchPage() {
     suggestRef.current = setTimeout(async () => {
       const s = await fetchAutocomplete(query).catch(() => []);
       setSuggestions(s);
-    }, 200);
+    }, 400);
   }, [query]);
 
   const doSearch = useCallback(async (q = query, types = selectedTypes, s = sort) => {

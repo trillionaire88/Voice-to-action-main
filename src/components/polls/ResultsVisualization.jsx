@@ -27,6 +27,33 @@ export default function ResultsVisualization({
   const [breakdownType, setBreakdownType] = useState("none"); // none, country, age
 
   const results = useMemo(() => {
+    const useAggregates = !votes?.length;
+
+    if (useAggregates && options?.length) {
+      const totalAll = options.reduce(
+        (sum, o) => sum + (o.votes_count_cached ?? o.vote_count ?? 0),
+        0,
+      );
+      const totalVerified = options.reduce(
+        (sum, o) => sum + (o.verified_votes_count ?? 0),
+        0,
+      );
+      const total = viewMode === "verified" ? totalVerified : totalAll;
+
+      return options.map((opt) => {
+        const count =
+          viewMode === "verified"
+            ? opt.verified_votes_count ?? 0
+            : opt.votes_count_cached ?? opt.vote_count ?? 0;
+        const percentage = total > 0 ? (count / total) * 100 : 0;
+        return {
+          option: opt,
+          count,
+          percentage,
+        };
+      }).sort((a, b) => b.count - a.count);
+    }
+
     const filteredVotes =
       viewMode === "verified"
         ? votes.filter((v) => v.is_verified_user)
@@ -58,6 +85,7 @@ export default function ResultsVisualization({
 
   const breakdownData = useMemo(() => {
     if (breakdownType === "none") return null;
+    if (!votes || votes.length === 0) return null;
 
     const filteredVotes =
       viewMode === "verified"
@@ -90,7 +118,7 @@ export default function ResultsVisualization({
   }, [votes, options, breakdownType, viewMode]);
 
   const biasWarning = useMemo(() => {
-    if (votes.length === 0) return null;
+    if (!votes || votes.length === 0) return null;
 
     const countryCounts = {};
     votes.forEach((vote) => {
@@ -263,7 +291,7 @@ export default function ResultsVisualization({
             </TabsList>
           </Tabs>
 
-          {breakdownData && (
+          {breakdownData && votes?.length > 0 ? (
             <div className="mt-4 space-y-3">
               {Object.entries(breakdownData)
                 .sort(([, a], [, b]) => {
@@ -309,7 +337,11 @@ export default function ResultsVisualization({
                   );
                 })}
             </div>
-          )}
+          ) : breakdownType !== "none" && (!votes || votes.length === 0) ? (
+            <p className="text-sm text-slate-500 mt-4">
+              Detailed geographic or age breakdown is not loaded for this poll (aggregate results only).
+            </p>
+          ) : null}
         </div>
 
         {/* Change Vote */}

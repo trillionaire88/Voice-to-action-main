@@ -150,6 +150,10 @@ export default function CivicMap() {
   }, [userLocation, filteredPetitions, filteredPolls]);
 
   const locateMe = () => {
+    const proceed = window.confirm(
+      "We'll use your location once to find petitions and polls near you. Your location is not stored on our servers."
+    );
+    if (!proceed) return;
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       pos => {

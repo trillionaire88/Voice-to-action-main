@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
+import { validateCheckoutRedirectPair } from "../_shared/checkoutRedirect.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -34,6 +35,14 @@ serve(async (req) => {
     const { amount, payment_type, success_url, cancel_url } = await req.json();
     if (!success_url || !cancel_url) {
       return new Response(JSON.stringify({ error: "success_url and cancel_url required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const redirectErr = validateCheckoutRedirectPair(String(success_url), String(cancel_url));
+    if (redirectErr) {
+      return new Response(JSON.stringify({ error: redirectErr }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
