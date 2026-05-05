@@ -2,6 +2,8 @@ import { createSupabaseContext } from '../lib/supabaseContext.ts';
 import { format } from 'npm:date-fns@3.6.0';
 import { siteUrl } from '../_shared/siteUrl.ts';
 
+/** Signatory lines omit PII (names, emails, city, trust_level); aligns with Supabase withdrawal email. */
+
 Deno.serve(async (req) => {
   try {
     const { supabase, supabaseAdmin, entities, adminEntities, integrations, getUser } = createSupabaseContext(req);
