@@ -34,4 +34,4 @@ export function appHostname() {
 
 /** Public support inbox shown in legal/export copy (avoid hardcoding alternate domains). */
 export const SUPPORT_EMAIL =
-  import.meta.env.VITE_SUPPORT_EMAIL || 'voicetoaction@outlook.com'
+  import.meta.env.VITE_SUPPORT_EMAIL || 'support@voicetoaction.io'
