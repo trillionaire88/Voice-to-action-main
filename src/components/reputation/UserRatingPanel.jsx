@@ -60,47 +60,7 @@ export default function UserRatingPanel({ targetUser, currentUser }) {
           value,
         });
       }
-
-      // Recalculate reputation scores
-      const allRatings = await api.entities.UserReputationRating.filter({
-        target_user_id: targetUser.id,
-      });
-
-      const constructiveRatings = allRatings.filter(
-        (r) => r.category === "constructive"
-      );
-      const respectfulRatings = allRatings.filter(
-        (r) => r.category === "respectful"
-      );
-      const wellReasonedRatings = allRatings.filter(
-        (r) => r.category === "well_reasoned"
-      );
-
-      const avgConstructive =
-        constructiveRatings.length > 0
-          ? constructiveRatings.reduce((sum, r) => sum + r.value, 0) /
-            constructiveRatings.length
-          : 0;
-      const avgRespectful =
-        respectfulRatings.length > 0
-          ? respectfulRatings.reduce((sum, r) => sum + r.value, 0) /
-            respectfulRatings.length
-          : 0;
-      const avgWellReasoned =
-        wellReasonedRatings.length > 0
-          ? wellReasonedRatings.reduce((sum, r) => sum + r.value, 0) /
-            wellReasonedRatings.length
-          : 0;
-
-      const overall = (avgConstructive + avgRespectful + avgWellReasoned) / 3;
-
-      await api.entities.User.update(targetUser.id, {
-        reputation_score_overall: overall,
-        reputation_score_constructive: avgConstructive,
-        reputation_score_respectful: avgRespectful,
-        reputation_score_well_reasoned: avgWellReasoned,
-        reputation_last_updated_at: new Date().toISOString(),
-      });
+      /* Profile reputation_* columns updated by DB trigger (user_reputation_aggregate_trigger.sql). */
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["myRating"]);
