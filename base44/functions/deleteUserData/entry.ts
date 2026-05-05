@@ -56,6 +56,7 @@ Deno.serve(async (req) => {
     const signatures = await adminEntities.PetitionSignature.filter({ user_id: targetId });
     let sigCount = 0;
     for (const s of signatures) {
+      const wasVerified = !!s.is_verified_user;
       await adminEntities.PetitionSignature.update(s.id, {
         signer_name: '[Deleted User]',
         signer_email: `deleted_${targetId}@deleted.invalid`,
@@ -66,7 +67,7 @@ Deno.serve(async (req) => {
       const pets = await adminEntities.Petition.filter({ id: s.petition_id });
       const p = pets[0];
       if (p && s.petition_id) {
-        const verifiedDelta = s.is_verified_user ? 1 : 0;
+        const verifiedDelta = wasVerified ? 1 : 0;
         await adminEntities.Petition.update(s.petition_id, {
           signature_count_total: Math.max(0, (p.signature_count_total || 0) - 1),
           signature_count_verified: Math.max(0, (p.signature_count_verified || 0) - verifiedDelta),
