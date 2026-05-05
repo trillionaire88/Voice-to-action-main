@@ -165,6 +165,12 @@ export default function CreatePoll() {
         description: sanitiseText(pollData.description || "", 5000) || undefined,
         intent_custom: pollData.intent_custom ? sanitiseText(pollData.intent_custom, 200) : undefined,
       });
+      if (row.end_time) {
+        const endMs = new Date(row.end_time).getTime();
+        if (endMs < Date.now() + 60 * 60 * 1000) {
+          throw new Error("End time must be at least one hour from now.");
+        }
+      }
       const { data: poll, error: pollErr } = await supabase.from("polls").insert(row).select().single();
       if (pollErr) throw new Error(pollErr.message || "Failed to create poll");
 
@@ -279,6 +285,12 @@ export default function CreatePoll() {
         setError("End date must be in the future");
         return;
       }
+    }
+
+    const minAllowedEnd = new Date(Date.now() + 60 * 60 * 1000);
+    if (endTime && endTime.getTime() < minAllowedEnd.getTime()) {
+      setError("End time must be at least one hour from now.");
+      return;
     }
 
     try {
