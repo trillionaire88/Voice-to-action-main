@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
 
     const now = new Date().toUTCString();
     const ownerDisplay =
-      (Deno.env.get('OWNER_DISPLAY_NAME') || 'Voice to Action Platform Team').trim();
+      (Deno.env.get('OWNER_DISPLAY_NAME') || 'Voice to Action Platform').trim();
 
     const geoList = Object.entries(countryBreakdown)
       .sort(([, a], [, b]) => b - a)
