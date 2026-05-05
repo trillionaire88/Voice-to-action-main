@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { initiateStripeCheckout } from "@/lib/stripeCheckout";
 import { cleanForDB } from "@/lib/dbHelpers";
 import FormErrorHandler from "@/components/ui/FormErrorHandler";
+import { communityPlanTier } from "@/lib/communityFields";
 
 const TYPE_CONFIG = {
   business:     { label: "Business",     icon: Building2, color: "text-yellow-600", desc: "Companies, retailers, service providers" },
@@ -68,7 +69,7 @@ export default function RequestVerification() {
     enabled: !!user,
   });
 
-  const paidCommunities = communities.filter(c => c.community_plan === "paid" || c.subscription_active);
+  const paidCommunities = communities.filter(c => communityPlanTier(c) === "paid" || c.subscription_active);
 
   const handleSubmit = async () => {
     if (!selectedType || !orgName || !contactName || !contactEmail) {

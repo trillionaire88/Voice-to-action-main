@@ -1,3 +1,8 @@
+/**
+ * Communities entity — canonical Supabase columns are documented in `src/lib/communityFields.ts`.
+ * Read helpers that handle legacy duplicate fields are re-exported at the bottom of this file.
+ */
+
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
 
@@ -208,7 +213,7 @@ export async function getMyPrivateCommunities() {
 export async function getAdminCommunityStats() {
   const { data: communities, error: cErr } = await supabase
     .from("communities")
-    .select("id, name, plan, plan_status, member_count, subscription_started_at, stripe_subscription_id, founder_user_id, community_owner")
+    .select("id, name, plan, plan_status, member_count, subscription_started_at, stripe_subscription_id, founder_user_id")
     .in("plan", ["paid", "private"])
     .eq("plan_status", "active");
 
@@ -231,3 +236,14 @@ export async function getAdminCommunityStats() {
     monthly_revenue: monthlyRevenue,
   };
 }
+
+export {
+  communityName,
+  communityDescriptionPublic,
+  communityVisibilityValue,
+  communityLogoUrl,
+  communityBannerUrl,
+  communityPlanTier,
+  communityOwnerId,
+  communityTagsList,
+} from "@/lib/communityFields";

@@ -80,7 +80,6 @@ serve(async (req) => {
         verified_badge: plan === "paid" || plan === "private",
         priority_search: plan === "paid" || plan === "private",
         invite_code: inviteCode,
-        community_plan: plan,
         verified_community: true,
         community_verified: true,
       }).eq("id", community_id);
@@ -107,7 +106,7 @@ serve(async (req) => {
     if (subscriptionId) {
       const { data: community } = await supabase
         .from("communities")
-        .select("id, plan, founder_user_id, community_owner")
+        .select("id, plan, founder_user_id")
         .eq("stripe_subscription_id", subscriptionId)
         .maybeSingle();
 
@@ -149,7 +148,6 @@ serve(async (req) => {
         priority_search: false,
         is_hidden: wasPrivate,
         invite_code: null,
-        community_plan: "free",
         verified_community: false,
         community_verified: false,
       }).eq("id", community.id);

@@ -19,6 +19,16 @@ import {
 import { toast } from "sonner";
 import { sanitiseText } from "@/lib/sanitise";
 import { approveMember, rejectMember } from "@/api/communityApi";
+import {
+  communityName,
+  communityDescriptionPublic,
+  communityVisibilityValue,
+  communityLogoUrl,
+  communityBannerUrl,
+  communityPlanTier,
+  communityOwnerId,
+  communityTagsList,
+} from "@/lib/communityFields";
 
 function generateAccessCode() {
   const bytes = new Uint8Array(6);
@@ -40,17 +50,17 @@ export default function EditCommunity() {
   const [addingAdmin, setAddingAdmin] = useState(false);
 
   const [form, setForm] = useState({
-    community_name: "",
-    community_description: "",
+    name: "",
+    description_public: "",
     community_type: "",
-    community_visibility: "public",
+    visibility: "public",
     join_policy: "open",
     community_location: "",
     community_category: "",
-    community_tags: "",
+    tags: "",
     private_code: "",
-    community_logo: "",
-    community_banner: "",
+    logo_url: "",
+    banner_url: "",
   });
 
   useEffect(() => {
@@ -67,17 +77,17 @@ export default function EditCommunity() {
   useEffect(() => {
     if (!community) return;
     setForm({
-      community_name: community.community_name || community.name || "",
-      community_description: community.community_description || community.description_public || "",
+      name: communityName(community),
+      description_public: communityDescriptionPublic(community),
       community_type: community.community_type || "",
-      community_visibility: community.community_visibility || community.visibility || "public",
+      visibility: communityVisibilityValue(community),
       join_policy: community.join_policy || "open",
       community_location: community.community_location || "",
       community_category: community.community_category || "",
-      community_tags: (community.community_tags || community.tags || []).join(", "),
+      tags: communityTagsList(community).join(", "),
       private_code: community.private_code || "",
-      community_logo: community.community_logo || community.logo_url || "",
-      community_banner: community.community_banner || community.banner_url || "",
+      logo_url: communityLogoUrl(community),
+      banner_url: communityBannerUrl(community),
     });
   }, [community]);
 
@@ -92,37 +102,30 @@ export default function EditCommunity() {
   const pendingMembers = allMembers.filter(m => m.status === "pending_approval");
 
   const isPlatformAdmin = user?.role === "admin" || user?.role === "owner_admin";
-  const isOwner = community && (community.community_owner === user?.id || community.founder_user_id === user?.id);
+  const isOwner = community && communityOwnerId(community) === user?.id;
   const canAccess = isOwner || isPlatformAdmin;
-  const isPrivatePlan = community?.plan === "private" || community?.community_plan === "private";
+  const isPrivatePlan = communityPlanTier(community) === "private";
 
   const saveMutation = useMutation({
     mutationFn: () => {
-      const tags = form.community_tags.split(",").map(t => sanitiseText(t.trim(), 80)).filter(Boolean);
-      const safeName = sanitiseText(form.community_name, 200);
-      const safeDesc = sanitiseText(form.community_description, 10000);
+      const tags = form.tags.split(",").map(t => sanitiseText(t.trim(), 80)).filter(Boolean);
+      const safeName = sanitiseText(form.name, 200);
+      const safeDesc = sanitiseText(form.description_public, 10000);
       // Private-plan communities are always invite_only — do not allow overriding
       const effectiveJoinPolicy = isPrivatePlan ? "invite_only" : form.join_policy;
-      const effectiveVisibility = isPrivatePlan ? "private" : form.community_visibility;
+      const effectiveVisibility = isPrivatePlan ? "private" : form.visibility;
       return api.entities.Community.update(communityId, {
-        community_name: safeName,
-        community_description: safeDesc,
+        name: safeName,
+        description_public: safeDesc,
         community_type: form.community_type,
-        community_visibility: effectiveVisibility,
+        visibility: effectiveVisibility,
         join_policy: effectiveJoinPolicy,
         community_location: sanitiseText(form.community_location, 500),
         community_category: sanitiseText(form.community_category, 200),
-        community_tags: tags,
-        private_code: form.private_code,
-        community_logo: sanitiseText(form.community_logo || "", 2000),
-        community_banner: sanitiseText(form.community_banner || "", 2000),
-        // Keep legacy fields in sync
-        name: safeName,
-        description_public: safeDesc,
-        visibility: effectiveVisibility,
         tags,
-        logo_url: form.community_logo,
-        banner_url: form.community_banner,
+        private_code: form.private_code,
+        logo_url: sanitiseText(form.logo_url || "", 2000),
+        banner_url: sanitiseText(form.banner_url || "", 2000),
       });
     },
     onSuccess: () => {
@@ -145,7 +148,7 @@ export default function EditCommunity() {
       const users = await api.entities.User.filter({ email: newAdminEmail.trim() });
       const target = users[0];
       if (!target) { toast.error("User not found"); return; }
-      if (target.id === community.community_owner) { toast.error("This user is already the owner"); return; }
+      if (target.id === communityOwnerId(community)) { toast.error("This user is already the owner"); return; }
       const admins = community.community_admins || [];
       if (admins.includes(target.id)) { toast.error("Already an admin"); return; }
       await api.entities.Community.update(communityId, { community_admins: [...admins, target.id] });
@@ -186,12 +189,12 @@ export default function EditCommunity() {
   };
 
   const handleDelete = async () => {
-    const targetName = community.community_name || community.name || "";
+    const targetName = communityName(community);
     if (deleteConfirmName !== targetName) {
       toast.error("Community name doesn't match");
       return;
     }
-    const isPaid = community.community_plan === "paid" || community.community_plan === "private";
+    const isPaid = ["paid", "private"].includes(communityPlanTier(community));
     if (isPaid && community.subscription_active && !isPlatformAdmin) {
       toast.error("Cancel your subscription before deleting a paid community");
       return;
@@ -226,9 +229,9 @@ export default function EditCommunity() {
     );
   }
 
-  const communityDisplayName = community.community_name || community.name || "Community";
+  const communityDisplayName = communityName(community) || "Community";
   const admins = community.community_admins || [];
-  const isPaid = community.community_plan === "paid" || community.community_plan === "private";
+  const isPaid = ["paid", "private"].includes(communityPlanTier(community));
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 pb-16">
@@ -240,7 +243,7 @@ export default function EditCommunity() {
           <h1 className="text-2xl font-bold text-slate-900">Manage Community</h1>
           <p className="text-sm text-slate-500">{communityDisplayName}</p>
         </div>
-        <Badge className="ml-auto capitalize bg-slate-100 text-slate-700">{community.community_plan || "free"}</Badge>
+        <Badge className="ml-auto capitalize bg-slate-100 text-slate-700">{communityPlanTier(community)}</Badge>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -266,11 +269,11 @@ export default function EditCommunity() {
             <CardContent className="space-y-4">
               <div>
                 <Label>Community Name *</Label>
-                <Input className="mt-1" value={form.community_name} onChange={e => setForm(f => ({ ...f, community_name: e.target.value }))} />
+                <Input className="mt-1" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
               </div>
               <div>
                 <Label>Description *</Label>
-                <Textarea className="mt-1" rows={3} value={form.community_description} onChange={e => setForm(f => ({ ...f, community_description: e.target.value }))} />
+                <Textarea className="mt-1" rows={3} value={form.description_public} onChange={e => setForm(f => ({ ...f, description_public: e.target.value }))} />
               </div>
               <div>
                 <Label>Community Type</Label>
@@ -288,7 +291,7 @@ export default function EditCommunity() {
                 <>
                   <div>
                     <Label>Visibility</Label>
-                    <Select value={form.community_visibility} onValueChange={v => setForm(f => ({ ...f, community_visibility: v }))}>
+                    <Select value={form.visibility} onValueChange={v => setForm(f => ({ ...f, visibility: v }))}>
                       <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="public">Public — discoverable by anyone</SelectItem>
@@ -337,15 +340,15 @@ export default function EditCommunity() {
               </div>
               <div>
                 <Label>Tags (comma-separated)</Label>
-                <Input className="mt-1" value={form.community_tags} onChange={e => setForm(f => ({ ...f, community_tags: e.target.value }))} />
+                <Input className="mt-1" value={form.tags} onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} />
               </div>
               <div>
                 <Label>Logo URL</Label>
-                <Input className="mt-1" value={form.community_logo} onChange={e => setForm(f => ({ ...f, community_logo: e.target.value }))} placeholder="https://…" />
+                <Input className="mt-1" value={form.logo_url} onChange={e => setForm(f => ({ ...f, logo_url: e.target.value }))} placeholder="https://…" />
               </div>
               <div>
                 <Label>Banner URL</Label>
-                <Input className="mt-1" value={form.community_banner} onChange={e => setForm(f => ({ ...f, community_banner: e.target.value }))} placeholder="https://…" />
+                <Input className="mt-1" value={form.banner_url} onChange={e => setForm(f => ({ ...f, banner_url: e.target.value }))} placeholder="https://…" />
               </div>
 
               {/* Private access code */}
@@ -502,7 +505,7 @@ export default function EditCommunity() {
                 <Alert className="border-amber-300 bg-amber-50">
                   <AlertTriangle className="h-4 w-4 text-amber-600" />
                   <AlertDescription className="text-amber-900">
-                    You have an active <strong>{community.community_plan}</strong> subscription. Cancel it first to avoid ongoing charges.
+                    You have an active <strong>{communityPlanTier(community)}</strong> subscription. Cancel it first to avoid ongoing charges.
                   </AlertDescription>
                 </Alert>
               )}

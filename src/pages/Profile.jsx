@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ProfileCustomizer from "../components/profile/ProfileCustomizer";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { communityName, communityDescriptionPublic } from "@/lib/communityFields";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -289,7 +290,7 @@ export default function Profile() {
 
   const { data: ownedCommunities = [] } = useQuery({
     queryKey: ["ownedCommunities", targetUserId],
-    queryFn: () => api.entities.Community.filter({ owner_user_id: targetUserId }),
+    queryFn: () => api.entities.Community.filter({ founder_user_id: targetUserId }),
     enabled: !!targetUserId,
   });
 
@@ -1183,10 +1184,10 @@ export default function Profile() {
                       }
                     >
                       <h4 className="font-semibold text-slate-900 mb-1">
-                        {community.name}
+                        {communityName(community)}
                       </h4>
                       <p className="text-sm text-slate-600 mb-2 line-clamp-2">
-                        {community.description}
+                        {communityDescriptionPublic(community)}
                       </p>
                       <div className="flex items-center gap-2 text-xs text-slate-500">
                         <UsersIcon className="w-3 h-3" />

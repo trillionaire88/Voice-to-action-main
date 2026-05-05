@@ -38,6 +38,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import SocialShareButtons from "@/components/social/SocialShareButtons";
 import { joinCommunityWithAccessCode, approveMember, rejectMember } from "@/api/communityApi";
+import {
+  communityName,
+  communityDescriptionPublic,
+  communityLogoUrl,
+  communityPlanTier,
+  communityOwnerId,
+} from "@/lib/communityFields";
 
 export default function CommunityDetail() {
   const navigate = useNavigate();
@@ -105,8 +112,8 @@ export default function CommunityDetail() {
 
   // Pending join requests — visible only to admins
   const isPlatformAdmin = user?.role === "admin" || user?.role === "owner_admin";
-  const isOwner = community && (community.community_owner === user?.id || community.founder_user_id === user?.id);
-  const effectivePlan = community ? (community.plan || community.community_plan || "free") : "free";
+  const isOwner = community && communityOwnerId(community) === user?.id;
+  const effectivePlan = community ? communityPlanTier(community) : "free";
   const isPaidTier = effectivePlan === "paid" || effectivePlan === "private";
   const isPrivatePlan = effectivePlan === "private";
   const showPlanVerified = community?.verified_badge || community?.verified_community || community?.community_verified;
@@ -335,8 +342,8 @@ export default function CommunityDetail() {
           </Button>
 
           <div className="flex items-start gap-6">
-            {community.logo_url ? (
-              <img src={community.logo_url} alt={community.community_name || community.name} className="w-20 h-20 rounded-xl object-cover" />
+            {communityLogoUrl(community) ? (
+              <img src={communityLogoUrl(community)} alt={communityName(community)} className="w-20 h-20 rounded-xl object-cover" />
             ) : (
               <div className="w-20 h-20 rounded-xl bg-white/10 flex items-center justify-center">
                 {isPrivatePlan ? <Lock className="w-10 h-10 text-white/60" /> : <Users className="w-10 h-10 text-white/60" />}
@@ -346,7 +353,7 @@ export default function CommunityDetail() {
             <div className="flex-1">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h1 className="text-3xl font-bold mb-2">{community.community_name || community.name}</h1>
+                  <h1 className="text-3xl font-bold mb-2">{communityName(community)}</h1>
                   <div className="flex items-center gap-2 flex-wrap">
                     <Badge className={`bg-${typeInfo.color}-500 text-white`}>
                       {typeInfo.label}
@@ -417,7 +424,7 @@ export default function CommunityDetail() {
 
               {/* Only show description publicly if community is not private-plan */}
               {!isPrivatePlan && (
-                <p className="text-blue-100 text-lg">{community.community_description || community.description_public}</p>
+                <p className="text-blue-100 text-lg">{communityDescriptionPublic(community)}</p>
               )}
               {isPrivatePlan && !isMember && (
                 <p className="text-blue-100 text-lg">This is a private community. Join to see content.</p>
@@ -623,7 +630,7 @@ export default function CommunityDetail() {
                     <CardContent className="space-y-4">
                       <div>
                         <h4 className="font-semibold text-sm text-slate-700 mb-2">Description</h4>
-                        <p className="text-slate-600">{community.community_description || community.description_public}</p>
+                        <p className="text-slate-600">{communityDescriptionPublic(community)}</p>
                       </div>
                       {community.description_internal && (
                         <div>
@@ -996,7 +1003,7 @@ export default function CommunityDetail() {
             <Card>
               <CardHeader><CardTitle>About</CardTitle></CardHeader>
               <CardContent>
-                <p className="text-slate-600">{community.community_description || community.description_public}</p>
+                <p className="text-slate-600">{communityDescriptionPublic(community)}</p>
                 {community.tags?.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-4">
                     {community.tags.map((tag) => (
@@ -1024,7 +1031,7 @@ export default function CommunityDetail() {
 
         <Card className="border-slate-200 mt-4">
           <CardContent className="pt-4">
-            <SocialShareButtons title={community?.community_name || community?.name || "Community"} url={window.location.href} />
+            <SocialShareButtons title={communityName(community) || "Community"} url={window.location.href} />
           </CardContent>
         </Card>
       </div>

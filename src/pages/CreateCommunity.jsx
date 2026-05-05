@@ -214,20 +214,12 @@ export default function CreateCommunity() {
 
       const community = await api.entities.Community.create(
         cleanForDB({
-          community_name: safeName,
-          community_description: safeDesc,
           community_type: communityType,
-          community_plan: communityPlan,
-          community_visibility: communityPlan === "private" ? "private" : communityVisibility,
-          community_owner: user.id,
           community_admins: [],
           community_verified: isPaid && subscriptionActive,
           subscription_active: isPaid ? subscriptionActive : false,
-          community_logo: undefined,
-          community_banner: undefined,
           community_category: safeCat || undefined,
           community_location: safeLoc || undefined,
-          community_tags: tags,
           community_created_date: new Date().toISOString(),
           name: safeName,
           slug,

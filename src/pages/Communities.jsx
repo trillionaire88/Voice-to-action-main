@@ -35,6 +35,13 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import {
+  communityName,
+  communityDescriptionPublic,
+  communityPlanTier,
+  communityOwnerId,
+  communityLogoUrl,
+} from "@/lib/communityFields";
 
 const COMMUNITY_TYPE_ICONS = {
   public_community: Users,
@@ -171,12 +178,12 @@ export default function Communities() {
 
   const filteredCommunities = communities.filter((community) => {
     // Private-plan communities are never shown in the public directory
-    const tier = community.plan || community.community_plan || "free";
+    const tier = communityPlanTier(community);
     if (tier === "private") return false;
     if (community.visibility === "private") return false;
 
-    const name = community.community_name || community.name || "";
-    const desc = community.community_description || community.description_public || "";
+    const name = communityName(community);
+    const desc = communityDescriptionPublic(community);
     const matchesSearch = !searchQuery ||
       name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       desc.toLowerCase().includes(searchQuery.toLowerCase());
@@ -215,7 +222,7 @@ export default function Communities() {
   };
 
   const isCommunityOwner = (c) =>
-    user && (c.founder_user_id === user.id || c.community_owner === user.id);
+    user && communityOwnerId(c) === user.id;
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
@@ -458,7 +465,7 @@ export default function Communities() {
             {filteredCommunities.map((community) => {
               const Icon = COMMUNITY_TYPE_ICONS[community.community_type] || Users;
               const isMember = myMembershipIds.has(community.id);
-              const tier = community.plan || community.community_plan || "free";
+              const tier = communityPlanTier(community);
               const showVerified =
                 community.verified_badge ||
                 community.community_verified ||
@@ -473,15 +480,15 @@ export default function Communities() {
                 >
                   <CardHeader>
                     <div className="flex items-start gap-3">
-                      {community.logo_url ? (
-                        <img src={community.logo_url} alt={community.name} className="w-12 h-12 rounded-lg object-cover" />
+                      {communityLogoUrl(community) ? (
+                        <img src={communityLogoUrl(community)} alt={communityName(community)} className="w-12 h-12 rounded-lg object-cover" />
                       ) : (
                         <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
                           <Icon className="w-6 h-6 text-purple-600" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-lg mb-1 truncate">{community.community_name || community.name}</CardTitle>
+                        <CardTitle className="text-lg mb-1 truncate">{communityName(community)}</CardTitle>
                         <div className="flex flex-wrap gap-1">
                           <Badge variant="outline" className="text-xs">
                             {(community.community_type || "").replace(/_/g, ' ')}
@@ -525,7 +532,7 @@ export default function Communities() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-slate-600 mb-4 line-clamp-2">
-                      {community.community_description || community.description_public}
+                      {communityDescriptionPublic(community)}
                     </p>
                     <div className="flex items-center justify-between text-sm text-slate-500">
                       <div className="flex items-center gap-3">
