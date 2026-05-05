@@ -195,9 +195,11 @@ export default function PetitionDetail() {
         is_verified_user: true,
       });
 
-      const signatureList = signatures.map((sig, idx) => 
-        `${idx + 1}. User ID: ${sig.user_id}, Country: ${sig.country_code}, Signed: ${format(new Date(sig.created_date), 'PPP')}`
-      ).join('\n');
+      const signatureList = signatures.map((sig, idx) => {
+        const country = sig.country_code || "—";
+        const signed = format(new Date(sig.created_date), "PPP");
+        return `Signatory #${idx + 1} — Country: ${country}, Signed: ${signed}`;
+      }).join("\n");
 
       const emailContent = `
 Petition Submission: ${petition.title}
