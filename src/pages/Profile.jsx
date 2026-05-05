@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
@@ -74,6 +74,7 @@ export default function Profile() {
   
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState(null); // { type: 'poll' | 'petition', id: string }
 
   // Handle return from Stripe checkout for identity_verification payment
   useEffect(() => {
@@ -338,16 +339,12 @@ export default function Profile() {
 
   const handleDeletePoll = (e, pollId) => {
     e.stopPropagation();
-    if (window.confirm("Are you sure you want to delete this poll? This cannot be undone.")) {
-      deletePollMutation.mutate(pollId);
-    }
+    setDeleteConfirm({ type: "poll", id: pollId });
   };
 
   const handleDeletePetition = (e, petitionId) => {
     e.stopPropagation();
-    if (window.confirm("Are you sure you want to delete this petition? This cannot be undone.")) {
-      deletePetitionMutation.mutate(petitionId);
-    }
+    setDeleteConfirm({ type: "petition", id: petitionId });
   };
 
   const updateProfileMutation = useMutation({
@@ -1223,6 +1220,43 @@ export default function Profile() {
           </div>
         </TabsContent>
       </Tabs>
+      {deleteConfirm && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="delete-confirm-title"
+        >
+          <Card className="max-w-md w-full shadow-xl border-slate-200">
+            <CardHeader>
+              <CardTitle id="delete-confirm-title">
+                Delete this {deleteConfirm.type}?
+              </CardTitle>
+              <CardDescription>This action cannot be undone.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex gap-2 justify-end">
+              <Button type="button" variant="outline" onClick={() => setDeleteConfirm(null)}>
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                disabled={deletePollMutation.isPending || deletePetitionMutation.isPending}
+                onClick={() => {
+                  if (deleteConfirm.type === "poll") {
+                    deletePollMutation.mutate(deleteConfirm.id);
+                  } else {
+                    deletePetitionMutation.mutate(deleteConfirm.id);
+                  }
+                  setDeleteConfirm(null);
+                }}
+              >
+                Delete
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
