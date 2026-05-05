@@ -21,6 +21,7 @@ import { reportHoneypotHit } from "@/lib/threatIntelClient";
 import { cleanForDB } from "@/lib/dbHelpers";
 import { checkRateLimit } from "@/lib/rateLimit";
 import FormErrorHandler from "@/components/ui/FormErrorHandler";
+import { api } from "@/api/client";
 import { PlusCircle, X, Globe2, Shield, ChevronDown, ChevronUp, GripVertical, ImageIcon } from "lucide-react";
 
 const CATEGORIES = [
@@ -146,7 +147,13 @@ export default function CreatePoll() {
 
       let image_url = null;
       if (imageFile) {
-        /* Image upload can be wired to storage later */
+        try {
+          const { file_url } = await api.integrations.Core.UploadFile({ file: imageFile });
+          image_url = file_url || null;
+        } catch (uploadErr) {
+          const msg = uploadErr?.message || "Image upload failed.";
+          throw new Error(`${msg} Remove the image or try again.`);
+        }
       }
 
       const row = cleanForDB({
@@ -579,8 +586,13 @@ export default function CreatePoll() {
               className="bg-blue-600 hover:bg-blue-700 text-white px-10"
             >
               {createPollMutation.isPending ? (
-                <><span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2 inline-block" />Publishing…</>
-              ) : "🚀 Publish Poll"}
+                <>
+                  <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2 inline-block" />
+                  {imageFile ? "Uploading image…" : "Publishing…"}
+                </>
+              ) : (
+                "🚀 Publish Poll"
+              )}
             </Button>
           </div>
         </div>
