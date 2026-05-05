@@ -1,3 +1,4 @@
+-- Figure rating aggregates (deploy with migrations). Client must not recompute these.
 -- Server-side aggregates for public figure ratings (SECURITY DEFINER).
 -- Requires: public.public_figures, public.figure_ratings
 
