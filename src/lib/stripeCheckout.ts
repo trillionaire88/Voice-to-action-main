@@ -9,20 +9,8 @@ export interface CheckoutOptions {
   cancel_url?: string;
 }
 
-export const PAYMENT_CONFIGS = {
-  org_subscription: {
-    name: "Voice to Action — Verified Organisation Presence",
-    description: "Monthly subscription for verified organisation presence. Includes verified badge, official response capability, and analytics.",
-    amount_cents: 9900,
-    mode: "subscription",
-  },
-  content_promotion: {
-    name: "Voice to Action — Content Promotion",
-    description: "Boost your petition or poll reach in the Voice to Action newsfeed.",
-    amount_cents: 1000,
-    mode: "payment",
-  },
-};
+const STRIPE_CHECKOUT_FN =
+  import.meta.env.VITE_STRIPE_CHECKOUT_FUNCTION?.trim() || "stripe-checkout";
 
 export async function initiateStripeCheckout(options: CheckoutOptions): Promise<void> {
   const {
@@ -42,7 +30,7 @@ export async function initiateStripeCheckout(options: CheckoutOptions): Promise<
   }
 
   try {
-    const { data, error } = await supabase.functions.invoke("stripe-checkout-blue", {
+    const { data, error } = await supabase.functions.invoke(STRIPE_CHECKOUT_FN, {
       body: {
         payment_type,
         amount,

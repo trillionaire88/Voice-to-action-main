@@ -27,7 +27,7 @@ const PLANS = [
   {
     id: "paid",
     name: "Paid",
-    price: "$10.99",
+    price: "$19.99",
     badge: "Popular",
     color: "border-blue-400",
     features: [
@@ -41,7 +41,7 @@ const PLANS = [
   {
     id: "private",
     name: "Private",
-    price: "$10.99",
+    price: "$19.99",
     badge: null,
     color: "border-slate-400",
     features: [
@@ -142,7 +142,7 @@ export default function CommunitySubscription() {
               <p className="text-slate-500 text-xs mt-0.5">
                 {community.plan_status === "cancelled"
                   ? "Your community will downgrade to Free at the end of this billing period."
-                  : "$10.99 AUD / month"}
+                  : "$19.99 AUD / month"}
               </p>
             </div>
           </div>

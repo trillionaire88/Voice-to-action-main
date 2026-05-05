@@ -22,10 +22,12 @@ Deno.serve(async (req) => {
         is_blocked: false,
       });
       const stale = oldRateLimits.filter(r => r.window_end && r.window_end < cutoff);
+      const ids = stale.map((r) => r.id);
       let rateClean = 0;
-      for (const r of stale) {
-        await adminEntities.RateLimitTracker.delete(r.id).catch(() => {});
-        rateClean++;
+      if (ids.length > 0) {
+        const { error: delErr } = await supabaseAdmin.from('rate_limit_trackers').delete().in('id', ids);
+        if (delErr) throw delErr;
+        rateClean = ids.length;
       }
       results.cleaned.rate_limit_records = rateClean;
       console.log(`[Maintenance] Cleaned ${rateClean} expired rate limit records`);
@@ -59,11 +61,13 @@ Deno.serve(async (req) => {
     try {
       const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
       const oldLogs = await adminEntities.SecurityLog.filter({ severity: 'info' });
-      const stale = oldLogs.filter(l => l.created_date < cutoff);
+      const stale = oldLogs.filter(l => l.created_date < cutoff).slice(0, 200);
+      const logIds = stale.map((l) => l.id);
       let logsCleaned = 0;
-      for (const l of stale.slice(0, 200)) { // cap at 200 per run
-        await adminEntities.SecurityLog.delete(l.id).catch(() => {});
-        logsCleaned++;
+      if (logIds.length > 0) {
+        const { error: delErr } = await supabaseAdmin.from('security_logs').delete().in('id', logIds);
+        if (delErr) throw delErr;
+        logsCleaned = logIds.length;
       }
       results.cleaned.old_security_logs = logsCleaned;
       console.log(`[Maintenance] Cleaned ${logsCleaned} old info-level security logs`);
@@ -75,11 +79,13 @@ Deno.serve(async (req) => {
     try {
       const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
       const rejected = await adminEntities.PollOptionSuggestion.filter({ status: 'rejected' });
-      const stale = rejected.filter(s => s.decided_at && s.decided_at < cutoff);
+      const stale = rejected.filter(s => s.decided_at && s.decided_at < cutoff).slice(0, 100);
+      const suggIds = stale.map((s) => s.id);
       let suggCleaned = 0;
-      for (const s of stale.slice(0, 100)) {
-        await adminEntities.PollOptionSuggestion.delete(s.id).catch(() => {});
-        suggCleaned++;
+      if (suggIds.length > 0) {
+        const { error: delErr } = await supabaseAdmin.from('poll_option_suggestions').delete().in('id', suggIds);
+        if (delErr) throw delErr;
+        suggCleaned = suggIds.length;
       }
       results.cleaned.old_rejected_suggestions = suggCleaned;
       console.log(`[Maintenance] Cleaned ${suggCleaned} old rejected poll suggestions`);
@@ -94,8 +100,14 @@ Deno.serve(async (req) => {
       const readyToDelete = pendingDeletions.filter(u => u.account_deletion_requested_at && u.account_deletion_requested_at < thirtyDaysAgo);
       let deletionCount = 0;
       for (const u of readyToDelete.slice(0, 20)) {
-        await vta.functions.invoke('deleteUserData', { user_id: u.id, immediate: true }).catch(e => console.error(`[Maintenance] Deletion failed for user ${u.id}:`, e.message));
-        deletionCount++;
+        const { error: delError } = await supabaseAdmin.functions.invoke('deleteUserData', {
+          body: { user_id: u.id, immediate: true },
+        });
+        if (delError) {
+          console.error(`[Maintenance] Deletion failed for user ${u.id}:`, delError.message);
+        } else {
+          deletionCount++;
+        }
       }
       results.cleaned.account_deletions_processed = deletionCount;
       console.log(`[Maintenance] Processed ${deletionCount} account deletions`);
@@ -119,9 +131,10 @@ Deno.serve(async (req) => {
 
     // ── 7. Run payment reconciliation ─────────────────────────────────────
     try {
-      const reconResult = await vta.functions.invoke('paymentReconciliation', {}).catch(e => ({ error: e.message }));
-      results.cleaned.payment_reconciliation = reconResult?.fulfilled || 0;
-      console.log(`[Maintenance] Payment reconciliation ran: ${reconResult?.fulfilled || 0} fulfilled`);
+      const { data: reconData, error: reconErr } = await supabaseAdmin.functions.invoke('paymentReconciliation', { body: {} });
+      if (reconErr) throw reconErr;
+      results.cleaned.payment_reconciliation = reconData?.fulfilled ?? 0;
+      console.log(`[Maintenance] Payment reconciliation ran: ${reconData?.fulfilled ?? 0} fulfilled`);
     } catch (e) { console.error('[Maintenance] Payment reconciliation trigger failed:', e.message); }
 
     // ── 8. Flag stuck identity verifications (paid but no identity step > 7 days) ──
@@ -156,8 +169,10 @@ Deno.serve(async (req) => {
       ];
       let reIndexed = 0;
       for (const item of allContent.slice(0, 100)) {
-        await vta.functions.invoke('indexContent', { content_type: item.type, content_id: item.id }).catch(() => {});
-        reIndexed++;
+        const { error: idxErr } = await supabaseAdmin.functions.invoke('indexContent', {
+          body: { content_type: item.type, content_id: item.id },
+        });
+        if (!idxErr) reIndexed++;
       }
       results.cleaned.search_index_refreshed = reIndexed;
       console.log(`[Maintenance] Re-indexed ${reIndexed} items in search`);
@@ -165,9 +180,16 @@ Deno.serve(async (req) => {
 
     // ── 10. Check petition deliveries for escalation ──────────────────────
     try {
-      const escalationResult = await vta.functions.invoke('petitionDeliveryTracker', { action: 'check_escalations' }).catch(e => ({ error: e.message }));
-      results.cleaned.petition_escalations = escalationResult?.escalated || 0;
-      console.log(`[Maintenance] Petition escalation check: ${escalationResult?.escalated || 0} escalated`);
+      const { data: escalationResult, error: escErr } = await supabaseAdmin.functions.invoke('petitionDeliveryTracker', {
+        body: { action: 'check_escalations' },
+      });
+      if (escErr) {
+        results.cleaned.petition_escalations = 0;
+        console.error('[Maintenance] petitionDeliveryTracker:', escErr.message);
+      } else {
+        results.cleaned.petition_escalations = escalationResult?.escalated || 0;
+        console.log(`[Maintenance] Petition escalation check: ${escalationResult?.escalated || 0} escalated`);
+      }
     } catch (e) { console.error('[Maintenance] Petition escalation check failed:', e.message); }
 
     // ── 11. Log maintenance run ───────────────────────────────────────────

@@ -18,7 +18,7 @@ export const AntiScrapingDetector = {
     return {
       timestamp: Date.now(),
       platform: "Voice to Action",
-      owner: "Jeremy Kyle Whisson",
+      owner: "Voice to Action",
       build: "production",
       signature: btoa(`VOICETOACTION-${navigator.userAgent}-${Date.now()}`),
       checksum,

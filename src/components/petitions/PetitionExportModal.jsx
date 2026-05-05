@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { api } from '@/api/client';
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +8,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Mail, Download, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Mail, Download } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { initiateStripeCheckout } from "@/lib/stripeCheckout";
@@ -17,53 +16,57 @@ import { initiateStripeCheckout } from "@/lib/stripeCheckout";
 export default function PetitionExportModal({ petition, onClose }) {
   const [emailInput, setEmailInput] = useState("");
   const [sending, setSending] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const handleSend = async () => {
-    if (!emailInput.trim()) {
-      toast.error("Please enter at least one email address");
+    const emails = emailInput
+      .split(",")
+      .map((e) => e.trim())
+      .filter(Boolean);
+
+    if (emails.length === 0) {
+      toast.error("Please enter at least one valid email address");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const invalidEmails = emails.filter((e) => !emailRegex.test(e));
+    if (invalidEmails.length > 0) {
+      toast.error(`Invalid email(s): ${invalidEmails.join(", ")}`);
+      return;
+    }
+
+    const exportEmailsMeta = emails.join(",");
+    if (exportEmailsMeta.length > 450) {
+      toast.error("Too many recipients — shorten the list (Stripe metadata limit).");
       return;
     }
 
     setSending(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Please sign in again.");
+
+      sessionStorage.setItem(
+        `petition_export_emails_${petition.id}`,
+        JSON.stringify(emails),
+      );
+
       await initiateStripeCheckout({
         payment_type: "petition_export",
         success_url: `${window.location.origin}/PetitionDetail?id=${petition.id}&exported=1`,
         cancel_url: `${window.location.origin}/PetitionDetail?id=${petition.id}&payment_cancelled=1`,
-        metadata: { user_id: user.id, petition_id: petition.id },
+        metadata: {
+          user_id: user.id,
+          petition_id: petition.id,
+          export_emails: exportEmailsMeta,
+        },
       });
-      const emails = emailInput
-        .split(",")
-        .map((e) => e.trim())
-        .filter(Boolean);
-
-      if (emails.length === 0) {
-        toast.error("Please enter valid email addresses");
-        setSending(false);
-        return;
-      }
-
-      const res = await api.functions.invoke("sendPetitionExport", {
-        petitionId: petition.id,
-        emailAddresses: emails,
-      });
-
-      if (res.data?.success) {
-        setSuccess(true);
-        toast.success(`Export sent to ${emails.length} recipient(s)`);
-        setTimeout(() => {
-          onClose();
-        }, 2000);
-      } else {
-        throw new Error(res.data?.error || "Failed to send export");
-      }
+      // Redirect leaves the page; no further client-side send.
     } catch (e) {
       console.error("Export error:", e);
-      toast.error("Failed to send export: " + e.message);
-    } finally {
+      toast.error("Failed to start checkout: " + e.message);
       setSending(false);
     }
   };
@@ -82,18 +85,6 @@ export default function PetitionExportModal({ petition, onClose }) {
         </DialogHeader>
 
         <div className="space-y-4">
-          {success ? (
-            <div className="text-center py-6">
-              <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
-              <h3 className="font-semibold text-slate-900 mb-1">
-                Export Sent Successfully!
-              </h3>
-              <p className="text-sm text-slate-600">
-                Your petition data has been sent to {emailInput}
-              </p>
-            </div>
-          ) : (
-            <>
               <Alert className="border-blue-200 bg-blue-50">
                 <Mail className="h-4 w-4 text-blue-600" />
                 <AlertDescription className="text-blue-800 text-sm">
@@ -114,7 +105,7 @@ user3@example.com"
                   className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none h-24"
                 />
                 <p className="text-xs text-slate-500 mt-1">
-                  Enter one or more email addresses (one per line or comma-separated)
+                  Enter one or more email addresses (one per line or comma-separated). After payment, recipients receive the export by email.
                 </p>
               </div>
 
@@ -135,18 +126,16 @@ user3@example.com"
                   {sending ? (
                     <span className="flex items-center gap-2">
                       <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                      Sending...
+                      Redirecting…
                     </span>
                   ) : (
                     <span className="flex items-center gap-2">
-                      <Download className="w-4 h-4" />
-                      Send Export
+                      <Download className="w-4 w-4" />
+                      Pay & send export
                     </span>
                   )}
                 </Button>
               </div>
-            </>
-          )}
         </div>
       </DialogContent>
     </Dialog>

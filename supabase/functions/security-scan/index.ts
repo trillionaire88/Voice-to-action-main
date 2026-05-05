@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { auditLog, SECURITY_HEADERS } from "../_shared/securityMiddleware.ts";
 import { FROM_SECURITY } from "../_shared/email.ts";
 
-const OWNER_EMAIL = "jeremywhisson@gmail.com";
+const OWNER_EMAIL = Deno.env.get("OWNER_NOTIFY_EMAIL") ?? "jeremywhisson@gmail.com";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: SECURITY_HEADERS });

@@ -15,8 +15,6 @@ Deno.serve(async (req) => {
     // Look back 48 hours for any sessions we may have missed
     const since = Math.floor(Date.now() / 1000) - (48 * 60 * 60);
 
-    // Fetch completed checkout sessions from Stripe
-    let sessions = [];
     let hasMore = true;
     let startingAfter = undefined;
 
@@ -24,100 +22,100 @@ Deno.serve(async (req) => {
       const params = { limit: 100, created: { gte: since }, status: 'complete' };
       if (startingAfter) params.starting_after = startingAfter;
       const page = await stripe.checkout.sessions.list(params);
-      sessions = sessions.concat(page.data);
+
+      for (const session of page.data) {
+        results.checked++;
+        const meta = session.metadata || {};
+        const userId = meta.user_id;
+        const paymentType = meta.payment_type;
+
+        if (!userId || !paymentType) continue;
+
+        try {
+          // identity_verification: ensure VerificationRequest exists + user flagged
+          if (paymentType === 'identity_verification') {
+            const existing = await adminEntities.VerificationRequest.filter({ user_id: userId });
+            const alreadyFulfilled = existing.some(r => r.payment_status === 'completed');
+
+            if (!alreadyFulfilled) {
+              const users = await adminEntities.User.filter({ id: userId });
+              const targetUser = users[0];
+
+              await adminEntities.VerificationRequest.create({
+                user_id: userId,
+                verification_type: 'identity',
+                full_name: targetUser?.full_name || targetUser?.display_name || '',
+                status: 'pending',
+                payment_status: 'completed',
+                payment_amount: 12.99,
+                payment_reference: session.id,
+                reconciled: true,
+              });
+
+              await adminEntities.User.update(userId, {
+                paid_identity_verification_completed: true,
+              }).catch(() => {});
+
+              results.fulfilled++;
+              console.log(`[PaymentReconciliation] FULFILLED identity_verification for user ${userId} session ${session.id}`);
+            }
+          }
+
+          // petition_withdrawal: ensure PetitionWithdrawal record exists
+          if (paymentType === 'petition_withdrawal' && meta.petition_id) {
+            const existing = await adminEntities.PetitionWithdrawal.filter({
+              petition_id: meta.petition_id,
+              user_id: userId,
+            });
+            if (existing.length === 0) {
+              await adminEntities.PetitionWithdrawal.create({
+                petition_id: meta.petition_id,
+                user_id: userId,
+                status: 'paid',
+                payment_reference: session.id,
+                payment_amount: (session.amount_total || 0) / 100,
+                reconciled: true,
+              });
+              results.fulfilled++;
+              console.log(`[PaymentReconciliation] FULFILLED petition_withdrawal for user ${userId} petition ${meta.petition_id}`);
+            }
+          }
+
+          // owner_gift / platform_donation: just ensure transaction is logged
+          if (paymentType === 'owner_gift' || paymentType === 'platform_donation') {
+            const existing = await adminEntities.Transaction.filter({
+              transaction_id: session.id,
+            });
+            if (existing.length === 0) {
+              await adminEntities.Transaction.create({
+                transaction_id: session.id,
+                user_id: userId,
+                user_email: session.customer_email || '',
+                amount: (session.amount_total || 0) / 100,
+                currency: (session.currency || 'aud').toUpperCase(),
+                payment_type: paymentType,
+                reason: paymentType,
+                reference: session.id,
+                status: 'confirmed',
+                period_month: new Date().toISOString().slice(0, 7),
+                reconciled: true,
+              });
+              results.fulfilled++;
+              console.log(`[PaymentReconciliation] Logged missed ${paymentType} for user ${userId}`);
+            }
+          }
+
+        } catch (innerErr) {
+          results.errors++;
+          console.error(`[PaymentReconciliation] Error processing session ${session.id}:`, innerErr.message);
+        }
+      }
+
       hasMore = page.has_more;
       if (page.data.length > 0) startingAfter = page.data[page.data.length - 1].id;
     }
 
-    console.log(`[PaymentReconciliation] Found ${sessions.length} completed sessions in last 48h`);
-
-    for (const session of sessions) {
-      results.checked++;
-      const meta = session.metadata || {};
-      const userId = meta.user_id;
-      const paymentType = meta.payment_type;
-
-      if (!userId || !paymentType) continue;
-
-      try {
-        // identity_verification: ensure VerificationRequest exists + user flagged
-        if (paymentType === 'identity_verification') {
-          const existing = await adminEntities.VerificationRequest.filter({ user_id: userId });
-          const alreadyFulfilled = existing.some(r => r.payment_status === 'completed');
-
-          if (!alreadyFulfilled) {
-            const users = await adminEntities.User.filter({ id: userId });
-            const targetUser = users[0];
-
-            await adminEntities.VerificationRequest.create({
-              user_id: userId,
-              verification_type: 'identity',
-              full_name: targetUser?.full_name || targetUser?.display_name || '',
-              status: 'pending',
-              payment_status: 'completed',
-              payment_amount: 12.99,
-              payment_reference: session.id,
-              reconciled: true,
-            });
-
-            await adminEntities.User.update(userId, {
-              paid_identity_verification_completed: true,
-            }).catch(() => {});
-
-            results.fulfilled++;
-            console.log(`[PaymentReconciliation] FULFILLED identity_verification for user ${userId} session ${session.id}`);
-          }
-        }
-
-        // petition_withdrawal: ensure PetitionWithdrawal record exists
-        if (paymentType === 'petition_withdrawal' && meta.petition_id) {
-          const existing = await adminEntities.PetitionWithdrawal.filter({
-            petition_id: meta.petition_id,
-            user_id: userId,
-          });
-          if (existing.length === 0) {
-            await adminEntities.PetitionWithdrawal.create({
-              petition_id: meta.petition_id,
-              user_id: userId,
-              status: 'paid',
-              payment_reference: session.id,
-              payment_amount: (session.amount_total || 0) / 100,
-              reconciled: true,
-            });
-            results.fulfilled++;
-            console.log(`[PaymentReconciliation] FULFILLED petition_withdrawal for user ${userId} petition ${meta.petition_id}`);
-          }
-        }
-
-        // owner_gift / platform_donation: just ensure transaction is logged
-        if (paymentType === 'owner_gift' || paymentType === 'platform_donation') {
-          const existing = await adminEntities.Transaction.filter({
-            transaction_id: session.id,
-          });
-          if (existing.length === 0) {
-            await adminEntities.Transaction.create({
-              transaction_id: session.id,
-              user_id: userId,
-              user_email: session.customer_email || '',
-              amount: (session.amount_total || 0) / 100,
-              currency: (session.currency || 'aud').toUpperCase(),
-              payment_type: paymentType,
-              reason: paymentType,
-              reference: session.id,
-              status: 'confirmed',
-              period_month: new Date().toISOString().slice(0, 7),
-              reconciled: true,
-            });
-            results.fulfilled++;
-            console.log(`[PaymentReconciliation] Logged missed ${paymentType} for user ${userId}`);
-          }
-        }
-
-      } catch (innerErr) {
-        results.errors++;
-        console.error(`[PaymentReconciliation] Error processing session ${session.id}:`, innerErr.message);
-      }
-    }
+    console.log(`[PaymentReconciliation] Finished paging checkout sessions (checked in loop above)`);
 
     // Also check active subscriptions for community access
     try {

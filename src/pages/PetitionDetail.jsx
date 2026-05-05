@@ -243,7 +243,7 @@ export default function PetitionDetail() {
   const isCreator = user && petition.creator_user_id === user.id;
   const hasWithdrawalPaid = isCreator && (
     (withdrawalRecord && withdrawalRecord.length > 0) ||
-    user?.email === 'jeremywhisson@gmail.com'
+    user?.role === "owner_admin"
   );
   const isAdmin = user?.role === "admin";
   const isCongressMember = user?.role === "congress_member" || user?.role === "organization_viewer";

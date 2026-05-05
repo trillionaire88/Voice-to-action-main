@@ -2,9 +2,10 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { validateCheckoutRedirectPair } from "../_shared/checkoutRedirect.ts";
+import { siteOrigin } from "../_shared/siteUrl.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": siteOrigin(),
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
@@ -84,7 +85,13 @@ serve(async (req) => {
       });
     }
 
-    if (user.email === "jeremywhisson@gmail.com") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (profile?.role === "owner_admin") {
       return new Response(JSON.stringify({ checkout_url: success_url, owner_bypass: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

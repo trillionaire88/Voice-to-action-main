@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { SUPPORT_EMAIL } from "@/constants/siteUrl";
 
 export default function AnalyticsAPI() {
   const [org, setOrg] = useState("");
@@ -17,7 +18,7 @@ export default function AnalyticsAPI() {
         <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Textarea placeholder="What data do you need?" value={notes} onChange={(e) => setNotes(e.target.value)} />
         <Button onClick={() => {
-          window.location.href = `mailto:jeremywhisson@gmail.com?subject=${encodeURIComponent("Analytics API Access Request")}&body=${encodeURIComponent(`Organisation: ${org}\nEmail: ${email}\nNotes: ${notes}`)}`;
+          window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent("Analytics API Access Request")}&body=${encodeURIComponent(`Organisation: ${org}\nEmail: ${email}\nNotes: ${notes}`)}`;
           toast.success("Opening email draft");
         }}>Request Access</Button>
       </div>

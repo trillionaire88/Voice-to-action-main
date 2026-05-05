@@ -1,19 +1,26 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { FROM_SECURITY } from "../_shared/email.ts";
+import { siteOrigin } from "../_shared/siteUrl.ts";
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-
-function ownerEmail(): string {
-  return Deno.env.get("OWNER_PANIC_EMAIL") || "jeremywhisson@gmail.com";
+function cors(): Record<string, string> {
+  return {
+    "Access-Control-Allow-Origin": siteOrigin(),
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
 }
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: cors() });
+
+  const panicOwnerEmail = Deno.env.get("OWNER_PANIC_EMAIL")?.trim();
+  if (!panicOwnerEmail) {
+    return new Response(JSON.stringify({ error: "Panic mode not configured" }), {
+      status: 503,
+      headers: { ...cors(), "Content-Type": "application/json" },
+    });
+  }
 
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
@@ -24,18 +31,31 @@ serve(async (req) => {
   if (!authHeader) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
-      headers: { ...CORS, "Content-Type": "application/json" },
+      headers: { ...cors(), "Content-Type": "application/json" },
     });
   }
 
   const {
     data: { user },
   } = await supabase.auth.getUser(authHeader.replace("Bearer ", ""));
-  const allowedEmail = ownerEmail();
-  if (!user || user.email !== allowedEmail) {
+  if (!user) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...cors(), "Content-Type": "application/json" },
+    });
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const canPanic = profile?.role === "owner_admin" || user.email === panicOwnerEmail;
+  if (!canPanic) {
     return new Response(JSON.stringify({ error: "Owner only" }), {
       status: 403,
-      headers: { ...CORS, "Content-Type": "application/json" },
+      headers: { ...cors(), "Content-Type": "application/json" },
     });
   }
 
@@ -64,7 +84,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           from: FROM_SECURITY,
-          to: allowedEmail,
+          to: panicOwnerEmail,
           subject: "🚨 PANIC MODE ACTIVATED — Voice to Action",
           text: `PANIC MODE has been activated on Voice to Action.\n\nReason: ${reason || "Manual"}\nTime: ${new Date().toISOString()}\nActivated by: ${user.email}\n\nAll write operations are now blocked. Only read access is available.\n\nTo deactivate, call this endpoint with action: "deactivate".`,
         }),
@@ -72,7 +92,7 @@ serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ success: true, status: "panic_mode_active" }), {
-      headers: { ...CORS, "Content-Type": "application/json" },
+      headers: { ...cors(), "Content-Type": "application/json" },
     });
   }
 
@@ -89,19 +109,19 @@ serve(async (req) => {
       .eq("id", 1);
 
     return new Response(JSON.stringify({ success: true, status: "normal" }), {
-      headers: { ...CORS, "Content-Type": "application/json" },
+      headers: { ...cors(), "Content-Type": "application/json" },
     });
   }
 
   if (action === "status") {
     const { data } = await supabase.from("platform_status").select("*").eq("id", 1).single();
     return new Response(JSON.stringify(data), {
-      headers: { ...CORS, "Content-Type": "application/json" },
+      headers: { ...cors(), "Content-Type": "application/json" },
     });
   }
 
   return new Response(JSON.stringify({ error: "Unknown action" }), {
     status: 400,
-    headers: { ...CORS, "Content-Type": "application/json" },
+    headers: { ...cors(), "Content-Type": "application/json" },
   });
 });

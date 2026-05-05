@@ -123,20 +123,28 @@ serve(async (req) => {
     }
 
     const criticalThreats = threats.filter((t) => t.severity === "critical");
+    const notifyTo = Deno.env.get("OWNER_NOTIFY_EMAIL")?.trim();
     if (criticalThreats.length > 0) {
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${Deno.env.get("RESEND_API_KEY")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: FROM_SECURITY,
-          to: "jeremywhisson@gmail.com",
-          subject: `CRITICAL SECURITY ALERT — ${criticalThreats.length} threat(s) detected`,
-          html: `<p>${criticalThreats.length} critical threat(s) detected. Check admin panel immediately.</p>`,
-        }),
-      }).catch((e) => console.error("[ThreatDetection] Alert email failed:", e));
+      const resendKey = Deno.env.get("RESEND_API_KEY");
+      if (!notifyTo) {
+        console.error("[ThreatDetection] OWNER_NOTIFY_EMAIL not set — skipping critical alert email");
+      } else if (!resendKey) {
+        console.error("[ThreatDetection] RESEND_API_KEY not set — skipping critical alert email");
+      } else {
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: FROM_SECURITY,
+            to: notifyTo,
+            subject: `CRITICAL SECURITY ALERT — ${criticalThreats.length} threat(s) detected`,
+            html: `<p>${criticalThreats.length} critical threat(s) detected. Check admin panel immediately.</p>`,
+          }),
+        }).catch((e) => console.error("[ThreatDetection] Alert email failed:", e));
+      }
     }
 
     return new Response(

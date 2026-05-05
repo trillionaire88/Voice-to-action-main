@@ -151,11 +151,14 @@ export default function PetitionWithdraw() {
     setTimeout(() => setLoading(false), 800);
   }, [navigate]);
 
-  useEffect(() => {
-    if (petitionId) {
-      hasAlreadyPaidWithdrawal(petitionId).then(setAlreadyPaid);
-    }
-  }, [petitionId]);
+  const { data: profile } = useQuery({
+    queryKey: ["petition-withdraw-profile", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
   const { data: petition, isLoading: petitionLoading } = useQuery({
     queryKey: ["petition", petitionId],
@@ -281,7 +284,7 @@ export default function PetitionWithdraw() {
     </div>
   );
 
-  const isCreator = user?.id === petition.creator_user_id || user?.email === "jeremywhisson@gmail.com";
+  const isCreator = user?.id === petition.creator_user_id || profile?.role === "owner_admin";
   const isPublicAllowed = petition.allow_public_withdrawal === true;
 
   if (!isCreator && !isPublicAllowed) return (

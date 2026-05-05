@@ -1,8 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { checkRateLimit, rateLimitResponse } from "../_shared/rateLimiter.ts";
+import { siteOrigin } from "../_shared/siteUrl.ts";
 
 const CORS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": siteOrigin(),
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 

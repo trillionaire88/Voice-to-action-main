@@ -91,6 +91,8 @@ const NAV_TABS = [
   { id: "referral_transactions", label: "Referral Payouts", icon: CreditCard },
 ];
 
+const PANIC_OWNER_EMAIL = import.meta.env.VITE_OWNER_PANIC_EMAIL || "jeremywhisson@gmail.com";
+
 export default function MasterAdmin() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -101,9 +103,7 @@ export default function MasterAdmin() {
 
   useEffect(() => { loadUser(); }, []);
 
-  const OWNER_EMAIL = "voicetoaction@outlook.com";
-  const PANIC_OWNER_EMAIL = import.meta.env.VITE_OWNER_PANIC_EMAIL || "jeremywhisson@gmail.com";
-  const canUsePanic = user?.email === PANIC_OWNER_EMAIL;
+  const canUsePanic = user?.role === "owner_admin" || user?.email === PANIC_OWNER_EMAIL;
 
   const activatePanic = async () => {
     if (!window.confirm("ACTIVATE PANIC MODE? This will lock the entire platform to read-only. Are you certain?")) return;
@@ -161,7 +161,7 @@ export default function MasterAdmin() {
   const loadUser = async () => {
     try {
       const u = await api.auth.me();
-      const isOwner = u.role === "owner_admin" || (u.role === "admin" && u.email === OWNER_EMAIL);
+      const isOwner = u.role === "owner_admin" || (u.role === "admin" && u.email === PANIC_OWNER_EMAIL);
       if (!isOwner) { navigate(createPageUrl("Home")); return; }
       setUser(u);
     } catch { navigate(createPageUrl("Home")); }
