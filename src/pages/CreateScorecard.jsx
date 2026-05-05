@@ -17,6 +17,7 @@ import { Star, AlertCircle, CheckCircle2, X, Plus, Globe2 } from "lucide-react";
 import { toast } from "sonner";
 import { cleanForDB } from "@/lib/dbHelpers";
 import FormErrorHandler from "@/components/ui/FormErrorHandler";
+import { supabase } from "@/lib/supabase";
 
 const CATEGORIES = [
   { value: "politician", label: "Politician" },
@@ -68,17 +69,42 @@ export default function CreateScorecard() {
   };
 
   const mutation = useMutation({
-    mutationFn: () =>
-      api.entities.Scorecard.create(
+    mutationFn: async () => {
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const { count, error: cntErr } = await supabase
+        .from("scorecards")
+        .select("*", { count: "exact", head: true })
+        .eq("submitted_by_user_id", user.id)
+        .gte("created_at", since);
+      if (cntErr) throw cntErr;
+      if ((count ?? 0) >= 3) {
+        throw new Error("You can only create 3 scorecards per day");
+      }
+
+      const nameTrim = form.name.trim();
+      const { data: dup } = await supabase
+        .from("scorecards")
+        .select("id")
+        .eq("submitted_by_user_id", user.id)
+        .eq("category", form.category)
+        .eq("name", nameTrim)
+        .maybeSingle();
+      if (dup?.id) {
+        throw new Error("You already have a scorecard for this subject and category.");
+      }
+
+      return api.entities.Scorecard.create(
         cleanForDB({
           ...form,
+          name: nameTrim,
           submitted_by_user_id: user.id,
           status: "pending_review",
           image_url: form.image_url || undefined,
           official_website: form.official_website || undefined,
           region: form.region || undefined,
         })
-      ),
+      );
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(["scorecards"]);
       toast.success("Scorecard submitted for review!");
@@ -196,7 +222,7 @@ export default function CreateScorecard() {
                 <h4 className="font-bold text-blue-900 text-sm mb-1">Public Transparency Disclaimer</h4>
                 <p className="text-blue-800 text-sm leading-relaxed">
                   This scorecard is submitted for purposes of <strong>public transparency, accountability, and civic awareness</strong>.
-                  EveryVoice is a platform designed to bring recognition and accountability into the public eye and to
+                  Voice to Action is a platform designed to bring recognition and accountability into the public eye and to
                   highlight matters of genuine public interest.
                 </p>
                 <p className="text-blue-800 text-sm mt-2 leading-relaxed">
