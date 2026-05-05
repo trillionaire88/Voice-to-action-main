@@ -278,6 +278,7 @@ export default function SecuritySettings() {
         data: { user: authUser },
       } = await supabase.auth.getUser();
       if (!authUser) throw new Error("not auth");
+      // Full `profiles` row for the signed-in user (RLS: id = auth.uid()). Session rows come from session-manager, not from querying other users’ profiles.
       const { data: profile } = await supabase.from("profiles").select("*").eq("id", authUser.id).maybeSingle();
       const currentUser = { ...authUser, ...(profile || {}) };
       setUser(currentUser);
