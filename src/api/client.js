@@ -128,8 +128,37 @@ export const api = {
       // Upload a file to Supabase Storage; returns { file_url }.
       UploadFile: async ({ file }) => {
         if (!file) throw new Error('No file provided');
-        const ext = (file.name || 'file').split('.').pop().replace(/[^a-zA-Z0-9]/g, '') || 'bin';
-        const path = `uploads/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+        const MAX_BYTES = 10 * 1024 * 1024;
+        if (file.size > MAX_BYTES) {
+          throw new Error('File is too large (maximum 10 MB).');
+        }
+
+        const name = (file.name || 'file').toLowerCase();
+        const mime = (file.type || '').toLowerCase();
+
+        const extOk = (suffix) => name.endsWith(suffix);
+        const isImage = mime.startsWith('image/');
+        const isPdf = mime === 'application/pdf' || extOk('.pdf');
+        const isText = mime === 'text/plain' || extOk('.txt');
+        const isDocx =
+          mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+          extOk('.docx');
+        const isXlsx =
+          mime === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+          extOk('.xlsx');
+
+        if (!isImage && !isPdf && !isText && !isDocx && !isXlsx) {
+          throw new Error(
+            'Unsupported file type. Allowed: images, PDF, plain text, .docx, or .xlsx.',
+          );
+        }
+
+        const folder = isImage ? 'images' : 'documents';
+        const ext =
+          (file.name || 'file').split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '') ||
+          (isPdf ? 'pdf' : isDocx ? 'docx' : isXlsx ? 'xlsx' : 'bin');
+        const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
         const { error } = await supabase.storage.from('media').upload(path, file, { upsert: false });
         if (error) throw error;
         const { data } = supabase.storage.from('media').getPublicUrl(path);
