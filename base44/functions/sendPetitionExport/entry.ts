@@ -28,8 +28,10 @@ Deno.serve(async (req) => {
 
     const credScore = credibility[0] || {};
 
-    // Generate CSV content
+    // Privacy: no personal signer data (Privacy Act 1988). Aggregated signatory rows only.
     const csvHeader = [
+      'PRIVACY NOTICE,"This export does not include names, emails, or other personal signer data. Rows are anonymised (sequence, country, verification flag, date only)."',
+      '',
       'Platform,Voice to Action',
       'Petition Title,' + (petition.title || ''),
       'Description,' + (petition.short_summary || ''),
@@ -39,11 +41,11 @@ Deno.serve(async (req) => {
       'Goal,' + (petition.signature_goal || 0),
       'Verified Score,' + (credScore.overall_score || 'N/A'),
       '',
-      'Name,Email,Country,Verified,Date Signed',
+      'Signatory #,Country Code,Verified User,Date Signed',
     ];
 
-    const csvRows = signatures.map(s => 
-      `"${s.signer_name || 'Anonymous'}","${s.signer_email || ''}","${s.country_code || ''}","${s.is_verified_user ? 'Yes' : 'No'}","${s.created_date ? format(new Date(s.created_date), 'PPP') : ''}"`
+    const csvRows = signatures.map((s, i) =>
+      `"${i + 1}","${s.country_code || ''}","${s.is_verified_user ? 'Yes' : 'No'}","${s.created_date ? format(new Date(s.created_date), 'PPP') : ''}"`
     );
 
     const csvContent = [...csvHeader, ...csvRows].join('\n');
@@ -78,8 +80,8 @@ Requested Action:
 ${petition.requested_action || 'No specific action requested'}
 
 ---
-This petition and all its data have been exported from Voice to Action.
-Signatories list included in attached CSV file.
+This petition export is from Voice to Action.
+The attached CSV lists signatories in anonymised form only (no names or emails), consistent with our privacy policy.
     `.trim();
 
     // Send email to each address
