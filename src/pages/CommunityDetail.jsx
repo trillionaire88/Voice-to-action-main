@@ -61,7 +61,7 @@ export default function CommunityDetail() {
     enabled: !!safeCommunityId,
   });
 
-  const { data: membership, isLoading: membershipLoading, refetch: refetchMembership } = useQuery({
+  const { data: membership, isLoading: membershipLoading } = useQuery({
     queryKey: ["communityMembership", communityId, user?.id],
     queryFn: async () => {
       const members = await api.entities.CommunityMember.filter({
@@ -90,7 +90,7 @@ export default function CommunityDetail() {
     enabled: !!safeCommunityId && isMember,
   });
 
-  const { data: roles = [] } = useQuery({
+  const { data: _roles = [] } = useQuery({
     queryKey: ["communityRoles", safeCommunityId],
     queryFn: () => api.entities.CommunityRole.filter({ community_id: safeCommunityId }),
     enabled: !!safeCommunityId && isMember,

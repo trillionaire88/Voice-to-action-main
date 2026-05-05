@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { key: "Profile",    label: "Profile",  icon: User          },
 ];
 
-export default function MobileBottomNav({ user, unreadCount = 0 }) {
+export default function MobileBottomNav({ unreadCount = 0 }) {
   const location = useLocation();
   const { switchTab } = useNavigation();
 

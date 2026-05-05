@@ -64,7 +64,6 @@ export default function CreateCreatorCommunity() {
   const [slug, setSlug] = useState("");
   const [creatorType, setCreatorType] = useState("");
   const [publicDescription, setPublicDescription] = useState("");
-  const [mission, setMission] = useState("");
 
   // Platform Links
   const [platforms, setPlatforms] = useState([]);
@@ -105,7 +104,7 @@ export default function CreateCreatorCommunity() {
         return;
       }
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     } finally {
       setLoading(false);

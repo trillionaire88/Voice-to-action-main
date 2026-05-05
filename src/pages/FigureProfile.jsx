@@ -53,7 +53,7 @@ export default function FigureProfile() {
     staleTime: 5 * 60_000,
   });
 
-  const { data: ratings = [] } = useQuery({
+  const { data: _ratings = [] } = useQuery({
     queryKey: ["figureRatings", figureId],
     queryFn: () => api.entities.FigureRating.filter({ figure_id: figureId }),
     enabled: !!figureId,

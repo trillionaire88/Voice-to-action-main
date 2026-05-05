@@ -6,7 +6,7 @@ import { MapPin, Users, CheckCircle2, Target, Clock, Flame, Trash2 } from "lucid
 import FollowButton from "@/components/FollowButton";
 import MessageButton from "@/components/MessageButton";
 
-const TARGET_TYPE_LABELS = {
+const _TARGET_TYPE_LABELS = {
   national_government: "National Government",
   local_council: "Local Council",
   corporation: "Corporation",

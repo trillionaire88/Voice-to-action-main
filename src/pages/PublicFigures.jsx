@@ -50,7 +50,6 @@ export default function PublicFigures() {
   const {
     data: figuresPages,
     isLoading,
-    isFetching,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,

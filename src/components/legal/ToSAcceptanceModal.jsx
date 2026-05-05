@@ -15,7 +15,7 @@ import { Shield, AlertTriangle, FileText } from "lucide-react";
 import { toast } from "sonner";
 import ToSContent, { CURRENT_TOS_VERSION } from "./ToSContent";
 
-export default function ToSAcceptanceModal({ user, onAccepted, onDecline }) {
+export default function ToSAcceptanceModal({ onAccepted, onDecline }) {
   const [hasRead, setHasRead] = useState(false);
   const [hasAgreed, setHasAgreed] = useState(false);
   const [showFullToS, setShowFullToS] = useState(false);

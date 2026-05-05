@@ -124,7 +124,7 @@ export default function GlobalOpinion() {
       return data || [];
     },
   });
-  const { data: polls = [] } = useQuery({
+  const { data: _polls = [] } = useQuery({
     queryKey: ["gopPolls"],
     queryFn: async () => {
       const { data } = await supabase.from("polls").select("*").eq("status", "open").order("total_votes_cached", { ascending: false }).limit(10);

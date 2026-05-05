@@ -14,7 +14,7 @@ import { MIN_VERIFIED_SIGS_FOR_DELIVERY } from "@/constants/petitionThresholds";
 
 const MILESTONES = [1000, 5000, 10000, 25000, 50000, 100000];
 
-export default function RequestDeliveryModal({ petition, user, onClose }) {
+export default function RequestDeliveryModal({ petition, onClose }) {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAuthority, setSelectedAuthority] = useState(null);

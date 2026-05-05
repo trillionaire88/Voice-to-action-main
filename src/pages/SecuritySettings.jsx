@@ -284,7 +284,7 @@ export default function SecuritySettings() {
       if (currentUser.phone_number || currentUser.phone) {
         setPhoneNumber(currentUser.phone_number || currentUser.phone);
       }
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     } finally {
       setLoading(false);
@@ -454,7 +454,7 @@ export default function SecuritySettings() {
     );
   }
 
-  const recentLoginAttempts = securityLogs.filter(
+  const _recentLoginAttempts = securityLogs.filter(
     log => log.event_type === 'login_success' || log.event_type === 'login_failed'
   );
 

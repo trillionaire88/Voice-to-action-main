@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
 
-export default function ProfileImpactCard({ user }) {
+export default function ProfileImpactCard() {
   return (
     <Card className="p-6">
       <div className="flex items-center gap-3">

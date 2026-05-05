@@ -63,7 +63,7 @@ function ApprovalBar({ scorecard }) {
   );
 }
 
-function CredibilityBadge({ score, label }) {
+function CredibilityBadge({ label }) {
   if (!label || label === "insufficient_data") return null;
   const cfg = {
     low: "bg-red-50 text-red-700 border-red-200",

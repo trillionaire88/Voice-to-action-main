@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function InstitutionHub() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("all");
 
@@ -24,7 +24,7 @@ export default function InstitutionHub() {
     try {
       const currentUser = await api.auth.me();
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       setUser(null);
     }
   };

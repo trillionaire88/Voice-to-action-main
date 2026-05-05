@@ -27,7 +27,7 @@ export default function PrivateGroups() {
     try {
       const currentUser = await api.auth.me();
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     }
   };

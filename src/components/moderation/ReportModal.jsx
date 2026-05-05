@@ -50,7 +50,7 @@ function getBrowserFingerprint() {
 }
 
 // Calculate trust level and weight for a reporter
-function calcReporterTrust(user, existingReports) {
+function calcReporterTrust(user, _existingReports) {
   if (!user) return { level: "normal", weight: 1 };
 
   const accountAgeDays = user.created_date

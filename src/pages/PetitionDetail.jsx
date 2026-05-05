@@ -161,7 +161,7 @@ export default function PetitionDetail() {
     })();
   }, [petitionId]);
 
-  const handleShare = async () => {
+  const _handleShare = async () => {
     const url = window.location.href;
     const shareData = {
       title: petition?.title || "Petition",

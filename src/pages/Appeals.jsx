@@ -30,7 +30,7 @@ export default function Appeals() {
     try {
       const currentUser = await api.auth.me();
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     } finally {
       setLoading(false);

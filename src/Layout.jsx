@@ -111,7 +111,7 @@ export default function Layout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { goBack, navigateTo, dispatch } = useNavigation();
+  const { goBack, dispatch } = useNavigation();
   useScrollRestore(); // Saves & restores scroll position per route
   const [createSheetOpen, setCreateSheetOpen] = useState(false);
   const [moreSheetOpen, setMoreSheetOpen] = useState(false);

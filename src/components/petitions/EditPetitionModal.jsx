@@ -30,7 +30,7 @@ const CATEGORIES = [
 ];
 
 export default function EditPetitionModal({ petition, onClose, onSaved }) {
-  const [title, setTitle] = useState(petition.title || "");
+  const [title] = useState(petition.title || "");
   const [shortSummary, setShortSummary] = useState(petition.short_summary || "");
   const [fullDescription, setFullDescription] = useState(petition.full_description || "");
   const [requestedAction, setRequestedAction] = useState(petition.requested_action || "");

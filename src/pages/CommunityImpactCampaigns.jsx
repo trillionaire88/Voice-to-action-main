@@ -1,14 +1,11 @@
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Calendar, Users, Target } from "lucide-react";
 
 export default function CommunityImpactCampaigns() {
-  const navigate = useNavigate();
-
   const { data: campaigns = [] } = useQuery({
     queryKey: ["campaigns"],
     queryFn: () => api.entities.CommunityImpactCampaign.list("-start_date"),

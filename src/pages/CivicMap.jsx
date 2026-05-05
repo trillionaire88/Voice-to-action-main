@@ -108,8 +108,8 @@ export default function CivicMap() {
     return Object.values(grid);
   }
 
-  const petitionClusters = useMemo(() => clusterItems(petitionsWithCoords), [petitionsWithCoords]);
-  const pollClusters = useMemo(() => clusterItems(pollsWithCoords), [pollsWithCoords]);
+  const _petitionClusters = useMemo(() => clusterItems(petitionsWithCoords), [petitionsWithCoords]);
+  const _pollClusters = useMemo(() => clusterItems(pollsWithCoords), [pollsWithCoords]);
 
   // Filter by search
   const filteredPetitions = useMemo(() => {

@@ -543,7 +543,7 @@ export default function MasterAdmin() {
 }
 
 function AdminCreatorCodesPanel() {
-  const { data: codes = [], isLoading, refetch } = useQuery({
+  const { data: codes = [], isLoading } = useQuery({
     queryKey: ["allCreatorCodes"],
     queryFn: () => api.entities.ReferralCode.list("-created_date", 200),
   });

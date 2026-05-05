@@ -85,7 +85,7 @@ export default function CreateScorecard() {
             const j = await ctx.json();
             if (j?.message) msg = j.message;
           }
-        } catch (_) {}
+        } catch {}
         throw new Error(msg);
       }
       if (validation && typeof validation === "object" && "ok" in validation && !validation.ok) {

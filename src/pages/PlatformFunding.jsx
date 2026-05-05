@@ -74,7 +74,7 @@ export default function PlatformFunding() {
         data: { user: authUser },
       } = await supabase.auth.getUser();
       setUser(authUser || null);
-    } catch (error) {
+    } catch {
       setUser(null);
     }
   };

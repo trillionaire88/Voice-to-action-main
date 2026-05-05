@@ -16,7 +16,7 @@ export default function TimeSlider({
 }) {
   const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
   const currentDay = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24));
-  const percentage = (currentDay / totalDays) * 100;
+  const _percentage = (currentDay / totalDays) * 100;
 
   const handleSliderChange = (value) => {
     const newDay = value[0];

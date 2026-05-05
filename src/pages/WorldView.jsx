@@ -15,13 +15,13 @@ import TimeSlider from "../components/worldview/TimeSlider";
 import GlobalSummaryPanel from "../components/worldview/GlobalSummaryPanel";
 
 export default function WorldView() {
-  const [user, setUser] = useState(null);
+  const [, setUser] = useState(null);
   const [viewMode, setViewMode] = useState("globe");
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [activeLayers, setActiveLayers] = useState(["activity"]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [showLayerSelector, setShowLayerSelector] = useState(true);
-  const [showGlobalSummary, setShowGlobalSummary] = useState(true);
+  const [showGlobalSummary] = useState(true);
   const [showTimeSlider, setShowTimeSlider] = useState(false);
   const [regionFilter, setRegionFilter] = useState(null);
   const [timelineDate, setTimelineDate] = useState(new Date());
@@ -37,7 +37,7 @@ export default function WorldView() {
         data: { user: authUser },
       } = await supabase.auth.getUser();
       setUser(authUser || null);
-    } catch (error) {
+    } catch {
       setUser(null);
     }
   };

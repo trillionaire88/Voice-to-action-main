@@ -3,7 +3,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { BookOpen, ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
 
-export default function PollLiteracyPanel({ poll, biasWarning }) {
+export default function PollLiteracyPanel({ biasWarning }) {
   const [expanded, setExpanded] = useState(false);
 
   return (

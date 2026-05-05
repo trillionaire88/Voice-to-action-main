@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
-export default function ExportSignersButton({ petition, signatures, hasPaid = false }) {
+export default function ExportSignersButton({ petition, hasPaid = false }) {
   const [isExporting, setIsExporting] = useState(false);
   const navigate = useNavigate();
 

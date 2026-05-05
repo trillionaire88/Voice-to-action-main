@@ -10,7 +10,7 @@ import { formatDistanceToNow } from "date-fns";
 
 export default function AdminMessages() {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
+  const [_currentUser, setCurrentUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [userCache, setUserCache] = useState({});
   const [search, setSearch] = useState("");

@@ -21,7 +21,7 @@ import { format } from "date-fns";
 
 export default function DecisionTracking() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [, setUser] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function DecisionTracking() {
         data: { user: authUser },
       } = await supabase.auth.getUser();
       setUser(authUser || null);
-    } catch (error) {
+    } catch {
       setUser(null);
     }
   };

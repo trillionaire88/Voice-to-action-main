@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-const SENTIMENT_CONFIG = {
+const _SENTIMENT_CONFIG = {
   positive: { color: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: ThumbsUp },
   negative: { color: "bg-red-50 text-red-700 border-red-200", icon: ThumbsDown },
   neutral: { color: "bg-slate-50 text-slate-600 border-slate-200", icon: Activity },
@@ -46,7 +46,7 @@ export default function InsightDashboard() {
       });
       setReport(res.data?.report);
       toast.success("Report generated");
-    } catch (e) {
+    } catch {
       toast.error("Report generation failed");
     } finally {
       setReportLoading(false);

@@ -4,7 +4,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, L
 import { TrendingUp, BarChart3 } from "lucide-react";
 import { format, subDays } from "date-fns";
 
-const RATING_WEIGHTS = {
+const _RATING_WEIGHTS = {
   strongly_approve: 1,
   approve: 0.5,
   neutral: 0,

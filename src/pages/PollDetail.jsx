@@ -155,7 +155,7 @@ export default function PollDetail() {
     },
   });
 
-  const handleShare = async () => {
+  const _handleShare = async () => {
     const url = window.location.href;
     try {
       if (navigator.share) {

@@ -127,7 +127,6 @@ export default function ScorecardDetail() {
       // Compute new counts
       const prevRating = myRating?.rating;
       const decrement = {};
-      const increment = {};
 
       if (prevRating) {
         decrement[`${prevRating}_count`] = Math.max(0, (scorecard[`${prevRating}_count`] || 1) - 1);
@@ -143,7 +142,7 @@ export default function ScorecardDetail() {
       valid.forEach(r => { if (counts[r.rating] !== undefined) counts[r.rating]++; });
       const total = valid.length;
       const approveN = counts.strongly_approve + counts.approve;
-      const disapproveN = counts.strongly_disapprove + counts.disapprove;
+      const _disapproveN = counts.strongly_disapprove + counts.disapprove;
       const rawApproval = total > 0 ? Math.round((approveN / total) * 100) : 0;
 
       // Weighted approval

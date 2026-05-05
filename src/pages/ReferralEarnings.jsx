@@ -46,7 +46,7 @@ export default function ReferralEarnings() {
     enabled: !!user,
   });
 
-  const { data: transactions = [], isLoading: txLoading, refetch: refetchTx } = useQuery({
+  const { data: transactions = [], isLoading: txLoading } = useQuery({
     queryKey: ["referralTransactions", user?.id],
     queryFn: async () => {
       const { data: code } = await supabase.from("referral_codes").select("id").eq("owner_user_id", user.id).maybeSingle();

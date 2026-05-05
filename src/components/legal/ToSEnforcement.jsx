@@ -108,7 +108,7 @@ export const ToSEnforcement = {
     }
   },
 
-  async getUserRecentActivity(userId) {
+  async getUserRecentActivity(_userId) {
     // Placeholder - would integrate with actual request logs
     return { requestsPerMinute: 5 };
   },

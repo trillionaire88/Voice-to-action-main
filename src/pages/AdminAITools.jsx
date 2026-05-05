@@ -32,7 +32,7 @@ export default function AdminAITools() {
         return;
       }
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     }
   };
@@ -64,7 +64,7 @@ export default function AdminAITools() {
       }
       
       toast.success(`Classified ${Math.min(5, unclassifiedPolls.length)} polls`);
-    } catch (error) {
+    } catch {
       toast.error("Classification failed");
     } finally {
       setProcessing(false);
@@ -78,7 +78,7 @@ export default function AdminAITools() {
         await AutoModerationEngine.flagSuspiciousPoll(poll.id);
       }
       toast.success("Auto-moderation scan complete");
-    } catch (error) {
+    } catch {
       toast.error("Auto-moderation failed");
     } finally {
       setProcessing(false);
@@ -96,7 +96,7 @@ export default function AdminAITools() {
       }
       
       toast.success("Reputation scores updated");
-    } catch (error) {
+    } catch {
       toast.error("Reputation update failed");
     } finally {
       setProcessing(false);

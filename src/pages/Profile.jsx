@@ -411,7 +411,7 @@ export default function Profile() {
       const { file_url } = await api.integrations.Core.UploadFile({ file });
       await updateProfileMutation.mutateAsync({ profile_avatar_url: file_url });
       toast.success("Profile picture updated!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to upload image");
     } finally {
       setUploadingAvatar(false);

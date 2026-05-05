@@ -40,7 +40,7 @@ export default function SubmitCharity() {
     try {
       const currentUser = await api.auth.me();
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Charities"));
     }
   };

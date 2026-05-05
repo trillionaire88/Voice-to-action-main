@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Lightbulb, TrendingUp, TrendingDown, AlertCircle } from "lucide-react";
 
-export default function ScenarioModeler({ decisionTitle }) {
+export default function ScenarioModeler() {
   const [scenario, setScenario] = useState("");
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);

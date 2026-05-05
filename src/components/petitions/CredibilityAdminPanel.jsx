@@ -45,9 +45,9 @@ function computeCredibility(petition, signatures, comments) {
 
   // -- GROWTH SCORE (max 100, weighted 15%)
   const now = new Date();
-  const sigs24h = signatures.filter(s => (now - new Date(s.created_date)) < 86400000).length;
+  const _sigs24h = signatures.filter(s => (now - new Date(s.created_date)) < 86400000).length;
   const sigs7d = signatures.filter(s => (now - new Date(s.created_date)) < 604800000).length;
-  const sigs30d = signatures.filter(s => (now - new Date(s.created_date)) < 2592000000).length;
+  const _sigs30d = signatures.filter(s => (now - new Date(s.created_date)) < 2592000000).length;
   // Organic distribution check — penalise if 80%+ came in under 1 hour
   const sigs1h = signatures.filter(s => (now - new Date(s.created_date)) < 3600000).length;
   const burstRatio = total > 10 ? sigs1h / total : 0;

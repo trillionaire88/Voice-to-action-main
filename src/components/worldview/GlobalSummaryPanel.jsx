@@ -103,7 +103,7 @@ export default function GlobalSummaryPanel({ polls, petitions, stats }) {
             Trending Global Issues
           </h4>
           <div className="space-y-1.5">
-            {globalIssues.map((issue, idx) => (
+            {globalIssues.map((issue) => (
               <div key={issue.topic} className="flex items-center justify-between text-xs">
                 <span className="text-slate-600">{issue.topic}</span>
                 <span className="text-slate-500">{issue.count}</span>

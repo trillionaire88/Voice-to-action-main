@@ -105,7 +105,7 @@ Provide specific violation types and reasoning.`,
     return { anomalyScore, avgInterval, variance };
   },
 
-  async analyzeNetworkPatterns(userId) {
+  async analyzeNetworkPatterns(_userId) {
     // Placeholder for IP/network analysis
     return { suspicious: false, score: 0 };
   },

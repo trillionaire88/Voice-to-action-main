@@ -46,7 +46,7 @@ export default function ModerationPanel({ adminUser }) {
   const [actionNotes, setActionNotes] = useState("");
   const [filterStatus, setFilterStatus] = useState("open");
 
-  const { data: reports = [], isLoading } = useQuery({
+  const { data: reports = [] } = useQuery({
     queryKey: ["allReports"],
     queryFn: () => api.entities.Report.list("-created_date", 100),
   });

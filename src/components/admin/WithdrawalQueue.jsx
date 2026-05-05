@@ -11,7 +11,6 @@ import { CheckCircle2, XCircle, Eye, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useNavigate } from "react-router-dom";
 
 const STATUS_COLORS = {
   pending_payment: "bg-slate-100 text-slate-600",
@@ -23,7 +22,6 @@ const STATUS_COLORS = {
 
 export default function WithdrawalQueue() {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const [notes, setNotes] = useState("");
 

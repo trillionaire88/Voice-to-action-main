@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from '@/api/client';
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
@@ -31,13 +31,11 @@ import { toast } from "sonner";
 
 export default function CharityProfile() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const charityId = urlParams.get("id");
 
   const [user, setUser] = useState(null);
   const [newComment, setNewComment] = useState("");
-  const [newUpdate, setNewUpdate] = useState("");
 
   useEffect(() => {
     loadUser();
@@ -47,7 +45,7 @@ export default function CharityProfile() {
     try {
       const currentUser = await api.auth.me();
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       setUser(null);
     }
   };

@@ -29,11 +29,10 @@ import InstitutionMarkers from "./InstitutionMarkers";
 import ElectionSimulator from "./ElectionSimulator";
 import ScenarioModeler from "./ScenarioModeler";
 
-export default function RegionPanel({ countryCode, polls, impactEvents, onClose, user }) {
+export default function RegionPanel({ countryCode, polls, impactEvents, onClose }) {
   const navigate = useNavigate();
   const [timeFilter, setTimeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
-  const [categoryFilter, setCategoryFilter] = useState("all");
 
   // Filter content for this region
   const regionPolls = polls.filter(poll => {

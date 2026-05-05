@@ -42,7 +42,7 @@ export default function CommunityAccessCodeSettings({ communityId, user }) {
         body: `A new community access code was created.\n\nCommunity ID: ${communityId}\nCode: ${code}\nCreated by: ${user.email}\nDate: ${new Date().toISOString()}`,
       });
       toast.success("Access code created!");
-    } catch (e) {
+    } catch {
       toast.error("Failed to create access code");
     } finally {
       setCreating(false);

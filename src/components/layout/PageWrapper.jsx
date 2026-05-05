@@ -19,7 +19,7 @@ export default function PageWrapper({ children, className = "", wide = false, fu
   );
 }
 
-export function PageHeader({ title, subtitle, action, icon: Icon, back = false }) {
+export function PageHeader({ title, subtitle, action, icon: Icon }) {
   return (
     <div className="flex items-start justify-between gap-4 mb-6">
       <div className="flex items-center gap-3 min-w-0">

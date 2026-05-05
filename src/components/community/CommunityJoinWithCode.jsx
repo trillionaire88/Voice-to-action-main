@@ -4,7 +4,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Key, Loader2, CheckCircle2 } from "lucide-react";
 import { joinCommunityWithAccessCode } from "@/api/communityApi";
 
-export default function CommunityJoinWithCode({ communityId, userId, onSuccess }) {
+export default function CommunityJoinWithCode({ communityId, onSuccess }) {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

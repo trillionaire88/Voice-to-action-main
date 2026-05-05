@@ -31,7 +31,7 @@ const EVENT_ICONS = {
   policy_change: FileText, system_check: Activity,
 };
 
-function ExportButton({ data, filename, label }) {
+function ExportButton({ data, filename }) {
   const exportCSV = () => {
     if (!data?.length) { toast.error("No data to export"); return; }
     const keys = Object.keys(data[0]).filter(k => typeof data[0][k] !== 'object');

@@ -391,7 +391,6 @@ export default function SearchPage() {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [sort, setSort] = useState("relevance");
   const [total, setTotal] = useState(0);
-  const debounceRef = useRef(null);
   const suggestRef = useRef(null);
 
   useEffect(() => {

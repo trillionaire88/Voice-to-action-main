@@ -24,7 +24,7 @@ function ScoreRow({ label, value, max, icon: Icon, color }) {
   );
 }
 
-export default function CredibilityBreakdown({ credibility, petition }) {
+export default function CredibilityBreakdown({ credibility }) {
   const [expanded, setExpanded] = useState(false);
 
   if (!credibility) return null;

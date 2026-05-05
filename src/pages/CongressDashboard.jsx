@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -45,12 +44,11 @@ const CATEGORIES = [
 ];
 
 export default function CongressDashboard() {
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [userLoading, setUserLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter] = useState("all");
   const [trackedPetitionIds, setTrackedPetitionIds] = useState(new Set());
 
   useEffect(() => {
@@ -68,7 +66,7 @@ export default function CongressDashboard() {
         const { data: profile } = await supabase.from("profiles").select("*").eq("id", authUser.id).maybeSingle();
         setUser({ ...authUser, ...(profile || {}) });
       }
-    } catch (error) {
+    } catch {
       setUser(null);
     } finally {
       setUserLoading(false);

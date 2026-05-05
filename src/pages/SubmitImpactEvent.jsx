@@ -46,7 +46,7 @@ export default function SubmitImpactEvent() {
         return;
       }
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     }
   };

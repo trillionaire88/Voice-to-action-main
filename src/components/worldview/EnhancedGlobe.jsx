@@ -11,7 +11,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-function MapController({ selectedCountry, activeLayers, onZoomChange }) {
+function MapController({ selectedCountry, onZoomChange }) {
   const map = useMap();
 
   useEffect(() => {
@@ -46,12 +46,11 @@ export default function EnhancedGlobe({
   selectedCountry,
   activeLayers,
   countryStats,
-  onCountryClick,
   polls = [],
   petitions = [],
 }) {
   const mapRef = useRef(null);
-  const [currentZoom, setCurrentZoom] = useState(2);
+  const [, setCurrentZoom] = useState(2);
 
   // Filter content with locations
   const contentWithLocations = [
@@ -63,7 +62,7 @@ export default function EnhancedGlobe({
       .map((p) => ({ ...p, type: "petition" })),
   ];
 
-  const getCountryStyle = (countryCode) => {
+  const _getCountryStyle = (countryCode) => {
     const stats = countryStats[countryCode] || {};
     const hasActivity = stats.pollCount > 0 || stats.petitionCount > 0;
 

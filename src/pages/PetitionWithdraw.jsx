@@ -236,7 +236,7 @@ export default function PetitionWithdraw() {
         document.body.removeChild(a);
         toast.success("Report downloaded as HTML — open in browser to print as PDF.");
       }
-    } catch (err) {
+    } catch {
       toast.error("Failed to generate PDF. Try the CSV download instead.");
     } finally {
       setDownloading(false);

@@ -332,7 +332,7 @@ function TrendingCard({ petition, score, cred, rank, onClick }) {
 }
 
 function TrendingPollCard({ poll, rank, onClick }) {
-  const engagementScore = (poll.total_votes_cached || 0) + (poll.comments_count || 0) * 0.5;
+  const _engagementScore = (poll.total_votes_cached || 0) + (poll.comments_count || 0) * 0.5;
   const verificationRate = poll.total_votes_cached > 0 ? ((poll.verified_votes_count || 0) / poll.total_votes_cached * 100) : 0;
 
   return (

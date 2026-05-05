@@ -38,7 +38,7 @@ const COUNTRY_CENTERS = {
   KR: [35.9078, 127.7669],
 };
 
-function MapController({ selectedCountry, onCountrySelect }) {
+function MapController({ selectedCountry }) {
   const map = useMap();
 
   useEffect(() => {
@@ -52,7 +52,6 @@ function MapController({ selectedCountry, onCountrySelect }) {
 }
 
 export default function InteractiveGlobe({ countryStats, selectedCountry, onCountrySelect }) {
-  const [tooltipInfo, setTooltipInfo] = useState(null);
   const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
@@ -60,7 +59,7 @@ export default function InteractiveGlobe({ countryStats, selectedCountry, onCoun
     setMapReady(true);
   }, []);
 
-  const getCountryColor = (code) => {
+  const _getCountryColor = (code) => {
     const stats = countryStats[code];
     if (!stats) return '#e2e8f0'; // slate-200
     
@@ -71,7 +70,7 @@ export default function InteractiveGlobe({ countryStats, selectedCountry, onCoun
     return '#93c5fd'; // blue-300
   };
 
-  const handleCountryClick = (countryCode) => {
+  const _handleCountryClick = (countryCode) => {
     onCountrySelect(countryCode);
   };
 

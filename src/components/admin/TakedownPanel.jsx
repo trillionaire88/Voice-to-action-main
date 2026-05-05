@@ -53,7 +53,7 @@ export default function TakedownPanel({ adminUser }) {
   const [filterStatus, setFilterStatus] = useState("pending");
   const [search, setSearch] = useState("");
 
-  const { data: requests = [], isLoading } = useQuery({
+  const { data: requests = [] } = useQuery({
     queryKey: ["takedownRequests"],
     queryFn: () => api.entities.TakedownRequest.list("-created_date", 200),
   });

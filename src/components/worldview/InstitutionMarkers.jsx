@@ -7,7 +7,7 @@ import { Building2, Search, MapPin, Filter } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
-export default function InstitutionMarkers({ countryCode, onSelectInstitution }) {
+export default function InstitutionMarkers({ onSelectInstitution }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     government: true,

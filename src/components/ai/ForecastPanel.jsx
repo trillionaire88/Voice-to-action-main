@@ -49,7 +49,7 @@ export default function ForecastPanel({ target_id, target_type, compact = false 
     try {
       const res = await api.functions.invoke("predictionEngine", { target_id, target_type });
       setForecast(res.data);
-    } catch (e) {
+    } catch {
       toast.error("Forecast failed");
     } finally {
       setLoading(false);

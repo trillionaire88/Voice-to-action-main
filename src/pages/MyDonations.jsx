@@ -24,7 +24,7 @@ export default function MyDonations() {
         data: { user: authUser },
       } = await supabase.auth.getUser();
       setUser(authUser || null);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Charities"));
     }
   };

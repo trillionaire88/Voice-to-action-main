@@ -16,7 +16,6 @@ export default function IdentityVerification() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [verificationMethod, setVerificationMethod] = useState("");
-  const [uploadedFile, setUploadedFile] = useState(null);
 
   useEffect(() => {
     loadUser();
@@ -26,7 +25,7 @@ export default function IdentityVerification() {
     try {
       const currentUser = await api.auth.me();
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     }
   };

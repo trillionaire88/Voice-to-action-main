@@ -23,7 +23,7 @@ export default function BrigadePanel({ adminUser }) {
   const queryClient = useQueryClient();
   const [expandedTarget, setExpandedTarget] = useState(null);
 
-  const { data: allReports = [], isLoading } = useQuery({
+  const { data: allReports = [] } = useQuery({
     queryKey: ["allReports"],
     queryFn: () => api.entities.Report.list("-created_date", 500),
   });
