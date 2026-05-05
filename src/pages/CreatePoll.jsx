@@ -19,6 +19,7 @@ import HoneypotField from "@/components/HoneypotField";
 import { insertContentWatermark } from "@/lib/watermark";
 import { reportHoneypotHit } from "@/lib/threatIntelClient";
 import { cleanForDB } from "@/lib/dbHelpers";
+import { assertPollImageUrlFromProject } from "@/lib/pollImageUrl";
 import { checkRateLimit } from "@/lib/rateLimit";
 import FormErrorHandler from "@/components/ui/FormErrorHandler";
 import { api } from "@/api/client";
@@ -155,6 +156,7 @@ export default function CreatePoll() {
           throw new Error(`${msg} Remove the image or try again.`);
         }
       }
+      assertPollImageUrlFromProject(image_url, import.meta.env.VITE_SUPABASE_URL);
 
       const row = cleanForDB({
         ...pollData,
