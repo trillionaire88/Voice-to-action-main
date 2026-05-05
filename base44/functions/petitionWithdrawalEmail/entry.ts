@@ -33,9 +33,9 @@ Deno.serve(async (req) => {
     const credibility = analytics[0];
     const isCreator = user.id === petition.creator_user_id;
 
-    // Build signature list
+    // Build anonymised signatory list (no names, emails, or internal trust fields)
     const sigList = freshSignatures.map((s, i) =>
-      `${i + 1}. Name: ${s.signer_name || "Anonymous"} | Email: ${s.signer_email || "N/A"} | Country: ${s.country_code || "Unknown"}${s.region_code ? ` / ${s.region_code}` : ""}${s.city ? ` / ${s.city}` : ""} | Verified: ${s.is_verified_user ? "Yes" : "No"} | Trust Level: ${s.trust_level || "N/A"} | Signed: ${s.created_date ? format(new Date(s.created_date), "PPP") : "Unknown"}`
+      `${i + 1}. Country: ${s.country_code || "Unknown"} | Verified: ${s.is_verified_user ? "Yes" : "No"} | Signed: ${s.created_date ? format(new Date(s.created_date), "PPP") : "Unknown"}`
     ).join("\n");
 
     // Build delivery section
