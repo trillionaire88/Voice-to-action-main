@@ -61,7 +61,7 @@ export default function PollDetail() {
   }
   const pollId = safeId(urlParams.get("id"));
 
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [showReportModal, setShowReportModal] = useState(false);
   const [translated, setTranslated] = useState("");
 
@@ -136,9 +136,11 @@ export default function PollDetail() {
       // Vote totals and profiles.polls_voted_count are maintained by DB triggers (poll_vote_count_trigger.sql).
     },
     onMutate: async (optionId) => {
-      // Optimistic update: immediately show the user's vote
+      // Optimistic UI only — triggers update authoritative counts; success invalidates below.
       await queryClient.cancelQueries({ queryKey: ["myVote", pollId, user?.id] });
       await queryClient.cancelQueries({ queryKey: ["poll", pollId] });
+      await queryClient.cancelQueries({ queryKey: ["pollOptions", pollId] });
+      await queryClient.cancelQueries({ queryKey: ["votes", pollId] });
       const previousMyVote = queryClient.getQueryData(["myVote", pollId, user?.id]);
       const previousPoll = queryClient.getQueryData(["poll", pollId]);
 
@@ -146,7 +148,7 @@ export default function PollDetail() {
       queryClient.setQueryData(["myVote", pollId, user?.id], {
         poll_id: pollId, user_id: user.id, option_id: optionId, id: previousMyVote?.id || "optimistic",
       });
-      // Optimistically increment vote count
+      // First-time vote only: bump displayed total (changing vote leaves total unchanged here).
       if (!previousMyVote && previousPoll) {
         queryClient.setQueryData(["poll", pollId], {
           ...previousPoll,
@@ -165,6 +167,7 @@ export default function PollDetail() {
       queryClient.invalidateQueries({ queryKey: ["pollOptions", pollId] });
       queryClient.invalidateQueries({ queryKey: ["myVote", pollId] });
       queryClient.invalidateQueries({ queryKey: ["votes", pollId] });
+      if (user) void refreshUser();
       toast.success("Vote recorded successfully!");
     },
   });
