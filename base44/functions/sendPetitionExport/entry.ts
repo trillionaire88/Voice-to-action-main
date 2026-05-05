@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
 
     // Privacy: no personal signer data (Privacy Act 1988). Aggregated signatory rows only.
     const csvHeader = [
-      'PRIVACY NOTICE,"This export does not include names, emails, or other personal signer data. Rows are anonymised (sequence, country, verification flag, date only)."',
+      '# Personal signer data omitted per Australian Privacy Act 1988',
       '',
       'Platform,Voice to Action',
       'Petition Title,' + (petition.title || ''),
@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
       'Goal,' + (petition.signature_goal || 0),
       'Verified Score,' + (credScore.overall_score || 'N/A'),
       '',
-      'Signatory #,Country Code,Verified User,Date Signed',
+      'Signatory #,Country Code,Is Verified User,Date Signed',
     ];
 
     const csvRows = signatures.map((s, i) =>
