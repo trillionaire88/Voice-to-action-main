@@ -300,25 +300,23 @@ export default function Profile() {
     enabled: !!targetUserId,
   });
 
-  const { data: followerCount = 0 } = useQuery({
-    queryKey: ["followers", targetUserId],
+  const { data: followCounts } = useQuery({
+    queryKey: ["profileFollowCounts", targetUserId],
     queryFn: async () => {
-      const followers = await api.entities.UserFollow.filter({ target_type: "user", target_id: targetUserId });
-      return followers.length;
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("follower_count, following_count")
+        .eq("id", targetUserId)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
     },
     enabled: !!targetUserId,
-    staleTime: 60_000,
+    staleTime: 30_000,
   });
 
-  const { data: followingCount = 0 } = useQuery({
-    queryKey: ["following", targetUserId],
-    queryFn: async () => {
-      const following = await api.entities.UserFollow.filter({ follower_id: targetUserId, target_type: "user" });
-      return following.length;
-    },
-    enabled: !!targetUserId,
-    staleTime: 60_000,
-  });
+  const followerCount = Number(followCounts?.follower_count ?? 0);
+  const followingCount = Number(followCounts?.following_count ?? 0);
 
   const deletePollMutation = useMutation({
     mutationFn: (pollId) => api.entities.Poll.delete(pollId),

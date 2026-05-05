@@ -3,9 +3,11 @@ import { UserPlus, UserMinus } from "lucide-react";
 import { followUser, unfollowUser, isFollowing } from "@/api/socialApi";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
 import ActionButton from "@/components/ui/ActionButton";
 
 export default function FollowButton({ targetUserId, targetName, size = "sm", className = "" }) {
+  const queryClient = useQueryClient();
   const [following, setFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
@@ -39,6 +41,10 @@ export default function FollowButton({ targetUserId, targetName, size = "sm", cl
       } else {
         await followUser(targetUserId);
         toast.success(`Now following ${targetName || "user"}`);
+      }
+      queryClient.invalidateQueries({ queryKey: ["profileFollowCounts", targetUserId] });
+      if (currentUser?.id) {
+        queryClient.invalidateQueries({ queryKey: ["profileFollowCounts", currentUser.id] });
       }
     } catch (err) {
       setFollowing(wasFollowing);
