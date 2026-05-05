@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { api } from '@/api/client';
+import { supabase } from "@/lib/supabase";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -56,8 +57,6 @@ import MilestoneCelebration from "@/components/petitions/MilestoneCelebration";
 import EmbedCodeModal from "@/components/petitions/EmbedCodeModal";
 import TrustScorePanel from "@/components/trust/TrustScorePanel";
 import SignatureCertificate from "@/components/petitions/SignatureCertificate";
-import { supabase } from "@/lib/supabase";
-
 
 export default function PetitionDetail() {
   const navigate = useNavigate();
@@ -190,55 +189,23 @@ export default function PetitionDetail() {
 
   const submitPetitionMutation = useMutation({
     mutationFn: async (emailChoice) => {
-      const signatures = await api.entities.PetitionSignature.filter({
-        petition_id: petitionId,
-        is_verified_user: true,
+      const { data, error } = await supabase.functions.invoke("submit-petition-delivery", {
+        body: { petition_id: petitionId, email_choice: emailChoice },
       });
-
-      const signatureList = signatures.map((sig, idx) => {
-        const country = sig.country_code || "—";
-        const signed = format(new Date(sig.created_date), "PPP");
-        return `Signatory #${idx + 1} — Country: ${country}, Signed: ${signed}`;
-      }).join("\n");
-
-      const emailContent = `
-Petition Submission: ${petition.title}
-
-Target: ${petition.target_name} (${petition.target_type})
-Category: ${petition.category}
-Location: ${petition.country_code}${petition.region_code ? `, ${petition.region_code}` : ''}
-
-Total Signatures: ${petition.signature_count_total}
-Verified Signatures: ${petition.signature_count_verified}
-
-Requested Action:
-${petition.requested_action}
-
-Full Description:
-${petition.full_description}
-
-VERIFIED SIGNATORIES (${signatures.length}):
-${signatureList}
-
-Created: ${format(new Date(petition.created_date), 'PPP')}
-Petition Link: ${window.location.href}
-      `.trim();
-
-      const recipientEmail = emailChoice === 'platform' ? 'jeremy@voicetoaction.com' : user.email;
-
-      await api.integrations.Core.SendEmail({
-        to: recipientEmail,
-        subject: `Petition Ready for Delivery: ${petition.title}`,
-        body: emailContent,
-      });
-
-      await api.entities.Petition.update(petitionId, {
-        status: 'delivered',
-        delivered_at: new Date().toISOString(),
-        delivery_method: 'email',
-      });
-
-      return recipientEmail;
+      if (error) {
+        let msg = error.message || "Failed to submit petition";
+        try {
+          const ctx = error.context;
+          if (ctx && typeof ctx.json === "function") {
+            const j = await ctx.json();
+            if (j?.error) msg = j.error;
+          }
+        } catch {
+          /* ignore */
+        }
+        throw new Error(msg);
+      }
+      return data?.sent_to ?? "";
     },
     onSuccess: (email) => {
       queryClient.invalidateQueries(["petition", petitionId]);
