@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -12,9 +12,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import {
-  Scale, Eye, EyeOff, Trash2, AlertTriangle, UserX, Ban,
-  CheckCircle2, Clock, ExternalLink, Mail, MoreHorizontal, Search,
-  Shield, User, Building2, Globe2, Flag
+  Scale, Eye, EyeOff, Trash2, AlertTriangle, UserX, Ban, ExternalLink, Search, User, Flag
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
@@ -55,7 +53,7 @@ export default function TakedownPanel({ adminUser }) {
   const [filterStatus, setFilterStatus] = useState("pending");
   const [search, setSearch] = useState("");
 
-  const { data: requests = [], isLoading } = useQuery({
+  const { data: requests = [] } = useQuery({
     queryKey: ["takedownRequests"],
     queryFn: () => api.entities.TakedownRequest.list("-created_date", 200),
   });

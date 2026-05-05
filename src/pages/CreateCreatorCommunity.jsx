@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -64,7 +64,6 @@ export default function CreateCreatorCommunity() {
   const [slug, setSlug] = useState("");
   const [creatorType, setCreatorType] = useState("");
   const [publicDescription, setPublicDescription] = useState("");
-  const [mission, setMission] = useState("");
 
   // Platform Links
   const [platforms, setPlatforms] = useState([]);
@@ -105,7 +104,7 @@ export default function CreateCreatorCommunity() {
         return;
       }
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     } finally {
       setLoading(false);

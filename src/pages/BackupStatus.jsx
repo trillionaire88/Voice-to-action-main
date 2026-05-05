@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
@@ -9,10 +8,10 @@ import { toast } from "sonner";
 
 export default function BackupStatus() {
   const { user } = useAuth();
-  if (!user || !["admin", "owner_admin"].includes(user.role)) return <Navigate to="/" replace />;
 
   const { data: lastCheck, refetch } = useQuery({
     queryKey: ["backupHealthLastCheck"],
+    enabled: !!user && ["admin", "owner_admin"].includes(user.role),
     queryFn: async () => {
       const { data } = await supabase
         .from("security_audit_log")
@@ -27,6 +26,7 @@ export default function BackupStatus() {
 
   const { data: platformStatus } = useQuery({
     queryKey: ["platformStatusForBackup"],
+    enabled: !!user && ["admin", "owner_admin"].includes(user.role),
     queryFn: async () => {
       const { data } = await supabase
         .from("platform_status")
@@ -36,6 +36,8 @@ export default function BackupStatus() {
       return data;
     },
   });
+
+  if (!user || !["admin", "owner_admin"].includes(user.role)) return <Navigate to="/" replace />;
 
   const runNow = async () => {
     const { data: { session } } = await supabase.auth.getSession();

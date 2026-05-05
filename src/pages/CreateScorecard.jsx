@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useAuth } from "@/lib/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Star, AlertCircle, CheckCircle2, X, Plus, Globe2 } from "lucide-react";
+import { Star, AlertCircle, X, Plus, Globe2 } from "lucide-react";
 import { toast } from "sonner";
 import { cleanForDB } from "@/lib/dbHelpers";
 import FormErrorHandler from "@/components/ui/FormErrorHandler";
@@ -85,7 +85,7 @@ export default function CreateScorecard() {
             const j = await ctx.json();
             if (j?.message) msg = j.message;
           }
-        } catch (_) {}
+        } catch {}
         throw new Error(msg);
       }
       if (validation && typeof validation === "object" && "ok" in validation && !validation.ok) {

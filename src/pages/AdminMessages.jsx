@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Search, MessageSquare, ArrowLeft } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 export default function AdminMessages() {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
+  const [_currentUser, setCurrentUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [userCache, setUserCache] = useState({});
   const [search, setSearch] = useState("");

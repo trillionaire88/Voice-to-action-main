@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
@@ -19,7 +19,6 @@ import {
   Clock,
   Monitor,
   Bell,
-  Lock,
   Mail,
   Phone,
   Send,
@@ -285,7 +284,7 @@ export default function SecuritySettings() {
       if (currentUser.phone_number || currentUser.phone) {
         setPhoneNumber(currentUser.phone_number || currentUser.phone);
       }
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     } finally {
       setLoading(false);
@@ -455,7 +454,7 @@ export default function SecuritySettings() {
     );
   }
 
-  const recentLoginAttempts = securityLogs.filter(
+  const _recentLoginAttempts = securityLogs.filter(
     log => log.event_type === 'login_success' || log.event_type === 'login_failed'
   );
 

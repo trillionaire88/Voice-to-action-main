@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, MapPin, Globe2, ChevronUp, ChevronDown, Building2 } from "lucide-react";
+import { Search, Globe2, ChevronUp, ChevronDown, Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 // Comprehensive global locations database

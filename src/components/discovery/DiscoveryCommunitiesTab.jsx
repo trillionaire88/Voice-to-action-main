@@ -1,11 +1,9 @@
-import React from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Users, Globe2, MapPin, Lock, CheckCircle2, ArrowRight } from "lucide-react";
 

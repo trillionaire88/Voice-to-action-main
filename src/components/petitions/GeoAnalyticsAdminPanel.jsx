@@ -1,12 +1,11 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { Globe, Download, AlertTriangle, MapPin, Users, TrendingUp } from "lucide-react";
+import { Globe, Download, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 
 const COUNTRY_NAMES = {

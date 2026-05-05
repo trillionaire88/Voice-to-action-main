@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Shield, ShieldCheck, ShieldAlert, ShieldX, Info } from "lucide-react";
 

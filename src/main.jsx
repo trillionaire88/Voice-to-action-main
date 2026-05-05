@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import * as Sentry from '@sentry/react';
 import App from '@/App.jsx'
 import '@/index.css'
+import '@/globals.css'
 import { initialiseSecurity } from "@/lib/security";
 import "@/lib/i18n";
 

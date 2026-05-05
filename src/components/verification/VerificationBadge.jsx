@@ -1,4 +1,3 @@
-import React from "react";
 
 const BADGE_CONFIG = {
   user:         { color: "text-blue-500",    label: "Verified User",         title: "Verified User" },
@@ -83,7 +82,7 @@ export function UserVerificationBadge({ user, size = "sm", showLabel = false }) 
   );
 }
 
-export function CommunityVerificationBadge({ community, showLabel = true }) {
+export function CommunityVerificationBadge({ community }) {
   if (!community) return null;
   const cvtype = community.community_verification;
   if (!cvtype || cvtype === "none") {

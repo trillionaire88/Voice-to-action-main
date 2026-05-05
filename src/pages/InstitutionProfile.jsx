@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";

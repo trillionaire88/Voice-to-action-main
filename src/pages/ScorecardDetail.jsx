@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
 import {
-  ArrowLeft, Star, Globe2, MapPin, ExternalLink, CheckCircle2,
-  Users, Shield, Flag, Lock, AlertTriangle, ThumbsUp
+  ArrowLeft, MapPin, ExternalLink, Shield, Flag, Lock, AlertTriangle, ThumbsUp
 } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -129,7 +127,6 @@ export default function ScorecardDetail() {
       // Compute new counts
       const prevRating = myRating?.rating;
       const decrement = {};
-      const increment = {};
 
       if (prevRating) {
         decrement[`${prevRating}_count`] = Math.max(0, (scorecard[`${prevRating}_count`] || 1) - 1);
@@ -145,7 +142,7 @@ export default function ScorecardDetail() {
       valid.forEach(r => { if (counts[r.rating] !== undefined) counts[r.rating]++; });
       const total = valid.length;
       const approveN = counts.strongly_approve + counts.approve;
-      const disapproveN = counts.strongly_disapprove + counts.disapprove;
+      const _disapproveN = counts.strongly_disapprove + counts.disapprove;
       const rawApproval = total > 0 ? Math.round((approveN / total) * 100) : 0;
 
       // Weighted approval

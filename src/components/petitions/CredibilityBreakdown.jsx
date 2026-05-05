@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Shield, ChevronDown, ChevronUp, CheckCircle2, Users, Globe, MessageSquare, TrendingUp } from "lucide-react";
 import CredibilityBadge from "./CredibilityBadge";
 
@@ -25,7 +24,7 @@ function ScoreRow({ label, value, max, icon: Icon, color }) {
   );
 }
 
-export default function CredibilityBreakdown({ credibility, petition }) {
+export default function CredibilityBreakdown({ credibility }) {
   const [expanded, setExpanded] = useState(false);
 
   if (!credibility) return null;

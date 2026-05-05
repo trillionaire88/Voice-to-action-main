@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -66,7 +66,7 @@ export default function ReferralCodeInput({ onCodeApplied, onCodeRemoved, basePr
       setDiscount(discountAmount);
       onCodeApplied && onCodeApplied(record.code, safeDiscount, discountAmount);
       toast.success(`${safeDiscount}% discount applied!`);
-    } catch (e) {
+    } catch {
       toast.error("Failed to verify code");
     } finally {
       setChecking(false);

@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import {
-  Settings, TrendingUp, AlertTriangle, CheckCircle2,
-  RefreshCw, Activity, Brain, Zap, Shield, BarChart3, Download
+  Settings, TrendingUp, AlertTriangle, CheckCircle2, Activity, Brain, Zap, Shield, Download
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,7 +21,7 @@ const DEFAULT_PARAMS = {
   prediction_smoothing: { value: 0.15, min: 0.05, max: 0.40, label: "Prediction Smoothing", desc: "Smoothing factor for growth predictions" },
 };
 
-export default function AdaptiveEnginePanel({ adminUser }) {
+export default function AdaptiveEnginePanel() {
   const [params, setParams] = useState(DEFAULT_PARAMS);
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -49,7 +47,7 @@ Brigade suspects: ${reports.filter(r=>r.is_brigade_suspect).length}
 Scorecards: ${scorecards.length}, avg credibility: ${scorecards.length > 0 ? Math.round(scorecards.reduce((s,sc)=>s+(sc.credibility_score||0),0)/scorecards.length) : 0}
 
 Current parameter values:
-${Object.entries(params).map(([k,v]) => `${v.label}: ${v.value}`).join('\n')}`;
+${Object.entries(params).map(([_k,v]) => `${v.label}: ${v.value}`).join('\n')}`;
 
       const result = await api.integrations.Core.InvokeLLM({
         prompt: `You are an Adaptive Engine for a civic platform. Analyze platform health data and suggest parameter adjustments.

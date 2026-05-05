@@ -1,8 +1,5 @@
-import React from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,8 +7,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle, MapPin, Calendar, ExternalLink } from "lucide-react";
 
 export default function CrisisHub() {
-  const navigate = useNavigate();
-
   const { data: crises = [] } = useQuery({
     queryKey: ["crises"],
     queryFn: () => api.entities.Crisis.list("-start_date"),

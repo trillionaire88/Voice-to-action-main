@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
-import { MapContainer, TileLayer, CircleMarker, Tooltip, Marker, useMap } from "react-leaflet";
-import L from "leaflet";
+import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap } from "react-leaflet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Globe2, FileText, BarChart3, MapPin, Navigation, Search,
-  Users, TrendingUp, Zap, ArrowRight, Filter, X
+  Globe2, FileText, BarChart3, MapPin, Navigation, Search, TrendingUp, Zap, ArrowRight, X
 } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
@@ -110,8 +108,8 @@ export default function CivicMap() {
     return Object.values(grid);
   }
 
-  const petitionClusters = useMemo(() => clusterItems(petitionsWithCoords), [petitionsWithCoords]);
-  const pollClusters = useMemo(() => clusterItems(pollsWithCoords), [pollsWithCoords]);
+  const _petitionClusters = useMemo(() => clusterItems(petitionsWithCoords), [petitionsWithCoords]);
+  const _pollClusters = useMemo(() => clusterItems(pollsWithCoords), [pollsWithCoords]);
 
   // Filter by search
   const filteredPetitions = useMemo(() => {

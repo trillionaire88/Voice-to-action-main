@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -8,12 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
 import {
-  Globe2, Users, TrendingUp, TrendingDown, Minus,
-  AlertTriangle, CheckCircle2, Brain, RefreshCw, Shield,
-  BarChart3, FileText, Vote, Star, Zap, Activity,
-  ThumbsUp, ThumbsDown, ArrowRight, ChevronRight
+  Globe2, TrendingUp, TrendingDown, Minus,
+  AlertTriangle, CheckCircle2, Brain, RefreshCw, Star, Activity
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -127,7 +124,7 @@ export default function GlobalOpinion() {
       return data || [];
     },
   });
-  const { data: polls = [] } = useQuery({
+  const { data: _polls = [] } = useQuery({
     queryKey: ["gopPolls"],
     queryFn: async () => {
       const { data } = await supabase.from("polls").select("*").eq("status", "open").order("total_votes_cached", { ascending: false }).limit(10);

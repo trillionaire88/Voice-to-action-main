@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { cleanForDB } from "@/lib/dbHelpers";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, Search, Send, Paperclip, Image as ImageIcon, MessageSquare, Plus, Pencil, Phone, Video, MoreHorizontal, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
-import { format, formatDistanceToNow, isToday } from "date-fns";
+import { format, isToday } from "date-fns";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
 import { checkRateLimit } from "@/lib/rateLimit";

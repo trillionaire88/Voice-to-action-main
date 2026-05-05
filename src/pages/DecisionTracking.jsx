@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   CheckCircle2,
   Clock,
@@ -21,7 +21,7 @@ import { format } from "date-fns";
 
 export default function DecisionTracking() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [, setUser] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function DecisionTracking() {
         data: { user: authUser },
       } = await supabase.auth.getUser();
       setUser(authUser || null);
-    } catch (error) {
+    } catch {
       setUser(null);
     }
   };

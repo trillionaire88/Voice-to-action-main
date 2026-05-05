@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "@/lib/AuthContext";
 import BaseFeedList from "./BaseFeedList";
 import { Button } from "@/components/ui/button";

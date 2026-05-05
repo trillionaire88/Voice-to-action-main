@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Globe2, FileText, Users, Activity, ChevronLeft, ChevronRight } from "lucide-react";
+import { TrendingUp, Globe2, FileText, Activity, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function GlobalSummaryPanel({ polls, petitions, stats }) {
   const [isMinimized, setIsMinimized] = useState(false);
@@ -103,7 +103,7 @@ export default function GlobalSummaryPanel({ polls, petitions, stats }) {
             Trending Global Issues
           </h4>
           <div className="space-y-1.5">
-            {globalIssues.map((issue, idx) => (
+            {globalIssues.map((issue) => (
               <div key={issue.topic} className="flex items-center justify-between text-xs">
                 <span className="text-slate-600">{issue.topic}</span>
                 <span className="text-slate-500">{issue.count}</span>

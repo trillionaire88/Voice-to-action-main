@@ -1,10 +1,9 @@
-import React from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { BookOpen, Shield, Clock, Users, TrendingUp } from "lucide-react";
+import { BookOpen, Shield, Clock } from "lucide-react";
 import { format } from "date-fns";
 
 export default function MandateLedger() {

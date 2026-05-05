@@ -1,4 +1,3 @@
-import React from "react";
 import BaseFeedList from "./BaseFeedList";
 
 export default function BreakingFeed() {

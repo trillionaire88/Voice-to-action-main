@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Globe2, TrendingUp, Zap } from "lucide-react";
+import { Globe2, TrendingUp } from "lucide-react";
 
 const COUNTRY_CODES = [
   "AU", "US", "GB", "CA", "NZ", "DE", "FR", "JP", "IN", "BR", "SG", "MX", "IT", "ES", "NL",

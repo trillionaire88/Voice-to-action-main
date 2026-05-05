@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -7,14 +7,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Vote, Globe2, Search, TrendingUp, Users, CheckCircle2,
-  Clock, Filter, PlusCircle, Shield, MapPin, Flame, ArrowRight, Star
+  Vote, Globe2, Search, Users, CheckCircle2, PlusCircle, ArrowRight
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import VoteTrustIndicators from "@/components/polls/VoteTrustIndicators";
 
 const CATEGORIES = [
   { value: "", label: "All Topics" },

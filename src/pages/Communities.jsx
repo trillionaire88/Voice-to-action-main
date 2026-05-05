@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { getCommunitiesVisible, getMyPrivateCommunities, joinCommunityWithCode } from "@/api/communityApi";
 import { useAuth } from "@/lib/AuthContext";
@@ -24,11 +24,9 @@ import {
   Globe2,
   TrendingUp,
   CheckCircle2,
-  Sparkles,
   PlusCircle,
   MessageSquare,
   BarChart3,
-  FileText,
   ShieldCheck,
   ChevronDown,
   ChevronUp,

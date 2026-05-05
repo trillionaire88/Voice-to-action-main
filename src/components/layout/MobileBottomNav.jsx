@@ -1,7 +1,5 @@
-import React from "react";
 import { useLocation } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { Home, Compass, FileText, User, PlusCircle, MessageSquare, Newspaper } from "lucide-react";
+import { Home, User, PlusCircle, MessageSquare, Newspaper } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigation, resolveTabKey } from "@/lib/NavigationContext";
 
@@ -13,7 +11,7 @@ const NAV_ITEMS = [
   { key: "Profile",    label: "Profile",  icon: User          },
 ];
 
-export default function MobileBottomNav({ user, unreadCount = 0 }) {
+export default function MobileBottomNav({ unreadCount = 0 }) {
   const location = useLocation();
   const { switchTab } = useNavigation();
 

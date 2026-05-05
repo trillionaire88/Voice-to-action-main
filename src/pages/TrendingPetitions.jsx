@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   TrendingUp, Flame, Globe, Users, MessageSquare, ArrowRight,
-  MapPin, Target, BarChart3, Zap, BarChart4, ThumbsUp, Vote, FileText
+  MapPin, Target, Zap, BarChart4, Vote, FileText
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import CredibilityBadge from "../components/petitions/CredibilityBadge";
@@ -332,7 +332,7 @@ function TrendingCard({ petition, score, cred, rank, onClick }) {
 }
 
 function TrendingPollCard({ poll, rank, onClick }) {
-  const engagementScore = (poll.total_votes_cached || 0) + (poll.comments_count || 0) * 0.5;
+  const _engagementScore = (poll.total_votes_cached || 0) + (poll.comments_count || 0) * 0.5;
   const verificationRate = poll.total_votes_cached > 0 ? ((poll.verified_votes_count || 0) / poll.total_votes_cached * 100) : 0;
 
   return (

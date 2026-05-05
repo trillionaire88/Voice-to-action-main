@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
-  Send, Clock, CheckCircle2, XCircle, AlertTriangle, Eye, Mail, Download,
-  Building2, FileText, Globe, Users
+  Send, Clock, XCircle, AlertTriangle, Eye,
+  Building2, Globe
 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";

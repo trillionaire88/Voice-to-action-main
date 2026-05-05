@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -33,7 +33,7 @@ export default function MediaUploader({ onUploadComplete, maxFiles = 1, accepted
       setUploadedFiles(newFiles);
       onUploadComplete(newFiles);
       toast.success("Files uploaded successfully");
-    } catch (error) {
+    } catch {
       toast.error("Upload failed");
     } finally {
       setUploading(false);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { api } from '@/api/client';
@@ -17,16 +17,11 @@ import {
   X,
   MapPin,
   BarChart3,
-  MessageSquare,
   Scale,
   Calendar,
   Users,
-  TrendingUp,
   Clock,
   FileText,
-  Newspaper,
-  Building2,
-  Lightbulb,
 } from "lucide-react";
 import { format } from "date-fns";
 import NewsLayer from "./NewsLayer";
@@ -34,11 +29,10 @@ import InstitutionMarkers from "./InstitutionMarkers";
 import ElectionSimulator from "./ElectionSimulator";
 import ScenarioModeler from "./ScenarioModeler";
 
-export default function RegionPanel({ countryCode, polls, impactEvents, onClose, user }) {
+export default function RegionPanel({ countryCode, polls, impactEvents, onClose }) {
   const navigate = useNavigate();
   const [timeFilter, setTimeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
-  const [categoryFilter, setCategoryFilter] = useState("all");
 
   // Filter content for this region
   const regionPolls = polls.filter(poll => {

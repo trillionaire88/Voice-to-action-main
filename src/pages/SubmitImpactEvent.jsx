@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Scale, AlertTriangle, Plus, X, ExternalLink } from "lucide-react";
+import { Scale, AlertTriangle, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SubmitImpactEvent() {
@@ -46,7 +46,7 @@ export default function SubmitImpactEvent() {
         return;
       }
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     }
   };

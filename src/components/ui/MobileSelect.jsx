@@ -12,7 +12,7 @@
  *   className    — extra classes for the trigger button
  */
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MobileBottomSheet from "@/components/ui/MobileBottomSheet";

@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { api } from '@/api/client';
+import { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,8 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Search, SlidersHorizontal, X, TrendingUp, Globe2, MapPin, RefreshCw,
-  BarChart3, FileText, Vote, Star, Users, AlertCircle, Newspaper, User
+  Search, SlidersHorizontal, X, TrendingUp, MapPin, RefreshCw,
+  BarChart3, FileText, Star, Users, Newspaper, User
 } from "lucide-react";
 import DiscoveryFilterPanel from "@/components/discovery/DiscoveryFilterPanel.jsx";
 import ForYouFeed from "@/components/newsfeed/ForYouFeed";

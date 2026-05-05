@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import PriceDisplay from "@/components/payments/PriceDisplay";
 
 const STATUS_COLORS = {
   pending:   "bg-amber-100 text-amber-800 border-amber-200",
@@ -47,7 +46,7 @@ export default function ReferralEarnings() {
     enabled: !!user,
   });
 
-  const { data: transactions = [], isLoading: txLoading, refetch: refetchTx } = useQuery({
+  const { data: transactions = [], isLoading: txLoading } = useQuery({
     queryKey: ["referralTransactions", user?.id],
     queryFn: async () => {
       const { data: code } = await supabase.from("referral_codes").select("id").eq("owner_user_id", user.id).maybeSingle();

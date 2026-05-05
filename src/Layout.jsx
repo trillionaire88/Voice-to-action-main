@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { api } from '@/api/client';
 import { supabase } from "@/lib/supabase";
-import { Globe2, User, LogOut, Lock, FileText, ChevronDown, PlusCircle, BarChart3, Vote, MessageSquare, Users, ArrowLeft } from "lucide-react";
+import { Globe2, User, LogOut, Lock, FileText, ChevronDown, PlusCircle, Vote, MessageSquare, Users, ArrowLeft } from "lucide-react";
 import { useNavigation } from "@/lib/NavigationContext";
 import VerificationBadge from "@/components/profile/VerificationBadge";
 import ToSGate from "@/components/legal/ToSGate";
@@ -111,7 +111,7 @@ export default function Layout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { goBack, navigateTo, dispatch } = useNavigation();
+  const { goBack, dispatch } = useNavigation();
   useScrollRestore(); // Saves & restores scroll position per route
   const [createSheetOpen, setCreateSheetOpen] = useState(false);
   const [moreSheetOpen, setMoreSheetOpen] = useState(false);

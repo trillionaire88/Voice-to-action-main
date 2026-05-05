@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,7 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-const STAT_KEYS = [
+const _STAT_KEYS = [
   { key: "new_petitions", label: "Petitions", color: "#f97316" },
   { key: "new_votes", label: "Votes", color: "#3b82f6" },
   { key: "total_signatures", label: "Signatures", color: "#8b5cf6" },
@@ -60,7 +59,7 @@ export default function DeepAnalytics() {
     enabled: isAdmin,
   });
 
-  const { data: monthlySeries = [], isLoading: loadingMonthly, refetch: refetchMonthly } = useQuery({
+  const { data: monthlySeries = [], refetch: refetchMonthly } = useQuery({
     queryKey: ["wh_monthly"],
     queryFn: () => api.functions.invoke("dataWarehouse", { action: "get_series", snapshot_type: "monthly", limit: 12 }).then(r => r.data?.series || []),
     enabled: isAdmin,
@@ -69,7 +68,7 @@ export default function DeepAnalytics() {
   const runSnapshot = async () => {
     setSnapshotLoading(true);
     try {
-      const [daily, monthly] = await Promise.all([
+      await Promise.all([
         api.functions.invoke("dataWarehouse", { action: "daily_snapshot" }),
         api.functions.invoke("dataWarehouse", { action: "monthly_snapshot" }),
       ]);

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MoreHorizontal, Bookmark, Share2, Flag, EyeOff, Flame, ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";

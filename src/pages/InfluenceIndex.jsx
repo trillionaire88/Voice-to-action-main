@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
 import {
-  TrendingUp, Users, Globe2, Flame, Award, Crown, Star,
-  CheckCircle2, Shield, FileText, Vote, BarChart3, ArrowRight,
-  Zap, Activity, Trophy, Medal, ChevronUp
+  TrendingUp, Users, Globe2, Flame, Crown, Star,
+  CheckCircle2, Shield, FileText, Vote, BarChart3, ArrowRight, Activity, Trophy, Medal, ChevronUp
 } from "lucide-react";
 import ReputationBadge, { getInfluenceLevel, INFLUENCE_LEVELS } from "@/components/reputation/ReputationBadge";
 
@@ -54,7 +52,7 @@ function pollInfluenceScore(p) {
 // Scorecard influence score (0–100)
 function scorecardInfluenceScore(s) {
   const total = s.total_ratings || 0;
-  const verified = s.verified_ratings_count || 0;
+  const _verified = s.verified_ratings_count || 0;
   const geo = s.countries_represented || 1;
   const credScore = s.credibility_score || 0;
 
@@ -215,10 +213,10 @@ function CommunityRow({ community, rank, onClick }) {
   );
 }
 
-function UserRow({ influenceRecord, rank, onClick }) {
+function UserRow({ influenceRecord, rank }) {
   const score = influenceRecord.overall_score || 0;
   const level = influenceRecord.influence_level || getInfluenceLevel(score);
-  const cfg = INFLUENCE_LEVELS[level];
+  const _cfg = INFLUENCE_LEVELS[level];
   return (
     <div className="flex items-center gap-3 py-3 border-b border-slate-100 last:border-0 px-2">
       <RankBadge rank={rank} />
@@ -371,7 +369,7 @@ export default function InfluenceIndex() {
   const totalPetitionSigs = petitions.reduce((s, p) => s + (p.signature_count_total || 0), 0);
   const totalPollVotes = polls.reduce((s, p) => s + (p.total_votes_cached || 0), 0);
   const totalRatings = scorecards.reduce((s, c) => s + (c.total_ratings || 0), 0);
-  const totalMembers = communities.reduce((s, c) => s + (c.member_count || 0), 0);
+  const _totalMembers = communities.reduce((s, c) => s + (c.member_count || 0), 0);
 
   const SkeletonRows = () => (
     <div className="space-y-3">
@@ -437,7 +435,7 @@ export default function InfluenceIndex() {
               <CardContent className="pt-0 space-y-2">
                 {isLoading ? <SkeletonRows /> : (
                   <>
-                    {trendingPetitions.slice(0, 3).map((p, i) => (
+                    {trendingPetitions.slice(0, 3).map((p) => (
                       <div key={p.id} onClick={() => navigate(createPageUrl("PetitionDetail") + `?id=${p.id}`)}
                         className="flex items-center gap-2 py-2 cursor-pointer hover:bg-orange-50 px-2 rounded-lg transition-colors">
                         <Flame className="w-3 h-3 text-orange-500 flex-shrink-0" />
@@ -445,7 +443,7 @@ export default function InfluenceIndex() {
                         <Badge className="bg-orange-50 text-orange-700 border-orange-200 text-[10px]">{petitionInfluenceScore(p)}</Badge>
                       </div>
                     ))}
-                    {trendingPolls.slice(0, 2).map((p, i) => (
+                    {trendingPolls.slice(0, 2).map((p) => (
                       <div key={p.id} onClick={() => navigate(createPageUrl("PollDetail") + `?id=${p.id}`)}
                         className="flex items-center gap-2 py-2 cursor-pointer hover:bg-blue-50 px-2 rounded-lg transition-colors">
                         <Vote className="w-3 h-3 text-blue-500 flex-shrink-0" />

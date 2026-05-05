@@ -1,4 +1,3 @@
-import React from "react";
 import { createPageUrl } from "@/utils";
 import { Shield, CheckCircle2 } from "lucide-react";
 

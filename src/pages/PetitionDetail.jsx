@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { api } from '@/api/client';
 import { supabase } from "@/lib/supabase";
@@ -14,9 +14,7 @@ import {
   FileText,
   MapPin,
   Target,
-  Users,
   CheckCircle2,
-  Share2,
   ExternalLink,
   Calendar,
   Clock,
@@ -26,7 +24,6 @@ import {
   Send,
   Mail,
   Pencil,
-  Download,
 } from "lucide-react";
 import { format } from "date-fns";
 import { MIN_VERIFIED_SIGS_FOR_DELIVERY } from "@/constants/petitionThresholds";
@@ -164,7 +161,7 @@ export default function PetitionDetail() {
     })();
   }, [petitionId]);
 
-  const handleShare = async () => {
+  const _handleShare = async () => {
     const url = window.location.href;
     const shareData = {
       title: petition?.title || "Petition",

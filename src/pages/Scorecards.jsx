@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Star, Search, TrendingUp, TrendingDown, Flame, Users,
-  CheckCircle2, Globe2, Plus, Filter, ArrowRight, ThumbsUp, ThumbsDown, Minus, BarChart3
+  Star, Search, Flame, Users,
+  CheckCircle2, Globe2, Plus, ArrowRight, BarChart3
 } from "lucide-react";
 
 const CATEGORY_CONFIG = {
@@ -64,7 +63,7 @@ function ApprovalBar({ scorecard }) {
   );
 }
 
-function CredibilityBadge({ score, label }) {
+function CredibilityBadge({ label }) {
   if (!label || label === "insufficient_data") return null;
   const cfg = {
     low: "bg-red-50 text-red-700 border-red-200",

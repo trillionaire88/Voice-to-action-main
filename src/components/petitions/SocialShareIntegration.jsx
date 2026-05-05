@@ -1,8 +1,7 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Share2, Twitter, Facebook } from "lucide-react";
 
-export default function SocialShareIntegration({ petition }) {
+export default function SocialShareIntegration() {
   return (
     <div className="flex items-center gap-2">
       <span className="text-sm text-slate-600">Share:</span>

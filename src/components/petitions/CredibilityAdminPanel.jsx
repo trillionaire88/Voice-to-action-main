@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,8 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
-  Shield, AlertTriangle, RefreshCw, Globe, Users, CheckCircle2,
-  Copy, TrendingUp, Activity, ShieldX
+  Shield, RefreshCw, ShieldX
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -47,9 +45,9 @@ function computeCredibility(petition, signatures, comments) {
 
   // -- GROWTH SCORE (max 100, weighted 15%)
   const now = new Date();
-  const sigs24h = signatures.filter(s => (now - new Date(s.created_date)) < 86400000).length;
+  const _sigs24h = signatures.filter(s => (now - new Date(s.created_date)) < 86400000).length;
   const sigs7d = signatures.filter(s => (now - new Date(s.created_date)) < 604800000).length;
-  const sigs30d = signatures.filter(s => (now - new Date(s.created_date)) < 2592000000).length;
+  const _sigs30d = signatures.filter(s => (now - new Date(s.created_date)) < 2592000000).length;
   // Organic distribution check — penalise if 80%+ came in under 1 hour
   const sigs1h = signatures.filter(s => (now - new Date(s.created_date)) < 3600000).length;
   const burstRatio = total > 10 ? sigs1h / total : 0;

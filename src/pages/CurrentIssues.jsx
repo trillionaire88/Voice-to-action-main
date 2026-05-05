@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -7,10 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
 import {
-  Flame, TrendingUp, BarChart3, Globe2, MessageSquare,
-  FileText, Vote, Star, Zap, RefreshCw, Brain,
+  Flame, TrendingUp, BarChart3,
+  FileText, Vote, Star, RefreshCw, Brain,
   AlertTriangle, ThumbsUp, ThumbsDown, Minus, ChevronRight,
   Activity, Users
 } from "lucide-react";

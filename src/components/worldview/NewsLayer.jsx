@@ -1,11 +1,10 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Newspaper, ExternalLink, Calendar, Building2 } from "lucide-react";
+import { Newspaper, Calendar, Building2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
-export default function NewsLayer({ countryCode, onLinkToPoll, onLinkToPetition }) {
+export default function NewsLayer({ onLinkToPoll, onLinkToPetition }) {
   // Mock news data - in production would fetch from API
   const newsItems = [
     {

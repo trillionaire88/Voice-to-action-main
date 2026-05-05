@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Shield, AlertTriangle, CheckCircle2, Flag } from "lucide-react";
+import { Shield, AlertTriangle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 export default function ElectionIntegrity() {
@@ -45,7 +44,7 @@ export default function ElectionIntegrity() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {elections.map((election) => {
-          const integrityLevel =
+          const _integrityLevel =
             election.integrity_score >= 80
               ? "high"
               : election.integrity_score >= 60

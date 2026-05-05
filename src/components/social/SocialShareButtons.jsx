@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Share2, Copy, Mail, MessageCircle, Send, Linkedin } from "lucide-react";
 import { toast } from "sonner";

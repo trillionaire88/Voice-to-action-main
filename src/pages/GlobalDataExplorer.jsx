@@ -1,4 +1,3 @@
-import React from "react";
 import GlobalDataExplorer from "@/components/dashboard/GlobalDataExplorer";
 
 export default function GlobalDataExplorerPage() {

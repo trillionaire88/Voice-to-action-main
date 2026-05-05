@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/AuthContext";
@@ -50,7 +50,7 @@ function getBrowserFingerprint() {
 }
 
 // Calculate trust level and weight for a reporter
-function calcReporterTrust(user, existingReports) {
+function calcReporterTrust(user, _existingReports) {
   if (!user) return { level: "normal", weight: 1 };
 
   const accountAgeDays = user.created_date
@@ -72,15 +72,10 @@ export default function ReportModal({ targetType, targetId, targetPreview = "", 
   const { user } = useAuth();
   const fingerprint = getBrowserFingerprint();
 
-  if (!user) {
-    onClose();
-    return null;
-  }
-
   const { data: existingReports = [] } = useQuery({
     queryKey: ["reportsForTarget", targetId],
     queryFn: () => api.entities.Report.filter({ target_id: targetId }),
-    enabled: !!targetId,
+    enabled: !!targetId && !!user,
   });
 
   const reportMutation = useMutation({
@@ -221,6 +216,11 @@ export default function ReportModal({ targetType, targetId, targetPreview = "", 
     },
     onError: () => toast.error("Failed to submit report. Please try again."),
   });
+
+  if (!user) {
+    onClose();
+    return null;
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();

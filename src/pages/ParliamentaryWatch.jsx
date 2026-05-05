@@ -1,4 +1,3 @@
-import React from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Building2, Radio, Vote, Users } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
 
 export default function ParliamentaryWatch() {
   const { data: sessions = [] } = useQuery({

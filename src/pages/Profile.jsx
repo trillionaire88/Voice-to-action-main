@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { supabase } from "@/lib/supabase";
 import HeaderCustomizer from "@/components/header/HeaderCustomizer";
@@ -33,8 +33,6 @@ import {
   TrendingUp,
   Settings,
   Upload,
-  Mail,
-  Phone,
   FileText,
   PenLine,
   Trash2,
@@ -49,7 +47,6 @@ import ActivityFeed from "@/components/social/ActivityFeed";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { sanitiseText } from "@/lib/sanitise";
-import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonProfile } from "@/components/ui/SkeletonCard";
 import PollCard from "../components/polls/PollCard";
 import UserRatingPanel from "../components/reputation/UserRatingPanel";
@@ -414,7 +411,7 @@ export default function Profile() {
       const { file_url } = await api.integrations.Core.UploadFile({ file });
       await updateProfileMutation.mutateAsync({ profile_avatar_url: file_url });
       toast.success("Profile picture updated!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to upload image");
     } finally {
       setUploadingAvatar(false);

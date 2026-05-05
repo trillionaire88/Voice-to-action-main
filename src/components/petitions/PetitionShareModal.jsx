@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { X, Copy, Check } from "lucide-react";
 
 export default function PetitionShareModal({ petition, onClose }) {

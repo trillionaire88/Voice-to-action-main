@@ -1,15 +1,15 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   AlertTriangle, Shield, Users, Clock, CheckCircle2, XCircle,
-  TrendingUp, Activity, Flag, Eye, Ban, AlertCircle
+  TrendingUp, Activity, Flag, AlertCircle
 } from "lucide-react";
-import { format, formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
 import { toast } from "sonner";
 
 const TRUST_COLORS = {
@@ -23,7 +23,7 @@ export default function BrigadePanel({ adminUser }) {
   const queryClient = useQueryClient();
   const [expandedTarget, setExpandedTarget] = useState(null);
 
-  const { data: allReports = [], isLoading } = useQuery({
+  const { data: allReports = [] } = useQuery({
     queryKey: ["allReports"],
     queryFn: () => api.entities.Report.list("-created_date", 500),
   });

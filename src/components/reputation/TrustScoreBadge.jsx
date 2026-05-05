@@ -1,4 +1,3 @@
-import React from "react";
 
 function getTrustLevel(score) {
   if (score <= 30) return { level: "low",     color: "text-red-500",    bg: "bg-red-50 border-red-200",     label: "Low Trust" };

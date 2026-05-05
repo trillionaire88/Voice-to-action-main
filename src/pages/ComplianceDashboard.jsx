@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Shield, FileText, Users, AlertTriangle, CheckCircle2, Clock,
+  Shield, FileText, Users, AlertTriangle, CheckCircle2,
   Download, RefreshCw, Eye, Database, Trash2, Globe2, Scale,
   Activity, CreditCard, BookOpen, X, Plus, Flag, ChevronDown,
 } from "lucide-react";
@@ -31,7 +31,7 @@ const EVENT_ICONS = {
   policy_change: FileText, system_check: Activity,
 };
 
-function ExportButton({ data, filename, label }) {
+function ExportButton({ data, filename }) {
   const exportCSV = () => {
     if (!data?.length) { toast.error("No data to export"); return; }
     const keys = Object.keys(data[0]).filter(k => typeof data[0][k] !== 'object');

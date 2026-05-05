@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
@@ -9,10 +8,10 @@ import { toast } from "sonner";
 
 export default function PrivacyCompliance() {
   const { user } = useAuth();
-  if (!user || user.role !== "owner_admin") return <Navigate to="/" replace />;
 
   const { data: report, refetch } = useQuery({
     queryKey: ["privacyComplianceReport"],
+    enabled: !!user && user.role === "owner_admin",
     queryFn: async () => {
       const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/privacy-compliance-report`, {
@@ -26,6 +25,7 @@ export default function PrivacyCompliance() {
 
   const { data: pending = [], refetch: refetchPending } = useQuery({
     queryKey: ["pendingDeletionRequestsCompliance"],
+    enabled: !!user && user.role === "owner_admin",
     queryFn: async () => {
       const { data } = await supabase
         .from("data_deletion_requests")
@@ -35,6 +35,8 @@ export default function PrivacyCompliance() {
       return data || [];
     },
   });
+
+  if (!user || user.role !== "owner_admin") return <Navigate to="/" replace />;
 
   const processDeletion = async (id) => {
     const { data: { session } } = await supabase.auth.getSession();

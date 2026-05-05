@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Building2, Search, MapPin, Filter, Star } from "lucide-react";
+import { Building2, Search, MapPin, Filter } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
-export default function InstitutionMarkers({ countryCode, onSelectInstitution }) {
+export default function InstitutionMarkers({ onSelectInstitution }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     government: true,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,6 @@ export default function IdentityVerification() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [verificationMethod, setVerificationMethod] = useState("");
-  const [uploadedFile, setUploadedFile] = useState(null);
 
   useEffect(() => {
     loadUser();
@@ -26,7 +25,7 @@ export default function IdentityVerification() {
     try {
       const currentUser = await api.auth.me();
       setUser(currentUser);
-    } catch (error) {
+    } catch {
       navigate(createPageUrl("Home"));
     }
   };

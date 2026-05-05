@@ -1,4 +1,3 @@
-import React from "react";
 import { api } from '@/api/client';
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -9,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   ArrowLeft,
   Scale,
@@ -55,7 +53,7 @@ export default function FigureProfile() {
     staleTime: 5 * 60_000,
   });
 
-  const { data: ratings = [] } = useQuery({
+  const { data: _ratings = [] } = useQuery({
     queryKey: ["figureRatings", figureId],
     queryFn: () => api.entities.FigureRating.filter({ figure_id: figureId }),
     enabled: !!figureId,

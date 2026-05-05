@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from '@/api/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Power, Trash2, Plus, Key, CheckCircle2 } from "lucide-react";
+import { Copy, Power, Trash2, Plus, Key } from "lucide-react";
 import { toast } from "sonner";
 
 function generateAccessCode() {
@@ -42,7 +42,7 @@ export default function CommunityAccessCodeSettings({ communityId, user }) {
         body: `A new community access code was created.\n\nCommunity ID: ${communityId}\nCode: ${code}\nCreated by: ${user.email}\nDate: ${new Date().toISOString()}`,
       });
       toast.success("Access code created!");
-    } catch (e) {
+    } catch {
       toast.error("Failed to create access code");
     } finally {
       setCreating(false);

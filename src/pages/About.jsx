@@ -1,6 +1,5 @@
-import React from "react";
 import {
-  Globe2, Shield, Users, MessageSquare, FileText, BarChart3,
+  Globe2, Shield, Users, FileText, BarChart3,
   ArrowRight, CheckCircle2, Building2, Zap, Lock, TrendingUp, Star
 } from "lucide-react";
 import { Link } from "react-router-dom";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -391,7 +391,6 @@ export default function SearchPage() {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [sort, setSort] = useState("relevance");
   const [total, setTotal] = useState(0);
-  const debounceRef = useRef(null);
   const suggestRef = useRef(null);
 
   useEffect(() => {

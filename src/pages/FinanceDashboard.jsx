@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from '@/api/client';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  DollarSign, TrendingUp, Users, Clock, CheckCircle2, XCircle,
+  DollarSign, TrendingUp, Users, Clock, CheckCircle2,
   AlertTriangle, Download, RefreshCw, Lock, Unlock, Eye,
-  CreditCard, Activity, BarChart3, Filter, Plus, ChevronDown,
+  CreditCard, Activity, BarChart3, Plus, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
-import { formatDistanceToNow, format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

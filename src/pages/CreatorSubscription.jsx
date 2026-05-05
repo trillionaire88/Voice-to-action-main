@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createPageUrl } from "@/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,8 +17,6 @@ import { initiateStripeCheckout } from "@/lib/stripeCheckout";
 import { appHostname } from "@/constants/siteUrl";
 
 export default function CreatorSubscription() {
-  const navigate    = useNavigate();
-  const queryClient = useQueryClient();
   const [user,           setUser]           = useState(null);
   const [checkingOut,    setCheckingOut]    = useState(false);
   const [generatingCode, setGeneratingCode] = useState(false);

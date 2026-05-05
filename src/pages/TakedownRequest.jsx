@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { supabase } from "@/lib/supabase";
 import { useMutation } from "@tanstack/react-query";
@@ -9,9 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
-  Scale, Shield, CheckCircle2, AlertTriangle, FileText, Globe2, Phone, Mail, User, Building2
+  Scale, Shield, CheckCircle2, FileText, User
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { api } from '@/api/client';
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
   Server, Database, Activity, CheckCircle2, AlertTriangle,
-  RefreshCw, Shield, Clock, Users, BarChart3, Zap, Globe2
+  RefreshCw, Shield, Zap, Globe2
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 

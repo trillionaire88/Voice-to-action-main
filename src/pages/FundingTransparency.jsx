@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ import {
 
 export default function FundingTransparency() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [, setUser] = useState(null);
 
   useEffect(() => {
     loadUser();
@@ -38,12 +38,12 @@ export default function FundingTransparency() {
         data: { user: authUser },
       } = await supabase.auth.getUser();
       setUser(authUser || null);
-    } catch (error) {
+    } catch {
       setUser(null);
     }
   };
 
-  const { data: donations = [], isLoading: donationsLoading } = useQuery({
+  const { data: donations = [] } = useQuery({
     queryKey: ["platformDonations"],
     queryFn: async () => {
       const { data, error } = await supabase.from("platform_donations").select("*").eq("status", "completed");
