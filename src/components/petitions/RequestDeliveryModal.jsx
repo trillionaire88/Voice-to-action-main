@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Send, Search, Building2, CheckCircle2, AlertCircle, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
+import { MIN_VERIFIED_SIGS_FOR_DELIVERY } from "@/constants/petitionThresholds";
 
 const MILESTONES = [1000, 5000, 10000, 25000, 50000, 100000];
 
@@ -84,8 +85,8 @@ export default function RequestDeliveryModal({ petition, user, onClose }) {
     onError: () => toast.error("Failed to submit delivery request"),
   });
 
-  const MIN_VERIFIED_SIGS = 100000;
-  const hasMinVerified = (petition.signature_count_verified || 0) >= MIN_VERIFIED_SIGS;
+  const hasMinVerified =
+    (petition.signature_count_verified || 0) >= MIN_VERIFIED_SIGS_FOR_DELIVERY;
   const eligible = hasMinVerified && MILESTONES.some(m => petition.signature_count_total >= m);
   const nextMilestone = MILESTONES.find(m => petition.signature_count_total < m);
 
@@ -105,7 +106,8 @@ export default function RequestDeliveryModal({ petition, user, onClose }) {
             {!hasMinVerified ? (
               <div className="flex items-center gap-2 text-amber-800 font-medium">
                 <AlertCircle className="w-5 h-5" />
-                Requires 100,000+ verified signatures ({MIN_VERIFIED_SIGS.toLocaleString() - (petition.signature_count_verified || 0)} more needed)
+                Requires {MIN_VERIFIED_SIGS_FOR_DELIVERY.toLocaleString()}+ verified signatures (
+                {MIN_VERIFIED_SIGS_FOR_DELIVERY - (petition.signature_count_verified || 0)} more needed)
               </div>
             ) : eligible ? (
               <div className="flex items-center gap-2 text-emerald-800 font-medium">

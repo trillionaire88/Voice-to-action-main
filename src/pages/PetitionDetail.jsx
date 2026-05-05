@@ -29,6 +29,7 @@ import {
   Download,
 } from "lucide-react";
 import { format } from "date-fns";
+import { MIN_VERIFIED_SIGS_FOR_DELIVERY } from "@/constants/petitionThresholds";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonDetail } from "@/components/ui/SkeletonCard";
@@ -246,10 +247,16 @@ export default function PetitionDetail() {
   );
   const isAdmin = user?.role === "admin";
   const isCongressMember = user?.role === "congress_member" || user?.role === "organization_viewer";
-  const submissionThreshold = petition.submission_threshold || 60000;
-  const canSubmit = isCreator && petition.signature_count_verified >= submissionThreshold && petition.status === 'active';
-  const MIN_VERIFIED_FOR_DELIVERY = 100000;
-  const canRequestDelivery = isCreator && petition.status === 'active' && (petition.signature_count_verified || 0) >= MIN_VERIFIED_FOR_DELIVERY;
+  const submissionThreshold =
+    petition.submission_threshold ?? MIN_VERIFIED_SIGS_FOR_DELIVERY;
+  const canSubmit =
+    isCreator &&
+    petition.signature_count_verified >= submissionThreshold &&
+    petition.status === "active";
+  const canRequestDelivery =
+    isCreator &&
+    petition.status === "active" &&
+    (petition.signature_count_verified || 0) >= MIN_VERIFIED_SIGS_FOR_DELIVERY;
 
   // Geo stats for opinion strength
   const geoCountries = [...new Set(signatures.filter(s => !s.is_invalidated && !s.has_withdrawn).map(s => s.country_code).filter(Boolean))].length;
@@ -443,26 +450,34 @@ export default function PetitionDetail() {
                 <Progress value={Math.min(progress, 100)} className="h-3" />
 
                 {/* Delivery milestone indicator */}
-                {(petition.signature_count_verified || 0) < 60000 && petition.status === 'active' && (
+                {(petition.signature_count_verified || 0) < MIN_VERIFIED_SIGS_FOR_DELIVERY &&
+                  petition.status === "active" && (
                   <div className="mt-2">
                     <div className="flex justify-between text-xs text-slate-500 mb-1">
                       <span>Verified signatures toward official delivery</span>
                       <span className="font-semibold text-emerald-600">
-                        {(petition.signature_count_verified || 0).toLocaleString()} / 60,000
+                        {(petition.signature_count_verified || 0).toLocaleString()} /{" "}
+                        {MIN_VERIFIED_SIGS_FOR_DELIVERY.toLocaleString()}
                       </span>
                     </div>
                     <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
                       <div
                         className="h-full bg-emerald-500 rounded-full transition-all"
-                        style={{ width: `${Math.min(((petition.signature_count_verified || 0) / 60000) * 100, 100)}%` }}
+                        style={{
+                          width: `${Math.min(
+                            ((petition.signature_count_verified || 0) / MIN_VERIFIED_SIGS_FOR_DELIVERY) * 100,
+                            100,
+                          )}%`,
+                        }}
                       />
                     </div>
                     <p className="text-xs text-slate-400 mt-1">
-                      60,000 verified signatures triggers official government delivery
+                      {MIN_VERIFIED_SIGS_FOR_DELIVERY.toLocaleString()} verified signatures unlock official delivery
+                      workflows
                     </p>
                   </div>
                 )}
-                {(petition.signature_count_verified || 0) >= 60000 && (
+                {(petition.signature_count_verified || 0) >= MIN_VERIFIED_SIGS_FOR_DELIVERY && (
                   <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 rounded-lg px-3 py-2 mt-2">
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                     <p className="text-xs font-semibold">Delivery threshold reached!</p>
@@ -644,8 +659,9 @@ export default function PetitionDetail() {
                     Request Official Delivery
                   </Button>
                   <p className="text-xs text-amber-700 text-center bg-amber-50 px-3 py-2 rounded-lg">
-                    Requires {MIN_VERIFIED_FOR_DELIVERY.toLocaleString()} verified signatures
-                    {(petition.signature_count_verified || 0) > 0 && ` (${MIN_VERIFIED_FOR_DELIVERY - (petition.signature_count_verified || 0)} more needed)`}
+                    Requires {MIN_VERIFIED_SIGS_FOR_DELIVERY.toLocaleString()} verified signatures
+                    {(petition.signature_count_verified || 0) > 0 &&
+                      ` (${MIN_VERIFIED_SIGS_FOR_DELIVERY - (petition.signature_count_verified || 0)} more needed)`}
                   </p>
                 </div>
               )}
