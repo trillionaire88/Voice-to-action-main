@@ -37,6 +37,67 @@ function escapeIlike(q) {
   return q.replace(/\\/g, "\\\\").replace(/%/g, "\\%").replace(/_/g, "\\_");
 }
 
+/**
+ * Discoverable communities for search: public (and legacy null visibility) non-private-plan
+ * rows, merged with communities the user is an active member of (so invite_only / private
+ * remain findable for members only). Excludes hidden communities unless matched via membership.
+ */
+async function fetchCommunitiesForDiscovery(searchPattern, limit = 5) {
+  const { data: { session } } = await supabase.auth.getSession();
+  const userId = session?.user?.id ?? null;
+
+  let memberIds = [];
+  if (userId) {
+    const { data: mem } = await supabase
+      .from("community_members")
+      .select("community_id")
+      .eq("user_id", userId)
+      .eq("status", "active");
+    memberIds = [...new Set((mem || []).map((m) => m.community_id).filter(Boolean))];
+  }
+
+  const sel = "id, name, description_public, description, member_count, plan, is_hidden, visibility";
+
+  let pubQ = supabase
+    .from("communities")
+    .select(sel)
+    .or("is_hidden.is.null,is_hidden.eq.false")
+    .or("visibility.eq.public,visibility.is.null")
+    .neq("plan", "private");
+
+  if (searchPattern && searchPattern.trim().length >= 2) {
+    const safe = escapeIlike(searchPattern.trim());
+    const p = `%${safe}%`;
+    pubQ = pubQ.or(`name.ilike.${p},description_public.ilike.${p},description.ilike.${p}`);
+  }
+
+  const pubRes = await pubQ.order("member_count", { ascending: false }).limit(limit);
+
+  let memRows = [];
+  if (memberIds.length) {
+    let memQ = supabase
+      .from("communities")
+      .select(sel)
+      .in("id", memberIds)
+      .or("is_hidden.is.null,is_hidden.eq.false");
+    if (searchPattern && searchPattern.trim().length >= 2) {
+      const safe = escapeIlike(searchPattern.trim());
+      const p = `%${safe}%`;
+      memQ = memQ.or(`name.ilike.${p},description_public.ilike.${p},description.ilike.${p}`);
+    }
+    const memRes = await memQ.order("member_count", { ascending: false }).limit(limit);
+    memRows = memRes.data || [];
+  }
+
+  const map = new Map();
+  for (const r of [...(pubRes.data || []), ...memRows]) {
+    if (!map.has(r.id)) map.set(r.id, r);
+  }
+  return Array.from(map.values())
+    .sort((a, b) => (b.member_count || 0) - (a.member_count || 0))
+    .slice(0, limit);
+}
+
 async function fetchByTypesOnly(types) {
   const limit = 5;
   const out = [];
@@ -70,13 +131,8 @@ async function fetchByTypesOnly(types) {
     if (!error) add(data, (p) => mapSearchToResults({ petitions: [], polls: [], profiles: [p], communities: [], discussions: [] })[0]);
   }
   if (types.includes("community")) {
-    const { data, error } = await supabase
-      .from("communities")
-      .select("id, name, description, member_count, plan")
-      .or("is_hidden.is.null,is_hidden.eq.false")
-      .order("member_count", { ascending: false })
-      .limit(limit);
-    if (!error) add(data, (c) => mapSearchToResults({ petitions: [], polls: [], profiles: [], communities: [c], discussions: [] })[0]);
+    const rows = await fetchCommunitiesForDiscovery(null, limit);
+    add(rows, (c) => mapSearchToResults({ petitions: [], polls: [], profiles: [], communities: [c], discussions: [] })[0]);
   }
   if (types.includes("discussion")) {
     const pd = await supabase
@@ -107,14 +163,12 @@ async function searchAll(query) {
   const orPetition = `title.ilike.${pattern},short_summary.ilike.${pattern},target_name.ilike.${pattern}`;
   const orPoll = `question.ilike.${pattern},description.ilike.${pattern}`;
   const orProfile = `display_name.ilike.${pattern},full_name.ilike.${pattern}`;
-  const orCommunity = `name.ilike.${pattern},description.ilike.${pattern}`;
   const orDiscussion = `title.ilike.${pattern},body.ilike.${pattern}`;
 
   const [
     petitionsR,
     pollsR,
     profilesR,
-    communitiesR,
     policyDiscussionsR,
     discussionsR,
   ] = await Promise.all([
@@ -136,12 +190,6 @@ async function searchAll(query) {
       .or(orProfile)
       .limit(5),
     supabase
-      .from("communities")
-      .select("id, name, description, member_count, plan, is_hidden")
-      .or(orCommunity)
-      .or("is_hidden.is.null,is_hidden.eq.false")
-      .limit(5),
-    supabase
       .from("policy_discussions")
       .select("id, title, body, created_at, policy_area")
       .or(orDiscussion)
@@ -152,6 +200,8 @@ async function searchAll(query) {
       .or(orDiscussion)
       .limit(5),
   ]);
+
+  const communitiesData = await fetchCommunitiesForDiscovery(raw, 5);
 
   const discussionsData =
     !policyDiscussionsR.error && policyDiscussionsR.data?.length
@@ -164,7 +214,7 @@ async function searchAll(query) {
     petitions: petitionsR.error ? [] : petitionsR.data || [],
     polls: pollsR.error ? [] : pollsR.data || [],
     profiles: profilesR.error ? [] : profilesR.data || [],
-    communities: communitiesR.error ? [] : communitiesR.data || [],
+    communities: communitiesData || [],
     discussions: discussionsData,
   };
 }
@@ -221,7 +271,7 @@ function mapSearchToResults(data) {
       content_type: "community",
       content_id: c.id,
       title: c.name || "Community",
-      description: c.description || "",
+      description: c.description_public || c.description || "",
       tags: c.plan ? [c.plan] : [],
       signature_count: 0,
       indexed_at: null,
