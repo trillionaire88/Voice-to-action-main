@@ -29,7 +29,16 @@ serve(async (req) => {
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(body, signature!, Deno.env.get("STRIPE_WEBHOOK_SECRET")!);
+    const webhookSecret =
+      Deno.env.get("STRIPE_WEBHOOK_SECRET_BLUE") || Deno.env.get("STRIPE_WEBHOOK_SECRET");
+    if (!webhookSecret) {
+      console.error("[stripe-webhook-blue] No STRIPE_WEBHOOK_SECRET_BLUE or STRIPE_WEBHOOK_SECRET");
+      return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+        status: 500,
+        headers: { ...SECURITY_HEADERS, "Content-Type": "application/json" },
+      });
+    }
+    event = stripe.webhooks.constructEvent(body, signature!, webhookSecret);
   } catch (err) {
     console.error("[stripe-webhook-blue] Signature verification failed:", err.message);
     return new Response(JSON.stringify({ error: "Invalid signature" }), { status: 400 });

@@ -41,7 +41,8 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: redirectErr }), { status: 400, headers: { ...SECURITY_HEADERS, "Content-Type": "application/json" } });
     }
 
-    if (user.email === "jeremywhisson@gmail.com") {
+    const { data: ownerProfile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    if (ownerProfile?.role === "owner_admin") {
       return new Response(JSON.stringify({ checkout_url: success_url, owner_bypass: true }), { headers: { ...SECURITY_HEADERS, "Content-Type": "application/json" } });
     }
 

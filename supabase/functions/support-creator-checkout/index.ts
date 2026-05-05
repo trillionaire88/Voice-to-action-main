@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED: creator_subscription, owner_gift, and platform_donation are handled by the main
+ * `stripe-checkout` Edge Function. Frontend uses `initiateStripeCheckout` / paymentsApi.
+ * Remove this function from Supabase after confirming no legacy callers.
+ */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";

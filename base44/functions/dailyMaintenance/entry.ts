@@ -1,17 +1,22 @@
 import { createSupabaseContext } from '../lib/supabaseContext.ts';
 
-const OWNER_EMAIL = 'voicetoaction@outlook.com';
-
 Deno.serve(async (req) => {
   try {
     const { supabase, supabaseAdmin, entities, adminEntities, integrations, getUser } = createSupabaseContext(req);
 
-    // Allow scheduled automations (no user) or owner_admin
-    try {
-      const user = await getUser();
-      const isOwner = user?.role === 'owner_admin' || (user?.role === 'admin' && user?.email === OWNER_EMAIL);
-      if (!isOwner) return Response.json({ error: 'Forbidden' }, { status: 403 });
-    } catch { /* scheduled automation — no user context */ }
+    const cronSecret = req.headers.get('x-cron-secret');
+    const expectedCronSecret = Deno.env.get('CRON_SECRET');
+    const hasCronAuth = !!(expectedCronSecret && cronSecret === expectedCronSecret);
+
+    if (!hasCronAuth) {
+      try {
+        const user = await getUser();
+        if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+        if (user.role !== 'owner_admin') return Response.json({ error: 'Forbidden' }, { status: 403 });
+      } catch {
+        return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+    }
 
     const results = { cleaned: {}, timestamp: new Date().toISOString() };
 

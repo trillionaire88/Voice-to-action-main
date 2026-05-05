@@ -106,6 +106,22 @@ Deno.serve(async (req) => {
       return Response.json({ error: `Unknown payment_type: ${payment_type}` }, { status: 400 });
     }
 
+    if (payment_type === 'petition_export') {
+      const exportEmails = String(metadata?.export_emails ?? '').trim();
+      if (!exportEmails) {
+        return Response.json({ error: 'export_emails is required for petition_export' }, { status: 400 });
+      }
+      const emails = exportEmails.split(',').map((e: string) => e.trim()).filter(Boolean);
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const invalid = emails.filter((e) => !emailRegex.test(e));
+      if (invalid.length > 0) {
+        return Response.json({ error: `Invalid email(s) in export_emails: ${invalid.join(', ')}` }, { status: 400 });
+      }
+      if (exportEmails.length > 450) {
+        return Response.json({ error: 'export_emails too long (Stripe metadata limit)' }, { status: 400 });
+      }
+    }
+
     // Prevent duplicate blue-check purchases for accounts already permanently verified.
     if (payment_type === 'identity_verification') {
       const { data: profile, error: profileError } = await supabaseAdmin

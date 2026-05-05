@@ -153,8 +153,7 @@ export default function CreatorReferral() {
   const handleSubscribe = async () => {
     setCheckoutLoading(true);
     try {
-      const url = await startCreatorReferralCheckout();
-      if (url) window.location.href = url;
+      await startCreatorReferralCheckout();
     } catch (e) {
       toast.error(e.message || "Could not start checkout");
     } finally {

@@ -12,11 +12,8 @@ export const SECURITY_HEADERS = {
   "Content-Security-Policy": "default-src 'none'",
 };
 
-export const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+// Wildcard CORS intentionally not exported — use SECURITY_HEADERS (siteOrigin). For a truly public
+// endpoint, set Access-Control-Allow-Origin inline in that function and document why.
 
 interface RateLimitConfig {
   windowMs: number;

@@ -137,35 +137,43 @@ Deno.serve(async (req) => {
 
       // ── petition_export: email recipients after successful payment ───────
       if (paymentType === 'petition_export' && userId && meta.petition_id) {
-        const exportEmails = String(meta.export_emails || '')
-          .split(',')
-          .map((e) => e.trim())
-          .filter(Boolean);
-        if (exportEmails.length === 0) {
-          throw new Error('petition_export missing export_emails metadata');
-        }
+        const { data: existingExport } = await supabaseAdmin
+          .from('petition_exports')
+          .select('id')
+          .eq('stripe_session_id', session.id)
+          .maybeSingle();
+        if (existingExport) {
+          console.log(`[StripeWebhook] petition_export already fulfilled for session ${session.id}, skipping`);
+        } else {
+          const exportEmails = String(meta.export_emails || '')
+            .split(',')
+            .map((e) => e.trim())
+            .filter(Boolean);
+          if (exportEmails.length === 0) {
+            throw new Error('petition_export missing export_emails metadata');
+          }
 
-        const resendKey = Deno.env.get('RESEND_API_KEY');
-        if (!resendKey) throw new Error('RESEND_API_KEY not configured');
+          const resendKey = Deno.env.get('RESEND_API_KEY');
+          if (!resendKey) throw new Error('RESEND_API_KEY not configured');
 
-        const { data: petition, error: petErr } = await supabaseAdmin
-          .from('petitions')
-          .select(
-            'id,title,short_summary,creator_name,signature_count_total,signature_count_verified,status,country_code,category,target_name,target_type,created_date',
-          )
-          .eq('id', meta.petition_id)
-          .single();
-        if (petErr || !petition) throw petErr || new Error('Petition not found');
+          const { data: petition, error: petErr } = await supabaseAdmin
+            .from('petitions')
+            .select(
+              'id,title,short_summary,creator_name,signature_count_total,signature_count_verified,status,country_code,category,target_name,target_type,created_date',
+            )
+            .eq('id', meta.petition_id)
+            .single();
+          if (petErr || !petition) throw petErr || new Error('Petition not found');
 
-        const fromAddr = Deno.env.get('EMAIL_FROM_NOREPLY') ?? 'noreply@voicetoaction.io';
-        const fromHeader = `Voice to Action <${fromAddr}>`;
-        const esc = (s: string) =>
-          String(s ?? '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+          const fromAddr = Deno.env.get('EMAIL_FROM_NOREPLY') ?? 'noreply@voicetoaction.io';
+          const fromHeader = `Voice to Action <${fromAddr}>`;
+          const esc = (s: string) =>
+            String(s ?? '')
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
 
-        const html = `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;color:#1e293b;">
+          const html = `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;color:#1e293b;">
 <h2 style="color:#1e40af;">Petition export</h2>
 <p>This summary was sent after your petition export purchase on Voice to Action.</p>
 <table style="border-collapse:collapse;max-width:640px;">
@@ -178,27 +186,35 @@ Deno.serve(async (req) => {
 <p style="font-size:12px;color:#64748b;">Personal signer identifiers are not included in this automated summary.</p>
 </body></html>`;
 
-        const primary = exportEmails[0];
-        const bcc = exportEmails.length > 1 ? exportEmails.slice(1) : undefined;
-        const res = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${resendKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: fromHeader,
-            to: primary,
-            ...(bcc && bcc.length ? { bcc } : {}),
-            subject: `Petition export: ${String(petition.title).slice(0, 200)}`,
-            html,
-          }),
-        });
-        if (!res.ok) {
-          const t = await res.text();
-          throw new Error(`Resend failed: ${res.status} ${t}`);
+          const primary = exportEmails[0];
+          const bcc = exportEmails.length > 1 ? exportEmails.slice(1) : undefined;
+          const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${resendKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              from: fromHeader,
+              to: primary,
+              ...(bcc && bcc.length ? { bcc } : {}),
+              subject: `Petition export: ${String(petition.title).slice(0, 200)}`,
+              html,
+            }),
+          });
+          if (!res.ok) {
+            const t = await res.text();
+            throw new Error(`Resend failed: ${res.status} ${t}`);
+          }
+          console.log(`[StripeWebhook] Petition export emailed | petition ${meta.petition_id}`);
+          await supabaseAdmin.from('petition_exports').insert({
+            stripe_session_id: session.id,
+            petition_id: meta.petition_id,
+            user_id: userId,
+            sent_to: String(meta.export_emails || ''),
+            sent_at: new Date().toISOString(),
+          }).catch(() => {});
         }
-        console.log(`[StripeWebhook] Petition export emailed | petition ${meta.petition_id}`);
       }
     }
 

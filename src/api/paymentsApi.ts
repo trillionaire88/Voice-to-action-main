@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { initiateStripeCheckout } from "@/lib/stripeCheckout";
 
 const FUNCTIONS_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
 
@@ -69,36 +70,28 @@ export async function sendPetitionWithdrawalEmail(petitionId: string, stripeSess
 export async function startSupportCreatorCheckout(
   amount: number,
   paymentType: "owner_gift" | "platform_donation" | "creator_subscription",
-): Promise<string> {
-  try {
-    const headers = await getAuthHeaders();
-    const successUrl =
-      paymentType === "platform_donation"
-        ? `${window.location.origin}/PlatformFunding?donated=1`
-        : paymentType === "creator_subscription"
-          ? `${window.location.origin}/CreatorReferral?subscribed=1`
-          : `${window.location.origin}/SupportOwner?donated=1`;
-    const cancelUrl = window.location.href;
-
-    const res = await fetch(`${FUNCTIONS_BASE}/support-creator-checkout`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ amount, payment_type: paymentType, success_url: successUrl, cancel_url: cancelUrl }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      console.error("[paymentsApi] support-creator-checkout error:", data);
-      throw new Error(data.error || "Payment failed. Please try again.");
-    }
-    return data.checkout_url;
-  } catch (e) {
-    console.error("[paymentsApi] startSupportCreatorCheckout:", e);
-    throw e;
-  }
+): Promise<void> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const successUrl =
+    paymentType === "platform_donation"
+      ? `${window.location.origin}/PlatformFunding?donated=1`
+      : paymentType === "creator_subscription"
+        ? `${window.location.origin}/CreatorReferral?subscribed=1`
+        : `${window.location.origin}/SupportOwner?donated=1`;
+  const cancelUrl = window.location.href;
+  await initiateStripeCheckout({
+    payment_type: paymentType,
+    amount: paymentType === "creator_subscription" ? undefined : amount,
+    success_url: successUrl,
+    cancel_url: cancelUrl,
+    metadata: { user_id: user?.id ?? "" },
+  });
 }
 
-/** $20 AUD — Creator Referral Program (checkout; webhook may finalize subscription record). */
-export async function startCreatorReferralCheckout(): Promise<string> {
+/** Creator Referral Program — redirects to Stripe (same as main stripe-checkout). */
+export async function startCreatorReferralCheckout(): Promise<void> {
   return startSupportCreatorCheckout(20, "creator_subscription");
 }
 

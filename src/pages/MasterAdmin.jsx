@@ -161,7 +161,7 @@ export default function MasterAdmin() {
   const loadUser = async () => {
     try {
       const u = await api.auth.me();
-      const isOwner = u.role === "owner_admin" || (u.role === "admin" && u.email === PANIC_OWNER_EMAIL);
+      const isOwner = u.role === "owner_admin";
       if (!isOwner) { navigate(createPageUrl("Home")); return; }
       setUser(u);
     } catch { navigate(createPageUrl("Home")); }
