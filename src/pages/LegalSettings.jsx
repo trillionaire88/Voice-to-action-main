@@ -14,6 +14,7 @@ import {
   BarChart3,
   ChevronRight,
 } from "lucide-react";
+import { SUPPORT_EMAIL } from "@/constants/siteUrl";
 
 const LEGAL_ITEMS = [
   {
@@ -128,8 +129,8 @@ export default function LegalSettings() {
           <p className="font-semibold mb-2">Need Help?</p>
           <p>
             If you have questions about our policies, contact us at{" "}
-            <a href="mailto:legal@everyvoice.global" className="underline font-medium">
-              voicetoaction@outlook.com
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="underline font-medium">
+              {SUPPORT_EMAIL}
             </a>
           </p>
         </CardContent>

@@ -61,7 +61,7 @@ export default function MyDonations() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">My Donations</h1>
-          <p className="text-slate-600">Your giving history on EveryVoice</p>
+          <p className="text-slate-600">Your giving history on Voice to Action</p>
         </div>
         <Button variant="outline">
           <Download className="w-4 h-4 mr-2" />

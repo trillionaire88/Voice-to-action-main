@@ -47,7 +47,7 @@ export default function ElectionSimulator({ countryCode }) {
         <Alert className="mt-2 border-amber-200 bg-amber-50">
           <AlertTriangle className="h-4 w-4 text-amber-600" />
           <AlertDescription className="text-xs text-amber-800">
-            This is a simulation based on EveryVoice data and is not a scientific poll or
+            This is a simulation based on Voice to Action data and is not a scientific poll or
             official forecast.
           </AlertDescription>
         </Alert>

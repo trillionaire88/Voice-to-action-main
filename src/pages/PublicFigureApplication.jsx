@@ -203,7 +203,7 @@ export default function PublicFigureApplication() {
         <h1 className="text-4xl font-bold text-slate-900 mb-3">Apply for Gold ★ Checkmark</h1>
         <p className="text-lg text-slate-600 max-w-xl mx-auto">
           Politicians, public officials, journalists, academics, and prominent public figures can apply
-          for the Gold ★ checkmark. All applications are manually reviewed by the EveryVoice team.
+          for the Gold ★ checkmark. All applications are manually reviewed by the Voice to Action team.
         </p>
       </div>
 
@@ -216,7 +216,7 @@ export default function PublicFigureApplication() {
               <h3 className="font-bold text-yellow-900 text-lg mb-1">$100 AUD Application Fee (via Stripe)</h3>
               <p className="text-yellow-800 text-sm leading-relaxed">
                 A non-refundable application fee of <strong>$100 AUD</strong> is required when submitting your Gold Checkmark application.
-                This fee covers the cost of manual review and identity verification by the EveryVoice team.
+                This fee covers the cost of manual review and identity verification by the Voice to Action team.
               </p>
               <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-yellow-800 bg-yellow-100 rounded-lg px-3 py-2">
                 <Clock className="w-4 h-4 flex-shrink-0" />

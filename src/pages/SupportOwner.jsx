@@ -89,7 +89,7 @@ export default function SupportOwner() {
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-4">Thank You for Your Gift</h1>
         <p className="text-slate-600 text-lg mb-8">
-          Your generous gift has been received and is deeply appreciated. It helps make EveryVoice possible.
+          Your generous gift has been received and is deeply appreciated. It helps make Voice to Action possible.
         </p>
         <Button onClick={() => navigate(createPageUrl("Home"))}>Return Home</Button>
       </div>
@@ -106,7 +106,7 @@ export default function SupportOwner() {
         </div>
         <h1 className="text-4xl font-bold text-slate-900 mb-3">Support the Creator</h1>
         <p className="text-lg text-slate-600 max-w-xl mx-auto">
-          If EveryVoice has made a difference in your life or community, you may choose to send a
+          If Voice to Action has made a difference in your life or community, you may choose to send a
           voluntary personal gift directly to the platform creator.
         </p>
       </div>

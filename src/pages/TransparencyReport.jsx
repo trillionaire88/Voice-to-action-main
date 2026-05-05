@@ -237,7 +237,7 @@ export default function TransparencyReport() {
                 <h3 className="font-semibold text-blue-900 mb-2">About This Report</h3>
                 <p className="text-sm text-blue-800 leading-relaxed mb-3">
                   This transparency report provides aggregated statistics about content moderation and safety
-                  actions on EveryVoice. All data is anonymized and presented in aggregate form to protect
+                  actions on Voice to Action. All data is anonymized and presented in aggregate form to protect
                   user privacy while maintaining transparency about platform governance.
                 </p>
                 <p className="text-sm text-blue-800 leading-relaxed">

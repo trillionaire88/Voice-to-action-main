@@ -213,7 +213,7 @@ export default function RequestDeliveryModal({ petition, user, onClose }) {
               <div className="flex items-start gap-3 bg-white rounded-lg p-3 border border-blue-100">
                 <span className="text-xl mt-0.5">🤝</span>
                 <div>
-                  <p className="text-sm font-semibold text-slate-800">Personal Delivery by EveryVoice</p>
+                  <p className="text-sm font-semibold text-slate-800">Personal Delivery by Voice to Action</p>
                   <p className="text-xs text-slate-600 mt-0.5">
                     Our team can personally hand-deliver or formally present your petition to the designated
                     person, office, or company — completely free. Select this option and we will contact you

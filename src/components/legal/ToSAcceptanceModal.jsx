@@ -44,7 +44,7 @@ export default function ToSAcceptanceModal({ user, onAccepted, onDecline }) {
             Terms of Service Agreement
           </DialogTitle>
           <DialogDescription>
-            Please review and accept our Terms of Service to continue using EveryVoice
+            Please review and accept our Terms of Service to continue using Voice to Action
           </DialogDescription>
         </DialogHeader>
 
@@ -53,7 +53,7 @@ export default function ToSAcceptanceModal({ user, onAccepted, onDecline }) {
             <Alert className="border-blue-200 bg-blue-50">
               <FileText className="h-4 w-4 text-blue-600" />
               <AlertDescription className="text-sm text-blue-800">
-                EveryVoice requires all users to accept our Terms of Service. This includes critical 
+                Voice to Action requires all users to accept our Terms of Service. This includes critical 
                 intellectual property protections and community guidelines.
               </AlertDescription>
             </Alert>
@@ -62,7 +62,7 @@ export default function ToSAcceptanceModal({ user, onAccepted, onDecline }) {
               <div className="space-y-3 text-sm text-slate-700">
                 <p><strong>Key Points:</strong></p>
                 <ul className="list-disc ml-5 space-y-1">
-                  <li>EveryVoice platform and all its features are protected intellectual property</li>
+                  <li>Voice to Action platform and all its features are protected intellectual property</li>
                   <li>Copying, cloning, or replicating the platform is strictly prohibited</li>
                   <li>Users must provide accurate identity information</li>
                   <li>Content must follow community guidelines (no hate speech, harassment, etc.)</li>
@@ -118,7 +118,7 @@ export default function ToSAcceptanceModal({ user, onAccepted, onDecline }) {
               <AlertTriangle className="h-4 w-4 text-red-600" />
               <AlertDescription className="text-xs text-red-800">
                 <strong>Warning:</strong> By accepting, you acknowledge that violating intellectual property 
-                protections (including copying or cloning EveryVoice) will result in immediate legal action.
+                protections (including copying or cloning Voice to Action) will result in immediate legal action.
               </AlertDescription>
             </Alert>
 

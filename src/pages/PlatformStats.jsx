@@ -72,7 +72,7 @@ export default function PlatformStats() {
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Platform Statistics</h1>
             <p className="text-slate-600">
-              Public, aggregated metrics about EveryVoice activity
+              Public, aggregated metrics about Voice to Action activity
             </p>
           </div>
         </div>

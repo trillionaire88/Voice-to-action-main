@@ -119,7 +119,7 @@ export const ToSEnforcement = {
   getDigitalWatermark() {
     // Hidden watermark embedded in DOM
     return {
-      platform: "EveryVoice",
+      platform: "Voice to Action",
       version: CURRENT_TOS_VERSION,
       owner: "Jeremy Kyle Whisson",
       timestamp: Date.now(),

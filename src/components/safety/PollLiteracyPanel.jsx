@@ -35,7 +35,7 @@ export default function PollLiteracyPanel({ poll, biasWarning }) {
           
           <AlertDescription className="text-sm text-blue-800 leading-relaxed">
             <p className="mb-2">
-              This poll reflects opinions from <strong>EveryVoice users</strong>, not a scientifically
+              This poll reflects opinions from <strong>Voice to Action users</strong>, not a scientifically
               representative sample of the global population.
             </p>
             
