@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { FROM_NOREPLY } from "../_shared/email.ts";
+import { supportContactEmail } from "../_shared/supportEmail.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -73,7 +74,7 @@ serve(async (req) => {
     }
 
     const resendKey = Deno.env.get("RESEND_API_KEY");
-    const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "support@voicetoaction.io";
+    const supportEmail = supportContactEmail();
     const ownerInbox =
       Deno.env.get("OWNER_NOTIFY_EMAIL")?.trim() || supportEmail;
     if (resendKey) {

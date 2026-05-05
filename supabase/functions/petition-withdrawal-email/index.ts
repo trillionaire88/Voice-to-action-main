@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { FROM_NOREPLY } from "../_shared/email.ts";
+import { supportContactEmail } from "../_shared/supportEmail.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -62,7 +63,7 @@ serve(async (req) => {
       .single();
 
     const userName = profile?.full_name || profile?.display_name || user.email;
-    const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "support@voicetoaction.io";
+    const supportEmail = supportContactEmail();
     const ownerInbox =
       Deno.env.get("OWNER_NOTIFY_EMAIL")?.trim() || supportEmail;
     const totalSignatures = petition.signature_count_total || signatureCount || 0;

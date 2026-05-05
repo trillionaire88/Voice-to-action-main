@@ -4,6 +4,7 @@ import { constantTimeResponse } from "../_shared/timingProtection.ts";
 import { checkRateLimit, rateLimitResponse } from "../_shared/rateLimiter.ts";
 import { siteUrl } from "../_shared/siteUrl.ts";
 import { FROM_SECURITY } from "../_shared/email.ts";
+import { supportContactEmail } from "../_shared/supportEmail.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -154,7 +155,7 @@ serve(async (req) => {
 
       if (emailAlert) {
         const resendKey = Deno.env.get("RESEND_API_KEY");
-        const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "support@voicetoaction.io";
+        const supportEmail = supportContactEmail();
         const ownerInbox =
           Deno.env.get("OWNER_NOTIFY_EMAIL")?.trim() || supportEmail;
         const alertBody =
