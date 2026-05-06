@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,7 +53,7 @@ const ALLOCATION_PREFERENCES = [
 
 export default function PlatformFunding() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user } = useAuth();
 
   const [donationType, setDonationType] = useState("one_time");
   const [selectedTier, setSelectedTier] = useState("25");
@@ -63,21 +64,6 @@ export default function PlatformFunding() {
   const [donorMessage, setDonorMessage] = useState("");
   const [hasConfirmed, setHasConfirmed] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-
-  useEffect(() => {
-    loadUser();
-  }, []);
-
-  const loadUser = async () => {
-    try {
-      const {
-        data: { user: authUser },
-      } = await supabase.auth.getUser();
-      setUser(authUser || null);
-    } catch {
-      setUser(null);
-    }
-  };
 
   const { data: totalRaised = 0 } = useQuery({
     queryKey: ["platformDonationsTotal"],

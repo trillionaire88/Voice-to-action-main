@@ -220,9 +220,6 @@ export default function Layout({ children }) {
       <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
         <div id="ev-ownership-marker" style={{ display: "none" }} data-platform="Voice to Action" />
 
-        {/* iOS PWA / safe-area top spacer — visible on all viewports */}
-        <div className="bg-white" style={{ height: "env(safe-area-inset-top, 0px)" }} />
-
         <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
           <div className="max-w-screen-2xl mx-auto px-3">
             <div className="flex items-center gap-2 min-h-14 h-14">
