@@ -104,7 +104,6 @@ export default function Onboarding() {
             id: authedUserId,
             full_name: fullName.trim(),
             country_code: countryCode,
-            interests: selectedInterests,
             onboarding_completed: true,
           }),
           { onConflict: "id" }
