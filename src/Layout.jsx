@@ -217,7 +217,7 @@ export default function Layout({ children }) {
 
   return (
     <ToSGate user={user}>
-      <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50" style={{ zoom: 1, transform: 'none', scale: 1 }}>
+      <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
         <div id="ev-ownership-marker" style={{ display: "none" }} data-platform="Voice to Action" />
 
         {/* iOS PWA / safe-area top spacer — visible on all viewports */}

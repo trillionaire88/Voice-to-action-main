@@ -92,14 +92,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
-    zoom: 1 !important;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.6;
-    zoom: 1 !important;
   }
   
   #root {
@@ -339,9 +337,11 @@ html {
 
 /* Body padding for mobile bottom nav — prevents content hiding behind fixed bottom nav */
 @media (max-width: 767px) {
-  body {
+  html, body {
     overflow-x: hidden;
     width: 100%;
+    max-width: 100vw;
+    position: relative;
   }
   /* Main content bottom padding accounts for bottom nav + safe area */
   .pb-main {
