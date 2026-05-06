@@ -29,25 +29,21 @@ export async function initiateStripeCheckout(options: CheckoutOptions): Promise<
     throw new Error("Please log in to continue with payment.");
   }
 
-  try {
-    const { data, error } = await supabase.functions.invoke(STRIPE_CHECKOUT_FN, {
-      body: {
-        payment_type,
-        amount,
-        referral_code,
-        metadata,
-        success_url,
-        cancel_url,
-      },
-    });
+  const { data, error } = await supabase.functions.invoke(STRIPE_CHECKOUT_FN, {
+    body: {
+      payment_type,
+      amount,
+      referral_code,
+      metadata,
+      success_url,
+      cancel_url,
+    },
+  });
 
-    if (error) throw new Error(error.message || "Payment failed. Please try again.");
-    if (!data?.checkout_url) throw new Error("Payment service unavailable. Please try again.");
+  if (error) throw new Error(error.message || "Payment failed. Please try again.");
+  if (!data?.checkout_url) throw new Error("Payment service unavailable. Please try again.");
 
-    window.location.href = data.checkout_url;
-  } catch (err) {
-    throw err;
-  }
+  window.location.href = data.checkout_url;
 }
 
 export async function initiateStripeIdentityVerification(options: {
