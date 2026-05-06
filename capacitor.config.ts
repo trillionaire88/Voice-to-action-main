@@ -23,7 +23,11 @@ const supabaseHost =
       })()
     : null;
 
-const allowNavigation = [siteHost, supabaseHost].filter(Boolean) as string[];
+const rawNavigation = [siteHost, supabaseHost].filter(Boolean) as string[];
+const allowNavigation: string[] =
+  rawNavigation.length > 0
+    ? rawNavigation
+    : ["voicetoaction.com", "*.supabase.co"];
 
 const config: CapacitorConfig = {
   appId: "io.voicetoaction.app",

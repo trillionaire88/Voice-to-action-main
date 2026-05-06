@@ -41,7 +41,7 @@ export default function SubmitCharity() {
       const currentUser = await api.auth.me();
       setUser(currentUser);
     } catch {
-      navigate(createPageUrl("Charities"));
+      navigate(createPageUrl("Home"));
     }
   };
 
@@ -71,8 +71,8 @@ export default function SubmitCharity() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["charities"]);
-      toast.success("Charity submitted for review!");
-      navigate(createPageUrl("Charities"));
+      toast.success("Charity submitted. Returning home.");
+      navigate(createPageUrl("Home"));
     },
     onError: () => {
       toast.error("Failed to submit charity");
@@ -92,11 +92,11 @@ export default function SubmitCharity() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <Button
         variant="ghost"
-        onClick={() => navigate(createPageUrl("Charities"))}
+        onClick={() => navigate(createPageUrl("Home"))}
         className="mb-6"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
-        Back to Charities
+        Back
       </Button>
 
       <Alert className="border-amber-200 bg-amber-50 mb-6">
@@ -224,7 +224,7 @@ export default function SubmitCharity() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => navigate(createPageUrl("Charities"))}
+                onClick={() => navigate(createPageUrl("Home"))}
               >
                 Cancel
               </Button>

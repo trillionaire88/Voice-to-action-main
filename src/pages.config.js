@@ -59,7 +59,6 @@ const MasterAdmin = React.lazy(() => import('./pages/MasterAdmin'));
 const MediaAmplification = React.lazy(() => import('./pages/MediaAmplification'));
 const MediaCredibility = React.lazy(() => import('./pages/MediaCredibility'));
 const ModeratorDashboard = React.lazy(() => import('./pages/ModeratorDashboard'));
-const MyDonations = React.lazy(() => import('./pages/MyDonations'));
 const MyPayments = React.lazy(() => import('./pages/MyPayments'));
 const ParliamentaryWatch = React.lazy(() => import('./pages/ParliamentaryWatch'));
 const PeoplesTribunal = React.lazy(() => import('./pages/PeoplesTribunal'));
@@ -74,7 +73,6 @@ const PrivateGroups = React.lazy(() => import('./pages/PrivateGroups'));
 const Profile = React.lazy(() => import('./pages/Profile'));
 const PublicFigureApplication = React.lazy(() => import('./pages/PublicFigureApplication'));
 const PublicFigures = React.lazy(() => import('./pages/PublicFigures'));
-const PublicVoting = React.lazy(() => import('./pages/PublicVoting'));
 const Purpose = React.lazy(() => import('./pages/Purpose'));
 const RealityIndex = React.lazy(() => import('./pages/RealityIndex'));
 const ReferralEarnings = React.lazy(() => import('./pages/ReferralEarnings'));
@@ -83,17 +81,9 @@ const ScorecardDetail = React.lazy(() => import('./pages/ScorecardDetail'));
 const Scorecards = React.lazy(() => import('./pages/Scorecards'));
 const Search = React.lazy(() => import('./pages/Search'));
 const SecuritySettings = React.lazy(() => import('./pages/SecuritySettings'));
-const Newsfeed = React.lazy(() => import('./pages/Newsfeed'));
 const OrganisationDashboard = React.lazy(() => import('./pages/OrganisationDashboard'));
 const PetitionDelivery = React.lazy(() => import('./pages/PetitionDelivery'));
-const PressKit = React.lazy(() => import('./pages/PressKit'));
 const PromoteContent = React.lazy(() => import('./pages/PromoteContent'));
-const PublicAuditLog = React.lazy(() => import('./pages/PublicAuditLog'));
-const VerifySignature = React.lazy(() => import('./pages/VerifySignature'));
-const FeedSettings = React.lazy(() => import('./pages/FeedSettings'));
-const SavedItems = React.lazy(() => import('./pages/SavedItems'));
-const MessageSettings = React.lazy(() => import('./pages/MessageSettings'));
-const SubmitCharity = React.lazy(() => import('./pages/SubmitCharity'));
 const SubmitImpactEvent = React.lazy(() => import('./pages/SubmitImpactEvent'));
 const SupportOwner = React.lazy(() => import('./pages/SupportOwner'));
 const TakedownRequest = React.lazy(() => import('./pages/TakedownRequest'));
@@ -101,7 +91,6 @@ const TakedownRequest = React.lazy(() => import('./pages/TakedownRequest'));
 const ThematicWorlds = React.lazy(() => import('./pages/ThematicWorlds'));
 const TransparencyReport = React.lazy(() => import('./pages/TransparencyReport'));
 const TrendingPetitions = React.lazy(() => import('./pages/TrendingPetitions'));
-const VerifyEmail = React.lazy(() => import('./pages/VerifyEmail'));
 const WorldView = React.lazy(() => import('./pages/WorldView'));
 
 export const PAGES = {
@@ -159,7 +148,6 @@ export const PAGES = {
     "MediaAmplification": MediaAmplification,
     "MediaCredibility": MediaCredibility,
     "ModeratorDashboard": ModeratorDashboard,
-    "MyDonations": MyDonations,
     "MyPayments": MyPayments,
     "ParliamentaryWatch": ParliamentaryWatch,
     "PeoplesTribunal": PeoplesTribunal,
@@ -174,7 +162,6 @@ export const PAGES = {
     "Profile": Profile,
     "PublicFigureApplication": PublicFigureApplication,
     "PublicFigures": PublicFigures,
-    "PublicVoting": PublicVoting,
     "Purpose": Purpose,
     "RealityIndex": RealityIndex,
     "ReferralEarnings": ReferralEarnings,
@@ -183,16 +170,9 @@ export const PAGES = {
     "Scorecards": Scorecards,
     "Search": Search,
     "SecuritySettings": SecuritySettings,
-    "Newsfeed": Newsfeed,
     "OrganisationDashboard": OrganisationDashboard,
     "PetitionDelivery": PetitionDelivery,
-    "PressKit": PressKit,
     "PromoteContent": PromoteContent,
-    "PublicAuditLog": PublicAuditLog,
-    "FeedSettings": FeedSettings,
-    "SavedItems": SavedItems,
-    "MessageSettings": MessageSettings,
-    "SubmitCharity": SubmitCharity,
     "SubmitImpactEvent": SubmitImpactEvent,
     "SupportOwner": SupportOwner,
     "TakedownRequest": TakedownRequest,
@@ -200,8 +180,6 @@ export const PAGES = {
     "ThematicWorlds": ThematicWorlds,
     "TransparencyReport": TransparencyReport,
     "TrendingPetitions": TrendingPetitions,
-    "VerifyEmail": VerifyEmail,
-    "VerifySignature": VerifySignature,
     "WorldView": WorldView,
 }
 

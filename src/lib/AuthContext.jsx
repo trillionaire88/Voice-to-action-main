@@ -21,9 +21,14 @@ function mergeSessionUser(session) {
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const userRef = useRef(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
   const refreshLock = useRef(null);
+
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
 
   const loadUser = useCallback(async (session) => {
     if (!session?.user) {
@@ -71,7 +76,13 @@ export const AuthProvider = ({ children }) => {
       if (!mounted) return;
       loadUser(session);
     });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'TOKEN_REFRESHED') {
+        if (session?.user && !userRef.current) {
+          loadUser(session);
+        }
+        return;
+      }
       loadUser(session);
     });
     return () => {

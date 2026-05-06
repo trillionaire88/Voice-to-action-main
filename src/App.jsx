@@ -25,6 +25,11 @@ const Newsfeed = React.lazy(() => import("./pages/Newsfeed"));
 const FeedSettings = React.lazy(() => import("./pages/FeedSettings"));
 const SavedItems = React.lazy(() => import("./pages/SavedItems"));
 const MessageSettings = React.lazy(() => import("./pages/MessageSettings"));
+const PressKit = React.lazy(() => import("./pages/PressKit"));
+const VerifySignature = React.lazy(() => import("./pages/VerifySignature"));
+const PublicVoting = React.lazy(() => import("./pages/PublicVoting"));
+const PublicAuditLog = React.lazy(() => import("./pages/PublicAuditLog"));
+const VerifyEmail = React.lazy(() => import("./pages/VerifyEmail"));
 const FollowingFeed = React.lazy(() => import("./pages/FollowingFeed"));
 const Messages = React.lazy(() => import('./pages/Messages'));
 const RequestVerification = React.lazy(() => import('./pages/RequestVerification'));
@@ -54,19 +59,16 @@ const prefetchCriticalPages = () => {
 
 const { Pages, Layout } = pagesConfig;
 
-// Role hierarchy — higher number = more permissions
 const ROLE_HIERARCHY = {
-  owner_admin: 100,
-  admin: 80,
-  moderator: 60,
-  verified: 40,
-  user: 20,
-  guest: 0,
+  user: 0,
+  moderator: 1,
+  admin: 2,
+  owner_admin: 3,
 };
 
 const hasRole = (user, requiredRole) => {
-  if (!user) return false;
-  return (ROLE_HIERARCHY[user.role] ?? 0) >= (ROLE_HIERARCHY[requiredRole] ?? 0);
+  const userRole = user?.role || 'user';
+  return (ROLE_HIERARCHY[userRole] ?? 0) >= (ROLE_HIERARCHY[requiredRole] ?? 0);
 };
 
 // Pages that are publicly accessible without authentication
@@ -106,8 +108,12 @@ const ProtectedRoute = ({
     return <Navigate to="/VerifyEmail" replace />;
   }
 
-  // Onboarding gate
-  if (!skipOnboardingCheck && user.onboarding_completed === false) {
+  // Onboarding gate — undefined means profile field not loaded yet; don't redirect
+  if (
+    !skipOnboardingCheck &&
+    user.onboarding_completed !== true &&
+    user.onboarding_completed !== undefined
+  ) {
     return <Navigate to="/Onboarding" replace />;
   }
 
@@ -115,8 +121,7 @@ const ProtectedRoute = ({
     return <Navigate to="/Home" replace />;
   }
 
-  const userRole = user?.role || 'user';
-  if (!hasRole({ ...user, role: userRole }, requiredRole)) {
+  if (!hasRole(user, requiredRole)) {
     return <Navigate to="/Home" replace />;
   }
 
@@ -153,10 +158,15 @@ const MOD_PAGES = new Set([
   'ModeratorDashboard', 'TakedownPanel', 'VerificationQueue',
 ]);
 
+const EMAIL_SKIP_PAGES = new Set([
+  'Profile', 'SecuritySettings', 'LegalSettings', 'AccountSettings',
+]);
+
 const getRouteProtection = (pageKey) => {
   if (OWNER_PAGES.has(pageKey)) return { requireOwner: true, requiredRole: 'admin' };
   if (ADMIN_PAGES.has(pageKey)) return { requiredRole: 'admin' };
   if (MOD_PAGES.has(pageKey)) return { requiredRole: 'moderator' };
+  if (EMAIL_SKIP_PAGES.has(pageKey)) return { skipEmailCheck: true };
   return {};
 };
 
@@ -166,19 +176,43 @@ const AuthenticatedApp = () => {
   useEffect(() => { prefetchCriticalPages(); }, []);
 
   useEffect(() => {
-    const load = () => {
-      supabase
-        .from('platform_status')
-        .select('panic_mode, maintenance_mode, panic_reason')
-        .eq('id', 1)
-        .single()
-        .then(({ data }) => setPlatformStatus(data ?? { panic_mode: false, maintenance_mode: false }))
-        .catch(() => setPlatformStatus({ panic_mode: false, maintenance_mode: false }));
+    supabase
+      .from('platform_status')
+      .select('panic_mode, maintenance_mode, panic_reason')
+      .eq('id', 1)
+      .single()
+      .then(({ data }) => setPlatformStatus(data ?? { panic_mode: false, maintenance_mode: false }))
+      .catch(() => setPlatformStatus({ panic_mode: false, maintenance_mode: false }));
+
+    const channel = supabase
+      .channel('platform-status-changes')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'platform_status', filter: 'id=eq.1' },
+        (payload) => {
+          if (payload.new) setPlatformStatus(payload.new);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
     };
-    load();
-    const interval = setInterval(load, 60000);
-    return () => clearInterval(interval);
   }, []);
+
+  if (import.meta.env.DEV) {
+    const EXPLICIT_ROUTES = new Set([
+      'Messages', 'RequestVerification', 'VerificationAdmin', 'Notifications',
+      'FollowList', 'AdminMessages', 'EditCommunity', 'CivicMap', 'AdminSignatures',
+      'SecurityDashboard', 'BackupStatus', 'PrivacyCompliance', 'Newsfeed',
+      'FeedSettings', 'SavedItems', 'MessageSettings',
+    ]);
+    const dynamicKeys = Object.keys(Pages);
+    const conflicts = dynamicKeys.filter((k) => EXPLICIT_ROUTES.has(k));
+    if (conflicts.length > 0) {
+      console.error('[Router] DUPLICATE ROUTES DETECTED — remove from pages.config.js:', conflicts);
+    }
+  }
 
   if (isLoadingAuth) {
     return (
@@ -243,14 +277,14 @@ const AuthenticatedApp = () => {
         <Route path="/CookiePolicy" element={<LayoutWrapper currentPageName="CookiePolicy"><CookiePolicy /></LayoutWrapper>} />
         <Route path="/TermsOfService" element={<LayoutWrapper currentPageName="TermsOfService"><TermsOfService /></LayoutWrapper>} />
         <Route path="/terms-of-service" element={<LayoutWrapper currentPageName="TermsOfService"><TermsOfService /></LayoutWrapper>} />
-        <Route path="/PressKit" element={<LayoutWrapper currentPageName="PressKit">{Pages.PressKit && <Pages.PressKit />}</LayoutWrapper>} />
+        <Route path="/PressKit" element={<LayoutWrapper currentPageName="PressKit"><PressKit /></LayoutWrapper>} />
         <Route path="/FreeExpressionPolicy" element={<LayoutWrapper currentPageName="FreeExpressionPolicy">{Pages.FreeExpressionPolicy && <Pages.FreeExpressionPolicy />}</LayoutWrapper>} />
         <Route path="/Constitution" element={<LayoutWrapper currentPageName="Constitution">{Pages.Constitution && <Pages.Constitution />}</LayoutWrapper>} />
         <Route path="/EmbedWidget" element={<EmbedWidget />} />
-        <Route path="/VerifyEmail" element={<Pages.VerifyEmail />} />
-        <Route path="/VerifySignature" element={<LayoutWrapper currentPageName="VerifySignature">{Pages.VerifySignature && <Pages.VerifySignature />}</LayoutWrapper>} />
-        <Route path="/PublicVoting" element={<LayoutWrapper currentPageName="PublicVoting">{Pages.PublicVoting && <Pages.PublicVoting />}</LayoutWrapper>} />
-        <Route path="/PublicAuditLog" element={<LayoutWrapper currentPageName="PublicAuditLog">{Pages.PublicAuditLog && <Pages.PublicAuditLog />}</LayoutWrapper>} />
+        <Route path="/VerifyEmail" element={<VerifyEmail />} />
+        <Route path="/VerifySignature" element={<LayoutWrapper currentPageName="VerifySignature"><VerifySignature /></LayoutWrapper>} />
+        <Route path="/PublicVoting" element={<LayoutWrapper currentPageName="PublicVoting"><PublicVoting /></LayoutWrapper>} />
+        <Route path="/PublicAuditLog" element={<LayoutWrapper currentPageName="PublicAuditLog"><PublicAuditLog /></LayoutWrapper>} />
 
         {/* ─── ONBOARDING (auth required, email check skipped) ─── */}
         <Route path="/Onboarding" element={
@@ -259,29 +293,7 @@ const AuthenticatedApp = () => {
           </ProtectedRoute>
         } />
 
-        {/* ─── PROTECTED PAGES from pages.config (dynamic) ─── */}
-        {Object.entries(Pages).map(([pageKey, Page]) => {
-          // Skip pages that are already declared as public above
-          if (PUBLIC_PAGE_KEYS.has(pageKey)) return null;
-
-          const protection = getRouteProtection(pageKey);
-          const element = (
-            <LayoutWrapper currentPageName={pageKey}><Page /></LayoutWrapper>
-          );
-          return (
-            <Route
-              key={pageKey}
-              path={`/${pageKey}`}
-              element={
-                <ProtectedRoute {...protection}>
-                  {element}
-                </ProtectedRoute>
-              }
-            />
-          );
-        })}
-
-        {/* ─── EXPLICITLY DECLARED PROTECTED ROUTES ─── */}
+        {/* ─── EXPLICITLY DECLARED PROTECTED ROUTES (must match before dynamic loop) ─── */}
         <Route path="/Messages" element={<ProtectedRoute><LayoutWrapper currentPageName="Messages"><Messages /></LayoutWrapper></ProtectedRoute>} />
         <Route path="/RequestVerification" element={<ProtectedRoute><LayoutWrapper currentPageName="RequestVerification"><RequestVerification /></LayoutWrapper></ProtectedRoute>} />
         <Route path="/VerificationAdmin" element={<ProtectedRoute requiredRole="admin"><LayoutWrapper currentPageName="VerificationAdmin"><VerificationAdmin /></LayoutWrapper></ProtectedRoute>} />
@@ -301,6 +313,30 @@ const AuthenticatedApp = () => {
         <Route path="/following-feed" element={<ProtectedRoute><LayoutWrapper currentPageName="FollowingFeed"><FollowingFeed /></LayoutWrapper></ProtectedRoute>} />
         <Route path="/community-subscription" element={<ProtectedRoute><LayoutWrapper currentPageName="CommunitySubscription"><CommunitySubscriptionPage /></LayoutWrapper></ProtectedRoute>} />
         <Route path="/admin-communities" element={<ProtectedRoute requiredRole="admin"><LayoutWrapper currentPageName="AdminCommunities"><AdminCommunities /></LayoutWrapper></ProtectedRoute>} />
+
+        {/* ─── PROTECTED PAGES from pages.config (dynamic) ─── */}
+        {Object.entries(Pages).map(([pageKey, Page]) => {
+          if (PUBLIC_PAGE_KEYS.has(pageKey)) return null;
+          if (!Page) {
+            if (import.meta.env.DEV) console.error(`[Router] Page component for "${pageKey}" is undefined`);
+            return null;
+          }
+          const protection = getRouteProtection(pageKey);
+          const element = (
+            <LayoutWrapper currentPageName={pageKey}><Page /></LayoutWrapper>
+          );
+          return (
+            <Route
+              key={pageKey}
+              path={`/${pageKey}`}
+              element={
+                <ProtectedRoute {...protection}>
+                  {element}
+                </ProtectedRoute>
+              }
+            />
+          );
+        })}
 
         {/* ─── REDIRECTS ─── */}
         <Route path="/CitizenJury" element={<Navigate to="/" replace />} />

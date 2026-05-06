@@ -11,8 +11,17 @@ Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
   sendDefaultPii: false,
   environment: import.meta.env.PROD ? 'production' : 'development',
-  tracesSampleRate: 0.2,
-  replaysOnErrorSampleRate: 1.0,
+  tracesSampleRate: import.meta.env.PROD ? 0.05 : 0.2,
+  replaysOnErrorSampleRate: import.meta.env.PROD ? 0.1 : 1.0,
+  replaysSessionSampleRate: 0,
+  integrations: import.meta.env.VITE_SENTRY_DSN
+    ? [
+        Sentry.replayIntegration({
+          maskAllText: true,
+          blockAllMedia: false,
+        }),
+      ]
+    : [],
 });
 
 initialiseSecurity();
