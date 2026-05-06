@@ -15,7 +15,7 @@ export default function TermsOfService() {
         <header className="space-y-2">
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">Terms of Service</h1>
           <p className="text-slate-700 font-medium">Voice to Action</p>
-          <p className="text-sm text-slate-600">Operated by Every Voice Pty Ltd · ACN 696 098 218</p>
+          <p className="text-sm text-slate-600">Operated by Every Voice Proprietary Limited (ABN 86 768 265 615)</p>
           <p className="text-sm text-slate-600">Contact: voicetoaction@outlook.com</p>
           <p className="text-sm text-slate-600">Last updated: April 2026</p>
         </header>
@@ -23,7 +23,7 @@ export default function TermsOfService() {
         <Section title="1. About These Terms">
           <p>
             These Terms of Service govern your use of Voice to Action, a civic accountability platform operated by
-            Every Voice Pty Ltd (ACN 696 098 218). By creating an account or using Voice to Action you agree to these terms in full.
+            Every Voice Proprietary Limited (ABN 86 768 265 615). By creating an account or using Voice to Action you agree to these terms in full.
           </p>
           <p>If you do not agree to these terms you must not use the platform.</p>
         </Section>
@@ -81,7 +81,7 @@ export default function TermsOfService() {
 
         <Section title="7. Content You Post">
           <p>You are solely responsible for all content you post on Voice to Action.</p>
-          <p>By posting content, you grant Every Voice Pty Ltd a non-exclusive, royalty-free licence to display, distribute, and promote that content on the platform. You retain ownership.</p>
+          <p>By posting content, you grant Every Voice Proprietary Limited (ABN 86 768 265 615) a non-exclusive, royalty-free licence to display, distribute, and promote that content on the platform. You retain ownership.</p>
           <p>We reserve the right to remove content that breaches these terms or harms users/platform integrity.</p>
         </Section>
 
@@ -111,7 +111,10 @@ export default function TermsOfService() {
         </Section>
 
         <Section title="12. Limitation of Liability">
-          <p>To the maximum extent permitted by Australian law, Every Voice Pty Ltd is not liable for losses from use of the platform, user-generated content, or service outages.</p>
+          <p>
+            Nothing in these Terms excludes, restricts, or modifies any right or remedy, or any guarantee, warranty, or other term or condition, implied or imposed by the Australian Consumer Law (Schedule 2 of the Competition and Consumer Act 2010 (Cth)) that cannot lawfully be excluded or limited. If the Australian Consumer Law applies, our liability for a failure to comply with a consumer guarantee is limited, to the extent permitted by law, to re-supplying the services or paying the cost of re-supply.
+          </p>
+          <p>To the maximum extent permitted by Australian law, Every Voice Proprietary Limited (ABN 86 768 265 615) is not liable for losses from use of the platform, user-generated content, or service outages.</p>
           <p>Our total liability is limited to the amount you paid us in the 12 months before a claim.</p>
         </Section>
 
@@ -124,7 +127,7 @@ export default function TermsOfService() {
         </Section>
 
         <Section title="15. Contact Us">
-          <p>Every Voice Pty Ltd</p>
+          <p>Every Voice Proprietary Limited (ABN 86 768 265 615)</p>
           <p>ACN 696 098 218</p>
           <p>Email: voicetoaction@outlook.com</p>
         </Section>

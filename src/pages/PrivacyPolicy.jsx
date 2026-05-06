@@ -15,16 +15,19 @@ export default function PrivacyPolicy() {
         <header className="space-y-2">
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">Privacy Policy</h1>
           <p className="text-slate-700 font-medium">Voice to Action</p>
-          <p className="text-sm text-slate-600">Operated by Every Voice Pty Ltd · ACN 696 098 218</p>
+          <p className="text-sm text-slate-600">Operated by Every Voice Proprietary Limited (ABN 86 768 265 615)</p>
           <p className="text-sm text-slate-600">Contact: voicetoaction@outlook.com</p>
           <p className="text-sm text-slate-600">Last updated: April 2026</p>
         </header>
 
         <Section title="1. About This Policy">
           <p>
-            Every Voice Pty Ltd (we, us, our) operates Voice to Action, a civic accountability platform
+            Every Voice Proprietary Limited (ABN 86 768 265 615) (we, us, our) operates Voice to Action, a civic accountability platform
             where Australians can create and sign petitions, vote in polls, participate in public discussions,
             and hold public figures and corporations accountable.
+          </p>
+          <p>
+            At or before the time we collect personal information, we will take reasonable steps to notify you of the matters required under Australian Privacy Principle 5 (APP 5), including the types of information collected, the purposes for collection, and whether we are likely to disclose information to overseas recipients.
           </p>
           <p>
             This Privacy Policy explains how we collect, use, store, and protect your personal information.
@@ -35,7 +38,7 @@ export default function PrivacyPolicy() {
         </Section>
 
         <Section title="2. Who We Are">
-          <p>Every Voice Pty Ltd</p>
+          <p>Every Voice Proprietary Limited (ABN 86 768 265 615)</p>
           <p>ACN 696 098 218</p>
           <p>Email: voicetoaction@outlook.com</p>
         </Section>
@@ -117,7 +120,7 @@ export default function PrivacyPolicy() {
           <p className="font-medium">Legal requirements</p>
           <p>We may disclose your information if required by Australian law, a court order, or to protect the safety of users or the public.</p>
           <p className="font-medium">Business transfers</p>
-          <p>If Every Voice Pty Ltd is sold or merged, your information may be transferred to the new owner who will be bound by this policy.</p>
+          <p>If Every Voice Proprietary Limited (ABN 86 768 265 615) is sold or merged, your information may be transferred to the new owner who will be bound by this policy.</p>
         </Section>
 
         <Section title="8. Where Your Data Is Stored">
@@ -143,6 +146,9 @@ export default function PrivacyPolicy() {
               rely on messages for life-safety or legally privileged communications.
             </li>
           </ul>
+          <p>
+            In the event of an eligible data breach under the Privacy Act 1988 (Cth) Notifiable Data Breaches scheme, Every Voice Proprietary Limited (ABN 86 768 265 615) will notify affected individuals and the Office of the Australian Information Commissioner (OAIC) as required by law, within 30 days of becoming aware of a breach likely to result in serious harm.
+          </p>
         </Section>
 
         <Section title="10. Cookies">
@@ -184,7 +190,7 @@ export default function PrivacyPolicy() {
         </Section>
 
         <Section title="15. Contact Us">
-          <p>Every Voice Pty Ltd</p>
+          <p>Every Voice Proprietary Limited (ABN 86 768 265 615)</p>
           <p>Email: voicetoaction@outlook.com</p>
         </Section>
       </article>

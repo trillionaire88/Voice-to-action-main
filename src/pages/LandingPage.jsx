@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { getSafeReturnPath } from "@/lib/safeReturnPath";
+import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import {
   FileText, Vote, Users, Shield, Globe2, TrendingUp,
   CheckCircle2, ArrowRight, Loader2, X
@@ -298,7 +299,7 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="relative min-h-screen bg-white pb-[72px] md:pb-0">
       {showAuth && (
         <AuthModal
           initialMode={authMode}
@@ -307,15 +308,50 @@ export default function LandingPage() {
       )}
 
       {/* Header */}
-      <header className="border-b border-slate-100 bg-white/95 backdrop-blur-sm sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
+      <header className="border-b border-slate-100 bg-white/95 backdrop-blur-sm sticky top-0 z-40 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4 h-16">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <Globe2 className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-slate-900 text-lg">Voice to Action</span>
-          </div>
-          <div className="flex items-center gap-3">
+          </Link>
+          <nav
+            className="hidden md:flex flex-1 items-center justify-center gap-1 lg:gap-3 min-w-0"
+            aria-label="Primary"
+          >
+            <Link
+              to={createPageUrl("Home")}
+              className="text-sm font-medium text-slate-600 hover:text-blue-600 px-2 py-1.5 rounded-lg whitespace-nowrap"
+            >
+              Home
+            </Link>
+            <Link
+              to={createPageUrl("Petitions")}
+              className="text-sm font-medium text-slate-600 hover:text-blue-600 px-2 py-1.5 rounded-lg whitespace-nowrap"
+            >
+              Petitions
+            </Link>
+            <Link
+              to={createPageUrl("Discovery")}
+              className="text-sm font-medium text-slate-600 hover:text-blue-600 px-2 py-1.5 rounded-lg whitespace-nowrap"
+            >
+              Polls
+            </Link>
+            <Link
+              to={createPageUrl("Communities")}
+              className="text-sm font-medium text-slate-600 hover:text-blue-600 px-2 py-1.5 rounded-lg whitespace-nowrap"
+            >
+              Communities
+            </Link>
+            <Link
+              to={createPageUrl("About")}
+              className="text-sm font-medium text-slate-600 hover:text-blue-600 px-2 py-1.5 rounded-lg whitespace-nowrap"
+            >
+              About
+            </Link>
+          </nav>
+          <div className="flex items-center gap-3 shrink-0">
             <Button
               variant="ghost"
               size="sm"
@@ -442,6 +478,8 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      <MobileBottomNav />
     </div>
   );
 }

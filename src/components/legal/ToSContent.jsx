@@ -450,7 +450,7 @@ export default function ToSContent() {
       <section id="director-liability" className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 mb-4">18. Director and Company Liability Separation</h2>
         <p className="text-slate-700 leading-relaxed mb-3">
-          The Voice to Action service is operated by <strong>Every Voice Pty Ltd</strong>, a proprietary limited company registered in Australia.
+          The Voice to Action service is operated by <strong>Every Voice Proprietary Limited (ABN 86 768 265 615)</strong>, a proprietary limited company registered in Australia.
           All obligations, liabilities, and responsibilities relating to the platform are undertaken by the company.
         </p>
         <p className="text-slate-700 leading-relaxed mb-2">To the maximum extent permitted by law:</p>
@@ -573,9 +573,21 @@ export default function ToSContent() {
 
       <Separator className="my-8" />
 
+      <section id="email-spam-compliance" className="mb-8">
+        <h2 className="text-2xl font-bold text-slate-900 mb-4">{"Email Communications & Spam Act Compliance"}</h2>
+        <p className="text-slate-700 leading-relaxed">
+          Every Voice Proprietary Limited (ABN 86 768 265 615) complies with the Spam Act 2003 (Cth). Commercial electronic messages will only be sent with your express or inferred consent. Each commercial message will clearly identify the sender and include a functional unsubscribe mechanism. You may withdraw consent at any time by clicking the unsubscribe link in any email or by updating your notification preferences in Settings.
+        </p>
+      </section>
+
+      <Separator className="my-8" />
+
       {/* 24. Limitation of Liability */}
       <section id="limitation-liability" className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 mb-4">24. Limitation of Liability</h2>
+        <p className="text-slate-700 leading-relaxed mb-3">
+          Nothing in these Terms excludes, restricts, or modifies any right or remedy, or any guarantee, warranty, or other term or condition, implied or imposed by the Australian Consumer Law (Schedule 2 of the Competition and Consumer Act 2010 (Cth)) that cannot lawfully be excluded or limited. If the Australian Consumer Law applies, our liability for a failure to comply with a consumer guarantee is limited, to the extent permitted by law, to re-supplying the services or paying the cost of re-supply.
+        </p>
         <p className="text-slate-700 leading-relaxed mb-3">
           To the maximum extent permitted by law, Voice to Action is not liable for:
         </p>
@@ -704,36 +716,36 @@ export default function ToSContent() {
 
       {/* 32. Petition Delivery Discretion */}
       <section id="petition-delivery-discretion" className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-900 mb-4">32. Petition Delivery — Every Voice Pty Ltd Discretion and Creator Self-Delivery</h2>
+        <h2 className="text-2xl font-bold text-slate-900 mb-4">32. Petition Delivery — Every Voice Proprietary Limited (ABN 86 768 265 615) Discretion and Creator Self-Delivery</h2>
         <p className="text-slate-700 leading-relaxed mb-3">
-        Voice to Action offers an optional paid petition delivery service whereby Every Voice Pty Ltd may personally deliver or formally
+        Voice to Action offers an optional paid petition delivery service whereby Every Voice Proprietary Limited (ABN 86 768 265 615) may personally deliver or formally
         submit a petition to the relevant authority, institution, or individual on behalf of the petition creator.
         </p>
         <p className="text-slate-700 leading-relaxed mb-3">
-        Every Voice Pty Ltd reserves the sole and absolute right to decline to personally deliver or formally submit any petition
+        Every Voice Proprietary Limited (ABN 86 768 265 615) reserves the sole and absolute right to decline to personally deliver or formally submit any petition
         if, in their reasonable opinion, the subject matter, cause, or target of the petition does not warrant personal attention
-        or direct engagement by Every Voice Pty Ltd. This includes, but is not limited to, petitions that:
+        or direct engagement by Every Voice Proprietary Limited (ABN 86 768 265 615). This includes, but is not limited to, petitions that:
         </p>
         <ul className="list-disc ml-6 space-y-1 text-slate-700 mb-4">
-        <li>Are directed at trivial, frivolous, or non-substantive matters in Every Voice Pty Ltd's reasonable judgement</li>
+        <li>Are directed at trivial, frivolous, or non-substantive matters in Every Voice Proprietary Limited (ABN 86 768 265 615)'s reasonable judgement</li>
         <li>Do not align with the civic engagement or democratic participation purposes of the platform</li>
-        <li>Target individuals or institutions in a manner Every Voice Pty Ltd does not consider appropriate for personal representation</li>
+        <li>Target individuals or institutions in a manner Every Voice Proprietary Limited (ABN 86 768 265 615) does not consider appropriate for personal representation</li>
         <li>Relate to purely private disputes rather than matters of genuine public interest</li>
         </ul>
         <p className="text-slate-700 leading-relaxed mb-3">
-        Where Every Voice Pty Ltd declines to personally deliver a petition, the petition creator retains the right to use the
+        Where Every Voice Proprietary Limited (ABN 86 768 265 615) declines to personally deliver a petition, the petition creator retains the right to use the
         <strong> Self-Delivery option ($25.00 AUD)</strong> to obtain an official printed and certified copy of the petition —
         including all verified signatures and supporting documentation — which the creator may then personally deliver to the
         relevant authority themselves.
         </p>
         <p className="text-slate-700 leading-relaxed mb-3">
         The $25.00 AUD self-delivery fee covers the cost of preparation, printing, certification, and packaging of the petition
-        materials. It does not include any representation, endorsement, or involvement by Every Voice Pty Ltd in
+        materials. It does not include any representation, endorsement, or involvement by Every Voice Proprietary Limited (ABN 86 768 265 615) in
         the delivery itself.
         </p>
         <p className="text-slate-700 leading-relaxed">
-        Every Voice Pty Ltd's decision to decline personal delivery is final and is not subject to appeal. No refund of any prior fees
-        is owed solely on the basis of Every Voice Pty Ltd exercising this discretion.
+        Every Voice Proprietary Limited (ABN 86 768 265 615)'s decision to decline personal delivery is final and is not subject to appeal. No refund of any prior fees
+        is owed solely on the basis of Every Voice Proprietary Limited (ABN 86 768 265 615) exercising this discretion.
         </p>
       </section>
 
@@ -753,24 +765,24 @@ export default function ToSContent() {
           products, services, and trading names operated by the legal entity:
         </p>
         <div className="ml-4 mb-4 bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-1">
-          <p className="text-slate-800 font-semibold">Every Voice Pty Ltd</p>
+          <p className="text-slate-800 font-semibold">Every Voice Proprietary Limited (ABN 86 768 265 615)</p>
           <p className="text-slate-700 text-sm">ABN: 86 768 265 615</p>
           <p className="text-slate-700 text-sm">Entity Type: Proprietary Limited Company</p>
           <p className="text-slate-700 text-sm">Country of Registration: Australia</p>
         </div>
         <p className="text-slate-700 leading-relaxed mb-4">
           All services, systems, software, applications, websites, databases, and features provided under the names listed above
-          are owned, controlled, governed, and operated by Every Voice Pty Ltd.
+          are owned, controlled, governed, and operated by Every Voice Proprietary Limited (ABN 86 768 265 615).
         </p>
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">No Personal Operation by Individual</h3>
         <p className="text-slate-700 leading-relaxed mb-3">
           The Platform is not operated by any individual in a personal capacity. All platform activities are conducted by the
-          company Every Voice Pty Ltd. To the maximum extent permitted by law:
+          company Every Voice Proprietary Limited (ABN 86 768 265 615). To the maximum extent permitted by law:
         </p>
         <ul className="list-disc ml-6 space-y-1 text-slate-700 mb-4">
           <li>The director is not personally responsible for user content</li>
-          <li>Every Voice Pty Ltd is not personally responsible for platform activity</li>
+          <li>Every Voice Proprietary Limited (ABN 86 768 265 615) is not personally responsible for platform activity</li>
           <li>The secretary is not personally responsible for user actions</li>
           <li>Employees and contractors are not personally liable for platform use</li>
         </ul>
@@ -781,14 +793,14 @@ export default function ToSContent() {
         <h3 className="text-lg font-semibold text-slate-800 mb-2">Trading Name Clarification</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
           <strong>Voice to Action</strong> and <strong>Voice to Action</strong> are trading names, brand names, or product names used by
-          Every Voice Pty Ltd. Use of these names does not create a separate legal entity. All legal responsibility remains with
-          Every Voice Pty Ltd.
+          Every Voice Proprietary Limited (ABN 86 768 265 615). Use of these names does not create a separate legal entity. All legal responsibility remains with
+          Every Voice Proprietary Limited (ABN 86 768 265 615).
         </p>
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">Limitation of Personal Liability</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
           Users agree that any claim, dispute, or legal action relating to the platform must be made against the company
-          Every Voice Pty Ltd and not against any individual director, officer, employee, or contractor, except where personal
+          Every Voice Proprietary Limited (ABN 86 768 265 615) and not against any individual director, officer, employee, or contractor, except where personal
           liability is required by law.
         </p>
 
@@ -803,7 +815,7 @@ export default function ToSContent() {
           <li>An official institution</li>
         </ul>
         <p className="text-slate-700 leading-relaxed">
-          The platform is a private service operated by Every Voice Pty Ltd.
+          The platform is a private service operated by Every Voice Proprietary Limited (ABN 86 768 265 615).
         </p>
       </section>
 
@@ -847,7 +859,7 @@ export default function ToSContent() {
         </p>
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">No Responsibility for User Decisions</h3>
-        <p className="text-slate-700 leading-relaxed mb-2">Every Voice Pty Ltd is not responsible for:</p>
+        <p className="text-slate-700 leading-relaxed mb-2">Every Voice Proprietary Limited (ABN 86 768 265 615) is not responsible for:</p>
         <ul className="list-disc ml-6 space-y-1 text-slate-700 mb-4">
           <li>Actions taken based on poll results</li>
           <li>Decisions influenced by platform content</li>
@@ -860,20 +872,20 @@ export default function ToSContent() {
         <h3 className="text-lg font-semibold text-slate-800 mb-2">User Opinions Do Not Represent the Platform</h3>
         <p className="text-slate-700 leading-relaxed mb-2">
           Content posted by users represents the views of the user only and does not represent the views of Voice to Action,
-          Voice to Action, Every Voice Pty Ltd, the director, moderators, employees, or contractors. The platform does
+          Voice to Action, Every Voice Proprietary Limited (ABN 86 768 265 615), the director, moderators, employees, or contractors. The platform does
           not endorse user opinions.
         </p>
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2 mt-4">Civic and Political Content Disclaimer</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
           The platform may contain political, civic, social, or public policy discussions. Such content is provided by users.
-          Every Voice Pty Ltd does not guarantee the accuracy, truthfulness, or legality of user statements. Users are responsible
+          Every Voice Proprietary Limited (ABN 86 768 265 615) does not guarantee the accuracy, truthfulness, or legality of user statements. Users are responsible
           for complying with the laws of their jurisdiction.
         </p>
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">No Duty to Enforce Public Opinion</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Every Voice Pty Ltd has no duty to enforce poll results, petitions, or public sentiment. Institutions listed on the
+          Every Voice Proprietary Limited (ABN 86 768 265 615) has no duty to enforce poll results, petitions, or public sentiment. Institutions listed on the
           platform are not required to follow platform outcomes. The platform is a communication tool only.
         </p>
 
@@ -901,13 +913,13 @@ export default function ToSContent() {
         <h3 className="text-lg font-semibold text-slate-800 mb-2">Platform Safety Intent</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
           Voice to Action / Voice to Action is designed to provide a safe environment for discussion, voting, and public expression.
-          Every Voice Pty Ltd makes reasonable efforts to maintain platform integrity, reduce abuse, and protect users from harmful behavior.
+          Every Voice Proprietary Limited (ABN 86 768 265 615) makes reasonable efforts to maintain platform integrity, reduce abuse, and protect users from harmful behavior.
           These efforts may include moderation, automated detection systems, reporting tools, account restrictions, and content removal.
         </p>
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">No Guarantee of User Safety</h3>
         <p className="text-slate-700 leading-relaxed mb-2">
-          While the platform aims to promote a respectful and lawful environment, Every Voice Pty Ltd does not guarantee that the Service will be free from:
+          While the platform aims to promote a respectful and lawful environment, Every Voice Proprietary Limited (ABN 86 768 265 615) does not guarantee that the Service will be free from:
         </p>
         <ul className="list-disc ml-6 space-y-1 text-slate-700 mb-4">
           <li>Offensive content</li>
@@ -922,7 +934,7 @@ export default function ToSContent() {
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">User Responsibility for Interactions</h3>
         <p className="text-slate-700 leading-relaxed mb-2">
-          Users are responsible for their own actions and interactions on the platform. Every Voice Pty Ltd is not responsible for:
+          Users are responsible for their own actions and interactions on the platform. Every Voice Proprietary Limited (ABN 86 768 265 615) is not responsible for:
         </p>
         <ul className="list-disc ml-6 space-y-1 text-slate-700 mb-4">
           <li>Statements made by users</li>
@@ -935,14 +947,14 @@ export default function ToSContent() {
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">No Duty to Monitor All Content</h3>
         <p className="text-slate-700 leading-relaxed mb-3">
-          Every Voice Pty Ltd does not have a legal duty to monitor all content posted on the platform. Content may be reviewed using
+          Every Voice Proprietary Limited (ABN 86 768 265 615) does not have a legal duty to monitor all content posted on the platform. Content may be reviewed using
           automated systems, human moderation, or user reports, but not all content can be reviewed at all times.
           Failure to remove or detect content does not create liability.
         </p>
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">Good Faith Moderation</h3>
         <p className="text-slate-700 leading-relaxed mb-2">
-          Every Voice Pty Ltd may take action in good faith to maintain safety and compliance, including:
+          Every Voice Proprietary Limited (ABN 86 768 265 615) may take action in good faith to maintain safety and compliance, including:
         </p>
         <ul className="list-disc ml-6 space-y-1 text-slate-700 mb-4">
           <li>Removing content</li>
@@ -956,7 +968,7 @@ export default function ToSContent() {
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">No Liability for User Content</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          To the maximum extent permitted by law, Every Voice Pty Ltd is not liable for damages caused by user-generated content,
+          To the maximum extent permitted by law, Every Voice Proprietary Limited (ABN 86 768 265 615) is not liable for damages caused by user-generated content,
           user conduct, or third-party actions on the platform. All content is provided by users, not by the company.
         </p>
 
@@ -986,9 +998,9 @@ export default function ToSContent() {
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">Commitment to Lawful Operation</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Every Voice Pty Ltd is firmly committed to operating this platform in full compliance with all applicable
+          Every Voice Proprietary Limited (ABN 86 768 265 615) is firmly committed to operating this platform in full compliance with all applicable
           laws and regulations. The platform will not knowingly endorse, facilitate, or promote any activity,
-          content, or conduct that is contrary to law. Every Voice Pty Ltd will take all reasonable and practicable
+          content, or conduct that is contrary to law. Every Voice Proprietary Limited (ABN 86 768 265 615) will take all reasonable and practicable
           steps to ensure that the platform remains a lawful, safe, and constructive environment for civic participation.
         </p>
         <p className="text-slate-700 leading-relaxed mb-4">
@@ -1006,14 +1018,14 @@ export default function ToSContent() {
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">Non-Partisan Stance</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Every Voice Pty Ltd does not endorse any political party, candidate, ideology, or campaign. The platform
+          Every Voice Proprietary Limited (ABN 86 768 265 615) does not endorse any political party, candidate, ideology, or campaign. The platform
           is designed to provide an equal and fair forum for diverse perspectives, and to represent the breadth
           of public opinion rather than advance any particular viewpoint.
         </p>
 
         <h3 className="text-lg font-semibold text-slate-800 mb-2">Limitation of Disclaimer</h3>
         <p className="text-slate-700 leading-relaxed">
-          While Every Voice Pty Ltd is committed to lawful and responsible operation, the platform cannot guarantee
+          While Every Voice Proprietary Limited (ABN 86 768 265 615) is committed to lawful and responsible operation, the platform cannot guarantee
           that all user-generated content complies with the law. Users remain individually responsible for the
           content they submit and the conduct they engage in on the platform.
         </p>
@@ -1052,7 +1064,7 @@ export default function ToSContent() {
 
       <div className="mt-12 pt-8 border-t border-slate-300 text-center">
         <p className="text-sm text-slate-600">
-          © 2026 Voice to Action (Every Voice Pty Ltd). All rights reserved worldwide.
+          © 2026 Voice to Action (Every Voice Proprietary Limited (ABN 86 768 265 615)). All rights reserved worldwide.
         </p>
         <p className="text-xs text-slate-500 mt-1">
           Last updated: March 11, 2026 • Version {CURRENT_TOS_VERSION}

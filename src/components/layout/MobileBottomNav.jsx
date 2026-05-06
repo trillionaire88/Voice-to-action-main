@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { Home, User, PlusCircle, MessageSquare, Newspaper } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -14,15 +16,22 @@ const NAV_ITEMS = [
 export default function MobileBottomNav({ unreadCount = 0 }) {
   const location = useLocation();
   const { switchTab } = useNavigation();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const currentTabKey = resolveTabKey(location.pathname);
 
-  return (
+  const nav = (
     <nav
       role="navigation"
       aria-label="Main mobile navigation"
-      className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur-xl border-t border-slate-200"
-      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      className="fixed bottom-0 left-0 right-0 z-[100] md:hidden bg-white/95 backdrop-blur-xl border-t border-slate-200 pointer-events-auto"
+      style={{
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
+      }}
     >
       <div className="flex items-end justify-around px-1 pt-1 pb-1 min-h-[56px]">
         {NAV_ITEMS.map((item) => {
@@ -33,6 +42,7 @@ export default function MobileBottomNav({ unreadCount = 0 }) {
             return (
               <button
                 key={key}
+                type="button"
                 onClick={() => switchTab(key)}
                 aria-label={`${label} — open creation options`}
                 className="flex flex-col items-center gap-0.5 px-2 pb-1 -mt-4"
@@ -49,6 +59,7 @@ export default function MobileBottomNav({ unreadCount = 0 }) {
           return (
             <button
               key={key}
+              type="button"
               onClick={() => switchTab(key)}
               aria-label={`Go to ${label}`}
               aria-current={active ? "page" : undefined}
@@ -86,4 +97,8 @@ export default function MobileBottomNav({ unreadCount = 0 }) {
       </div>
     </nav>
   );
+
+  if (!mounted || typeof document === "undefined") return null;
+
+  return createPortal(nav, document.body);
 }
