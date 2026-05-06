@@ -1,0 +1,3 @@
+[functions.update-feed-algorithm]
+verify_jwt = false
+schedule = "0 * * * *"

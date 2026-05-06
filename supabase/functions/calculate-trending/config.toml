@@ -1,0 +1,3 @@
+[functions.calculate-trending]
+verify_jwt = false
+schedule = "*/30 * * * *"
