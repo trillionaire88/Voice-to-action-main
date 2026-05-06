@@ -121,8 +121,8 @@
   header nav {
     display: flex;
     flex-wrap: nowrap;
-    overflow: hidden;
-    max-height: 2.25rem;
+    overflow: visible;
+    align-items: center;
   }
 
   header nav button {
