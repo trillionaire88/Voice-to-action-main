@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { getFollowingFeed } from "@/api/socialApi";
 import { createPageUrl } from "@/utils";
+import { getSafeReturnPath } from "@/lib/safeReturnPath";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,6 +24,7 @@ const ACTIVITY_CONFIG = {
 };
 
 export default function FollowingFeed() {
+  const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -87,7 +90,7 @@ export default function FollowingFeed() {
           <UserPlus className="w-16 h-16 text-slate-300 mx-auto mb-4" />
           <h2 className="text-xl font-bold text-slate-700 mb-2">Your feed is empty</h2>
           <p className="text-slate-500 mb-6">Follow people from petitions, polls, and discussions to see their activity here.</p>
-          <Button onClick={() => { window.location.href = createPageUrl("Discovery"); }} className="bg-blue-600 hover:bg-blue-700">Discover People</Button>
+          <Button onClick={() => { navigate(createPageUrl("Discovery")); }} className="bg-blue-600 hover:bg-blue-700">Discover People</Button>
         </div>
       ) : (
         <div className="space-y-3">
@@ -96,7 +99,7 @@ export default function FollowingFeed() {
             const Icon = config.icon;
             const profile = activity.profiles;
             return (
-              <Card key={activity.id} className="border-slate-200 hover:border-slate-300 transition-colors cursor-pointer" onClick={() => activity.url_path && (window.location.href = activity.url_path)}>
+              <Card key={activity.id} className="border-slate-200 hover:border-slate-300 transition-colors cursor-pointer" onClick={() => activity.url_path && navigate(getSafeReturnPath(activity.url_path, "/Home"))}>
                 <CardContent className="pt-4 pb-4">
                   <div className="flex items-start gap-3">
                     <Avatar className="w-10 h-10 flex-shrink-0">
